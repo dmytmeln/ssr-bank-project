@@ -3,6 +3,9 @@ package bank.model.repository;
 import bank.configuration.HibernateConfiguration;
 import bank.model.domain.User;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -20,16 +23,37 @@ public class UserDao {
     public UserDao(){}
 
     public List<User> readAll() {
-        return null; // TODO
+
+        Transaction transaction = null;
+        List<User> allUsers = null;
+
+        try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
+
+            transaction = session.beginTransaction();
+
+            //language=MySQL
+            String sqlGetAll =
+                    """
+                    SELECT *
+                    FROM users;
+                    """;
+            allUsers = session.createQuery(sqlGetAll, User.class).getResultList();
+
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+
+        return allUsers;
+
     }
 
     public User readById(Long id) {
 
         Transaction transaction = null;
         User persistentUser = null;
-
         try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
-
             transaction = session.beginTransaction();
 
             persistentUser = Optional.ofNullable((session.get(User.class, id)))
@@ -47,19 +71,41 @@ public class UserDao {
 
     }
 
-    public User read(User user) {
-        return null; // TODO
+    public List<User> read(User user) {
+
+        List<User> allMatchedUsers = null;
+        Transaction transaction = null;
+        try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<User> query = cb.createQuery(User.class);
+            Root<User> root = query.from(User.class);
+            query.select(root)
+                    .where(cb.or(
+                            cb.equal(root.get("email"), user.getEmail()),
+                            cb.equal(root.get("phoneNumber"), user.getPhoneNumber())
+                    ));
+            allMatchedUsers = session.createQuery(query).getResultList();
+
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+
+        return allMatchedUsers;
     }
 
     public Long create(User user) {
 
         Transaction transaction = null;
+        Long id = null;
 
         try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
-
             transaction = session.beginTransaction();
 
-            session.persist(user);
+            id = (Long) session.save(user);
 
             transaction.commit();
 
@@ -68,7 +114,7 @@ public class UserDao {
             e.printStackTrace();
         }
 
-        return user.getId();
+        return id;
 
     }
 
@@ -77,14 +123,12 @@ public class UserDao {
         User persistentUser = null;
         Transaction transaction = null;
         try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
-
             transaction = session.beginTransaction();
 
             persistentUser = Optional.ofNullable((session.get(User.class, id)))
                     .orElseThrow(() -> new EntityNotFoundException(
                             String.format("User with id: {%d} not found!", id)
                     ));
-
             persistentUser = persistentUser.toBuilder()
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
@@ -92,7 +136,6 @@ public class UserDao {
                     .email(user.getEmail())
                     .phoneNumber(user.getPhoneNumber())
                     .build();
-
             session.merge(persistentUser);
 
             transaction.commit();
@@ -107,7 +150,27 @@ public class UserDao {
     }
 
     public boolean delete(Long id) {
-        return false; // TODO
+
+        User persistentUser = null;
+        Transaction transaction = null;
+        try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            persistentUser = Optional.ofNullable((session.get(User.class, id)))
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            String.format("User with id: {%d} not found!", id)
+                    ));
+            session.delete(persistentUser);
+
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        }
+
+        return true;
+
     }
 
 }
