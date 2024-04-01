@@ -1,15 +1,16 @@
 package bank.model.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "user")
@@ -18,38 +19,41 @@ public class User {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Positive(message = "Message should be greater than zero!")
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(name = "firstname")
     @NotNull(message = "First name can't be null")
-    @NotBlank(message = "First name can't be blank")
+    @Pattern(regexp = "^[A-Z][a-z]*(?:-[A-Z][a-z]*)*$", message = "Invalid first name format")
     private String firstName;
 
     @Column(name = "lastname")
     @NotNull(message = "Last name can't be null")
-    @NotBlank(message = "Last name can't be blank")
+    @Pattern(regexp = "^[A-Z][a-z]*(?:-[A-Z][a-z]*)*$", message = "Invalid last name format")
     private String lastName;
 
     @Column(name = "pass")
     @NotNull(message = "Password can't be null")
-    @NotBlank(message = "Password can't be blank")
+    @Pattern(regexp = "^(?=.*[a-z].*[a-z])(?=.*[A-Z].*[A-Z])(?=.*\\d.*\\d)(?=.*[!@#$%^&*()\\[\\]{}|;:',.<>/?`~\\-_=+].*[!@#$%^&*()\\[\\]{}|;:',.<>/?`~\\-_=+])[A-Za-z\\d!@#$%^&*()\\[\\]{}|;:',.<>/?`~\\-_=+]{8,}$",
+            message = "Password must contain at least 2 lowercase letters, 2 uppercase letters, 2 digits, and 2 special symbols, and be at least 8 characters long")
     private String password;
 
     @Column(unique = true)
     @NotNull(message = "Email can't be null")
-    @NotBlank(message = "Email can't be blank")
-    @Email
+    @Pattern(regexp =  "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$",
+            message = "Improper email format")
     private String email;
 
     @Column(name = "phone_number", unique = true)
     @NotNull(message = "Phone number can't be null")
-    @NotBlank(message = "Phone number can't be blank")
+    @Pattern(regexp = "\\d{12}", message = "Phone number has to contain 12 digits")
     private String phoneNumber;
 
-    @NotNull
     @Column(name = "creation_date")
     @Builder.Default
-    private LocalDateTime creationDate = LocalDateTime.now();
+    @CreationTimestamp
+    private Instant creationDate = Instant.now();
 
     @OneToOne(mappedBy = "user", optional = false, cascade = CascadeType.ALL)
     private BankAccount bankAccount;
