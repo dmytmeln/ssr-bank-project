@@ -1,6 +1,5 @@
 package bank;
 
-import bank.exceptions.AccountNotFound;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
@@ -12,7 +11,7 @@ import java.io.File;
 
 public class Main {
 
-    public static void main(String[] args) throws LifecycleException, AccountNotFound {
+    public static void main(String[] args) throws LifecycleException {
 //        ApplicationContextHolder.init();
 //        System.out.println(ApplicationContextHolder.getAutowireCapableBeanFactory().getBean(BankService.class).findBankAccountByUserId(1L));
 
