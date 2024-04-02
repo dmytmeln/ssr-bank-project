@@ -31,11 +31,11 @@ public class UserDao {
 
             transaction = session.beginTransaction();
 
-            //language=MySQL
+            //language=JPQL
             String sqlGetAll =
                     """
-                    SELECT *
-                    FROM users;
+                    SELECT u
+                    FROM users u;
                     """;
             allUsers = session.createQuery(sqlGetAll, User.class).getResultList();
 
