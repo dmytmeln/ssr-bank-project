@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "transaction_histories")
 public class TransactionHistory {
