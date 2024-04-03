@@ -20,7 +20,7 @@ public class BankAccount {
     @Column(name = "bank_account_id")
     private Long id;
 
-    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount")
     @ToString.Exclude
     private List<TransactionHistory> transactions;
 
@@ -29,7 +29,7 @@ public class BankAccount {
     @Builder.Default
     private Double balance = 0D;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

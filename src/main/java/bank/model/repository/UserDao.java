@@ -9,7 +9,6 @@ import jakarta.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
@@ -118,13 +117,14 @@ public class UserDao {
 
     }
 
-    public User update(User user, Long id) {
+    public User update(User user) {
 
         User persistentUser = null;
         Transaction transaction = null;
         try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
+            Long id = user.getId();
             persistentUser = Optional.ofNullable((session.get(User.class, id)))
                     .orElseThrow(() -> new EntityNotFoundException(
                             String.format("User with id: {%d} not found!", id)
@@ -136,7 +136,7 @@ public class UserDao {
                     .email(user.getEmail())
                     .phoneNumber(user.getPhoneNumber())
                     .build();
-            session.merge(persistentUser);
+            persistentUser = session.merge(persistentUser);
 
             transaction.commit();
 

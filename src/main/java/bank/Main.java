@@ -1,5 +1,7 @@
 package bank;
 
+import bank.model.repository.TransactionHistoryDao;
+import bank.model.repository.UserDao;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
@@ -15,8 +17,9 @@ public class Main {
 //        ApplicationContextHolder.init();
 //        System.out.println(ApplicationContextHolder.getAutowireCapableBeanFactory().getBean(BankService.class).findBankAccountByUserId(1L));
 
+        System.out.println(new UserDao().readById(1L));
 
-        startServer();
+//        startServer();
 
     }
 

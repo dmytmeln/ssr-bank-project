@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Data
 @Builder(toBuilder = true)
@@ -27,7 +26,7 @@ public class TransactionHistory {
     @Column(name = "transaction_history_id")
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "bank_account_id", nullable = false)
     private BankAccount bankAccount;
 
@@ -47,7 +46,6 @@ public class TransactionHistory {
     @Column(name = "transaction_date")
     @NotNull
     @CreationTimestamp
-    @Builder.Default
-    private Instant transactionDate = Instant.now();
+    private Instant transactionDate;
 
 }
