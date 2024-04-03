@@ -1,20 +1,22 @@
 package bank.model.domain;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
+
+    @Transient
+    private static final String NAME_REGEX = "^[A-Z][a-z]*(?:-[A-Z][a-z]*)*$";
 
     @Id
     @Column(name = "user_id")
@@ -25,12 +27,12 @@ public class User {
 
     @Column(name = "firstname")
     @NotNull(message = "First name can't be null")
-    @Pattern(regexp = "^[A-Z][a-z]*(?:-[A-Z][a-z]*)*$", message = "Invalid first name format")
+    @Pattern(regexp = NAME_REGEX, message = "Invalid first name format")
     private String firstName;
 
     @Column(name = "lastname")
     @NotNull(message = "Last name can't be null")
-    @Pattern(regexp = "^[A-Z][a-z]*(?:-[A-Z][a-z]*)*$", message = "Invalid last name format")
+    @Pattern(regexp = NAME_REGEX, message = "Invalid last name format")
     private String lastName;
 
     @Column(name = "pass")
@@ -50,12 +52,12 @@ public class User {
     @Pattern(regexp = "\\d{12}", message = "Phone number has to contain 12 digits")
     private String phoneNumber;
 
-    @Column(name = "creation_date")
-    @Builder.Default
-    @CreationTimestamp
-    private Instant creationDate = Instant.now();
-
-    @OneToOne(mappedBy = "user", optional = false, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", optional = false, cascade = CascadeType.REMOVE)
+    @ToString.Exclude
     private BankAccount bankAccount;
+
+    @Column(name = "creation_date")
+    @CreationTimestamp
+    private Instant creationDate;
 
 }
