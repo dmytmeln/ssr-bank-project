@@ -1,5 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%String errorMsg = (String) request.getAttribute("errorMsg");%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,34 +8,33 @@
         <!-- Unicons -->
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
         <title>Authorization</title>
-        <style>
-            <%@include file="../css/style.css"%>
-        </style>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
     </head>
 
     <body>
         <section class="home">
-            <h1 class="error_msg"><%=errorMsg == null ? "" : errorMsg%></h1>
+            <h1 class="error_msg"></h1>
             <div class="form_container">
-                <a href="/"><i class="uil uil-times form_close"></i></a>
+                <a th:href="@{/}"><i class="uil uil-times form_close"></i></a>
                 <!-- Login From -->
                 <div class="form login_form">
-                    <form method="post" action="/auth/login">
+                    <!--/*@thymesVar id="user" type="bank.model.domain.User"*/-->
+                    <form action="#" th:action="@{/auth/login}" th:object="${user}" method="post">
                         <h2>Login</h2>
 
                         <div class="input_box">
-                            <input type="email" name="email" placeholder="Enter your email" required />
+                            <input type="email" name="email" placeholder="Enter your email" required th:field="*{email}"/>
                             <i class="uil uil-envelope-alt email"></i>
                         </div>
 
                         <div class="input_box">
-                            <input type="password" name="password" id="login_password" placeholder="Enter your password" required />
+                            <input type="password" name="password" id="login_password" placeholder="Enter your password" required th:field="*{password}"/>
                             <i class="uil uil-lock password"></i>
                             <i class="uil uil-eye-slash pw_hide" id="login_hide"></i>
                         </div>
 
                         <div class="input_box">
-                            <input type="tel" name="phone_number" placeholder="Enter your phone number" required />
+                            <input type="tel" name="phone_number" placeholder="Enter your phone number" required th:field="*{phoneNumber}"/>
                         </div>
 
                         <div class="option_field">
@@ -45,7 +42,7 @@
                             <input type="checkbox" id="check" />
                             <label for="check">Remember me</label>
                             </span>
-                            <a href="#" class="forgot_pw">Forgot password?</a>
+                            <a class="forgot_pw">Forgot password?</a>
                         </div>
 
                         <button class="button">Login Now</button>
@@ -54,44 +51,52 @@
                     </form>
                 </div>
 
+                <!-- Signup From -->
                 <div class="form signup_form">
-                    <form method="post" action="/auth/signup">
+                    <!--/*@thymesVar id="user" type="bank.model.domain.User"*/-->
+                    <form action="#" th:action="@{/auth/signup}" th:object="${user}" method="post">
                         <h2>Signup</h2>
 
                         <div class="input_box">
-                            <input type="email" name="email" placeholder="Enter your email" required />
+                            <input type="email" name="email" placeholder="Enter your email" required th:field="*{email}"/>
+                            <p class="invalid_field" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</p>
                             <i class="uil uil-envelope-alt email"></i>
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="firstname" placeholder="Enter your firstname" required />
+                            <input type="text" name="firstname" placeholder="Enter your firstname" required th:field="*{firstName}"/>
+                            <p class="invalid_field" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name error</p>
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="lastname" placeholder="Enter your lastname" required />
+                            <input type="text" name="lastname" placeholder="Enter your lastname" required th:field="*{lastName}"/>
+                            <p class="invalid_field" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name error</p>
+
                         </div>
 
                         <div class="input_box">
-                            <input type="password" name="password" id="signup_password" placeholder="Create password" required />
+                            <input type="password" name="password" id="signup_password" placeholder="Create password" required
+                                   th:field="*{password}"/>
                             <i class="uil uil-lock password"></i>
                             <i class="uil uil-eye-slash pw_hide" id="signup_hide"></i>
+                            <p class="invalid_field" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</p>
                         </div>
 
                         <div class="input_box">
-                            <input type="tel" name="phone_number" placeholder="Enter your phone number" required />
+                            <input type="tel" name="phone_number" placeholder="Enter your phone number" required th:field="*{phoneNumber}"/>
+                            <p class="invalid_field" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Phone number error</p>
                         </div>
 
                         <button class="button">Signup Now</button>
 
-                        <div class="login_signup">Already have an account? <a href="#" id="login">Login</a></div>
+                        <div class="login_signup">Already have an account? <a id="login">Login</a></div>
                     </form>
                 </div>
+
             </div>
         </section>
 
-        <script>
-            <%@include file="../js/main.js"%>
-        </script>
+        <script type="text/javascript" th:src="@{/js/main.js}"></script>
     </body>
 
 </html>
