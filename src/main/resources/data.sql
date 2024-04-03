@@ -1,3 +1,4 @@
+/*
 DROP DATABASE IF EXISTS bank;
 
 CREATE DATABASE bank;
@@ -32,6 +33,8 @@ CREATE TABLE IF NOT EXISTS transaction_histories (
 
                                                      FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(bank_account_id)
 );
+
+ */
 
 INSERT INTO users(firstname, lastname, pass, email, phone_number, creation_date)
 VALUES ('dmytro', 'melnyk', 'mdm281004', 'dimamel28@gmail.com', '380984035791', '2023-01-25 22:10:10');
