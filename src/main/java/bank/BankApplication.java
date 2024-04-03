@@ -1,35 +1,23 @@
 package bank;
 
-import bank.configuration.ApplicationContextHolder;
-import bank.model.repository.BankAccountDao;
-import bank.model.repository.TransactionHistoryDao;
-import bank.model.repository.UserDao;
+import bank.model.repository.AccountRepository;
+import bank.model.repository.TransactionHistoryRepository;
+import bank.model.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
-import org.apache.catalina.WebResourceRoot;
-import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.DirResourceSet;
-import org.apache.catalina.webresources.StandardRoot;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.io.File;
 
 @SpringBootApplication
 @AllArgsConstructor
 public class BankApplication implements CommandLineRunner {
 
-    @Autowired
-    UserDao userDao;
+    UserRepository userRepo;
 
-    @Autowired
-    BankAccountDao bankAccountDao;
+    AccountRepository accountRepository;
 
-    @Autowired
-    TransactionHistoryDao transactionDao;
+    TransactionHistoryRepository transactionRepo;
 
     public static void main(String[] args) throws LifecycleException {
 
@@ -40,7 +28,13 @@ public class BankApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-//        System.out.println(userDao.readById(1L));
+        System.out.println(userRepo.findById(1L).get());
+
+        System.out.println(accountRepository.findById(1L).get());
+
+        System.out.println(transactionRepo.findTransactionHistoriesByBankAccountId(1L));
+
+        System.out.println(transactionRepo.findById(1L).get());
 
     }
 
