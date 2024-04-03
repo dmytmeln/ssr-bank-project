@@ -1,0 +1,96 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="bank.model.domain.User" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.format.FormatStyle" %>
+<%
+    User user = (User) request.getAttribute("user");
+
+    String fullName = user.getFirstName() + " " + user.getLastName();
+    String creationDate = user.getCreationDate().format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm"));
+    String errorMsg = (String) request.getAttribute("errorMsg");
+    errorMsg = errorMsg == null ? "" : errorMsg;
+%>
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Unicons -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+        <title>User Profile</title>
+        <style>
+            <%@include file="../css/style.css"%>
+
+            i.pw_hide {
+                font-size: 18px;
+                cursor: pointer;
+                color: #a6ff00;
+                padding-left: 10px;
+            }
+
+            .names > .button {
+                background: #0009ff;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- Header -->
+        <%@include file="header.html"%>
+
+        <!-- Home -->
+        <section class="home">
+
+            <h1 class="error_msg"><%=errorMsg%></h1>
+
+            <form action="" method="post">
+                <div class="names">
+
+                    <label class="edit_label" for="full_name"><h4 class="user_name">Name: </h4></label>
+                    <input class="edit_input" id="full_name" name="full_name" type="text" value="<%=fullName%>">
+                    <label class="edit_label " for="full_name">edit</label>
+                    <br>
+
+                    <label class="edit_label" for="phone_number"><h4 class="user_name">Phone number: </h4></label>
+                    <input class="edit_input" id="phone_number" name="phone_number" type="text" value="<%=user.getPhoneNumber()%>">
+                    <label class="edit_label " for="phone_number">edit</label>
+                    <br>
+
+                    <label class="edit_label" for="email"><h4 class="user_name">Email: </h4></label>
+                    <input class="edit_input" id="email" name="email" type="text" value="<%=user.getEmail()%>">
+                    <label class="edit_label " for="email">edit</label>
+                    <br>
+
+                    <label class="edit_label" for="password"><h4 class="user_name">Password: </h4></label>
+                    <input class="edit_input" id="password" name="password" type="password" value="<%=user.getPassword()%>">
+                    <label class="edit_label " for="password">edit</label>
+                    <i class="uil uil-eye-slash pw_hide" id="password_hide"></i>
+                    <br>
+
+                    <label class="edit_label" for="creation_date"><h4 class="user_name">Creation date: </h4></label>
+                    <input class="edit_input" disabled id="creation_date" name="creation_date" type="text" value="<%=creationDate%>">
+                    <br>
+
+                    <button class="button" type="submit">Submit changes</button>
+                    <button class="button" type="reset">Reset changes</button>
+                </div>
+            </form>
+
+        </section>
+
+        <script>
+            const passwordHide = document.querySelector("#password_hide");
+            passwordHide.addEventListener("click", (e) => {
+                e.preventDefault();
+                const passwordInput = document.querySelector("#password");
+                passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+
+            });
+        </script>
+
+    </body>
+
+</html>
