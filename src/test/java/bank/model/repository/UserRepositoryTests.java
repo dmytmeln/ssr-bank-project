@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UserRepositoryTests {
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public UserRepositoryTests(UserRepository userRepository) {
