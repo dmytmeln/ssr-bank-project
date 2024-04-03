@@ -52,7 +52,7 @@ public class User {
     @Pattern(regexp = "\\d{12}", message = "Phone number has to contain 12 digits")
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "user", optional = false, cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", optional = false, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private BankAccount bankAccount;
 
