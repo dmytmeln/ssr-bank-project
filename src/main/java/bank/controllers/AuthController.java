@@ -26,6 +26,8 @@ public class AuthController {
             return "html/auth";
         }
 
+        // user service signup
+
         return "redirect:/";
     }
 

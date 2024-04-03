@@ -44,7 +44,7 @@
 //        } catch (IllegalArgumentException | NullPointerException | UserAlreadyExists | AccountAlreadyExists e) {
 //            resp.setStatus(HttpServletResponse.SC_CONFLICT);
 //            req.setAttribute("errorMsg", "Account haven't been created<br>" + e.getMessage());
-//            req.getRequestDispatcher("/WEB-INF/html/auth.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/auth.html").forward(req, resp);
 //        }
 //
 //    }
