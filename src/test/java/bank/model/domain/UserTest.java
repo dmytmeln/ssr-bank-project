@@ -1,24 +1,22 @@
 package bank.model.domain;
 
-import bank.model.domain.User;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class UserTest {
 
     private User validUser;
@@ -37,13 +35,11 @@ public class UserTest {
 
     @Test
     void checkValidUser() {
-
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
-
     }
 
     @ParameterizedTest
@@ -217,8 +213,6 @@ public class UserTest {
     }
 
     private static Stream<Arguments> provideInvalidPasswords() {
-        String errorMsg = "Password must contain at least 2 lowercase letters, 2 uppercase letters, 2 digits, and 2 special symbols, " +
-                          "and be at least 8 characters long";
         return Stream.of(
                 Arguments.of("short1!", "short1!"),
                 Arguments.of("2134", "2134"),

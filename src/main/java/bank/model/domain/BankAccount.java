@@ -1,8 +1,8 @@
 package bank.model.domain;
 
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -29,8 +29,9 @@ public class BankAccount {
     @Builder.Default
     private Double balance = 0D;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @ToString.Exclude
     private User user;
 
 }

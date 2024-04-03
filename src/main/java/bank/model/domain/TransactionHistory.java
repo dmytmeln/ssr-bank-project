@@ -1,13 +1,9 @@
 package bank.model.domain;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -26,8 +22,9 @@ public class TransactionHistory {
     @Column(name = "transaction_history_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, optional = false)
     @JoinColumn(name = "bank_account_id", nullable = false)
+    @ToString.Exclude
     private BankAccount bankAccount;
 
     @NotNull(message = "Transaction msg can't be null")
@@ -44,7 +41,6 @@ public class TransactionHistory {
     private Double moneyAmount;
 
     @Column(name = "transaction_date")
-    @NotNull
     @CreationTimestamp
     private Instant transactionDate;
 

@@ -2,10 +2,10 @@ package bank.model.repository;
 
 import bank.configuration.HibernateConfiguration;
 import bank.model.domain.User;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -31,11 +31,7 @@ public class UserDao {
             transaction = session.beginTransaction();
 
             //language=JPQL
-            String sqlGetAll =
-                    """
-                    SELECT u
-                    FROM users u;
-                    """;
+            String sqlGetAll = "SELECT u FROM users u;";
             allUsers = session.createQuery(sqlGetAll, User.class).getResultList();
 
             transaction.commit();
@@ -136,7 +132,7 @@ public class UserDao {
                     .email(user.getEmail())
                     .phoneNumber(user.getPhoneNumber())
                     .build();
-            persistentUser = session.merge(persistentUser);
+            persistentUser = (User) session.merge(persistentUser);
 
             transaction.commit();
 

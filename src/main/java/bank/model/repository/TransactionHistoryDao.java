@@ -3,10 +3,10 @@ package bank.model.repository;
 import bank.configuration.HibernateConfiguration;
 import bank.model.domain.TransactionHistory;
 import bank.model.domain.User;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -30,11 +30,7 @@ public class TransactionHistoryDao  {
             transaction = session.beginTransaction();
 
             //language=JPQL
-            String sqlGetAll =
-                    """
-                    SELECT t
-                    FROM transaction_histories t;
-                    """;
+            String sqlGetAll = "SELECT t FROM transaction_histories t";
             allTransactions = session.createQuery(sqlGetAll, TransactionHistory.class).getResultList();
 
             transaction.commit();
