@@ -16,8 +16,8 @@
 
     <!-- Home -->
     <section class="home">
-      <!--/*@thymesVar id="exception" type="javax.persistence.PersistenceException"*/-->
-      <h3 class="error_msg" th:text="${exception.getMessage()}"></h3>
+      <!--/*@thymesVar id="exception" type="java.lang.Exception"*/-->
+      <h3 class="error_msg" th:text="${exception.message}"></h3>
     </section>
 
   </body>

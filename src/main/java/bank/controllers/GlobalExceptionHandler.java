@@ -13,9 +13,9 @@ import javax.persistence.PersistenceException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({EntityNotFoundException.class, EntityExistsException.class})
+    @ExceptionHandler({EntityNotFoundException.class, EntityExistsException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleSignupLoginExceptions(PersistenceException ex) {
+    public ModelAndView handleSignupLoginExceptions(Exception ex) {
         ModelAndView model = new ModelAndView("html/error");
         model.addObject("exception", ex);
         return model;

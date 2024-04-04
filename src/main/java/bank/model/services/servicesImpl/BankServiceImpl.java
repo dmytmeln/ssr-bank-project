@@ -35,6 +35,9 @@ public class BankServiceImpl implements BankService {
     public BankAccount makeDeposit(Long accountId, Transaction transaction) {
         BankAccount bankAccount = findById(accountId);
         bankAccount.setBalance(bankAccount.getBalance() + transaction.getMoneyAmount());
+        if (transaction.getTransactionType().isBlank()) {
+            transaction.setTransactionType("Deposit");
+        }
         update(bankAccount, transaction);
 
         return bankAccount;
@@ -52,6 +55,9 @@ public class BankServiceImpl implements BankService {
         }
 
         bankAccount.setBalance(result);
+        if (transaction.getTransactionType().isBlank()) {
+            transaction.setTransactionType("Withdrawal");
+        }
         update(bankAccount, transaction);
 
         return bankAccount;

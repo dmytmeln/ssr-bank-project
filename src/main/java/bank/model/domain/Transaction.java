@@ -31,7 +31,6 @@ public class Transaction {
     private String msg;
 
     @NotNull(message = "Transaction type can't be null")
-    @NotBlank(message = "Transaction type can't be blank")
     @Column(name = "transaction_type")
     private String transactionType;
 
