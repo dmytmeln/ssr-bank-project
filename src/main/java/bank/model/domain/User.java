@@ -22,7 +22,6 @@ public class User {
     @Column(name = "user_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive(message = "Message should be greater than zero!")
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(name = "firstname")

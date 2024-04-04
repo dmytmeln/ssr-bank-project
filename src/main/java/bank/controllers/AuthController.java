@@ -44,16 +44,8 @@ public class AuthController {
 
     @PostMapping("login")
     public String loginUser(User user, HttpSession session) {
-        session.setAttribute("user", userService.login(user));
+        session.setAttribute("userId", userService.login(user).getId());
         return "redirect:/user";
-    }
-
-    @ExceptionHandler({EntityNotFoundException.class, EntityExistsException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleSignupLoginExceptions(PersistenceException ex) {
-        ModelAndView model = new ModelAndView("html/error");
-        model.addObject("exception", ex);
-        return model;
     }
 
 }

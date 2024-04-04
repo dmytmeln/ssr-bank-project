@@ -10,8 +10,8 @@ import java.io.IOException;
 public class UnauthorizedUserFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
-        if (user == null) {
+        Long userId = (Long) httpServletRequest.getSession().getAttribute("userId");
+        if (userId == null) {
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/auth");
             return;
         }
