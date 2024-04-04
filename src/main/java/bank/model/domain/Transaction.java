@@ -19,7 +19,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaction_history_id")
+    @Column(name = "transaction_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, optional = false)

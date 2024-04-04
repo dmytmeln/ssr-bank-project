@@ -19,7 +19,7 @@ public class User {
     private static final String NAME_REGEX = "^[A-Z][a-z]*(?:-[A-Z][a-z]*)*$";
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive(message = "Message should be greater than zero!")
     @Setter(AccessLevel.NONE)
@@ -52,7 +52,7 @@ public class User {
     @Pattern(regexp = "\\d{12}", message = "Phone number has to contain 12 digits")
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "user", optional = false, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private BankAccount bankAccount;
 
