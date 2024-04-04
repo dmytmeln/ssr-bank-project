@@ -30,7 +30,7 @@ public class TransactionRepositoryTests {
     void testFindTransactionHistoriesByBankAccountId() {
         Long bankAccountId = 1L;
 
-        List<Transaction> transactionHistories = transactionRepo.findTransactionHistoriesByBankAccountId(bankAccountId);
+        List<Transaction> transactionHistories = transactionRepo.findTransactionsByBankAccountId(bankAccountId);
 
         assertEquals(2, transactionHistories.size());
     }
