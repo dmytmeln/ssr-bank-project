@@ -1,7 +1,7 @@
 package bank.model.repository;
 
 import bank.model.domain.BankAccount;
-import bank.model.domain.TransactionHistory;
+import bank.model.domain.Transaction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest
-public class TransactionHistoryRepositoryTests {
+public class TransactionRepositoryTests {
 
-    private TransactionHistoryRepository transactionRepo;
+    private TransactionRepository transactionRepo;
 
     @Autowired
-    public TransactionHistoryRepositoryTests(TransactionHistoryRepository transactionRepo) {
+    public TransactionRepositoryTests(TransactionRepository transactionRepo) {
         this.transactionRepo = transactionRepo;
     }
 
@@ -30,22 +30,22 @@ public class TransactionHistoryRepositoryTests {
     void testFindTransactionHistoriesByBankAccountId() {
         Long bankAccountId = 1L;
 
-        List<TransactionHistory> transactionHistories = transactionRepo.findTransactionHistoriesByBankAccountId(bankAccountId);
+        List<Transaction> transactionHistories = transactionRepo.findTransactionHistoriesByBankAccountId(bankAccountId);
 
         assertEquals(2, transactionHistories.size());
     }
 
     @Test
     void testSaveAndFindTransactionHistory() {
-        TransactionHistory transactionHistory = TransactionHistory.builder()
+        Transaction transaction = Transaction.builder()
                 .msg("Test message")
                 .moneyAmount(500.0)
                 .bankAccount(BankAccount.builder().id(1L).build())
                 .transactionType("Test type")
                 .build();
 
-        TransactionHistory savedTransactionHistory = transactionRepo.save(transactionHistory);
-        Optional<TransactionHistory> foundTransactionHistory = transactionRepo.findById(savedTransactionHistory.getId());
+        Transaction savedTransaction = transactionRepo.save(transaction);
+        Optional<Transaction> foundTransactionHistory = transactionRepo.findById(savedTransaction.getId());
 
         assertTrue(foundTransactionHistory.isPresent());
         assertEquals("Test message", foundTransactionHistory.get().getMsg());
@@ -66,13 +66,13 @@ public class TransactionHistoryRepositoryTests {
     @Test
     void updateTransactionHistory() {
         double moneyAmount = 10000.0;
-        TransactionHistory transactionHistory = transactionRepo.findById(1L).get();
-        transactionHistory = transactionHistory.toBuilder()
+        Transaction transaction = transactionRepo.findById(1L).get();
+        transaction = transaction.toBuilder()
                 .moneyAmount(moneyAmount)
                 .build();
 
-        TransactionHistory savedTransactionHistory = transactionRepo.save(transactionHistory);
-        Optional<TransactionHistory> foundTransactionHistory = transactionRepo.findById(savedTransactionHistory.getId());
+        Transaction savedTransaction = transactionRepo.save(transaction);
+        Optional<Transaction> foundTransactionHistory = transactionRepo.findById(savedTransaction.getId());
 
         assertTrue(foundTransactionHistory.isPresent());
         assertEquals(moneyAmount, foundTransactionHistory.get().getMoneyAmount());

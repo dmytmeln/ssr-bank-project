@@ -1,7 +1,7 @@
 package bank;
 
 import bank.model.repository.AccountRepository;
-import bank.model.repository.TransactionHistoryRepository;
+import bank.model.repository.TransactionRepository;
 import bank.model.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.LifecycleException;
@@ -17,7 +17,7 @@ public class BankApplication implements CommandLineRunner {
 
     AccountRepository accountRepository;
 
-    TransactionHistoryRepository transactionRepo;
+    TransactionRepository transactionRepo;
 
     public static void main(String[] args) throws LifecycleException {
 
