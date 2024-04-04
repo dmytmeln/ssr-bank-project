@@ -36,11 +36,11 @@
 //            List<TransactionHistory> transactions = transactionService.getTransactionsByUserId(userId);
 //
 //            req.setAttribute("transactions", transactions);
-//            req.getRequestDispatcher("/WEB-INF/html/transactions.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/transactions.html").forward(req, resp);
 //
 //        } catch (NotFound e) {
 //            req.setAttribute("errorMsg", "Account haven't been found");
-//            req.getRequestDispatcher("/WEB-INF/html/auth.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/auth.html").forward(req, resp);
 //        }
 //
 //    }

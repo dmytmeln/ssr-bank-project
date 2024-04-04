@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!-- Coding by CodingLab || www.codinglabweb.com -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -10,13 +9,13 @@
     <!-- Unicons -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
     <style>
-      <%@include file="css/style.css"%>
+      <%@include file="WEB-INF/css/style.css"%>
     </style>
   </head>
   <body>
 
     <!-- Header -->
-    <%@include file="html/header.jsp"%>
+    <%@include file="WEB-INF/html/header.jsp"%>
 
     <!-- Home -->
     <section class="home">

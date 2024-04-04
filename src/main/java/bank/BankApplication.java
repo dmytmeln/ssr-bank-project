@@ -28,13 +28,15 @@ public class BankApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println(userRepo.findById(1L).get());
+//        System.out.println(userRepo.findById(1L).get());
 
-        System.out.println(accountRepository.findById(1L).get());
-
-        System.out.println(transactionRepo.findTransactionHistoriesByBankAccountId(1L));
-
-        System.out.println(transactionRepo.findById(1L).get());
+//        System.out.println(userRepo.findUserByEmailOrPhoneNumberAndPassword("dimamel28@gmail.com", "380984035791", "Mdm281004"));
+//
+//        System.out.println(accountRepository.findById(1L).get());
+//
+//        System.out.println(transactionRepo.findTransactionHistoriesByBankAccountId(1L));
+//
+//        System.out.println(transactionRepo.findById(1L).get());
 
     }
 

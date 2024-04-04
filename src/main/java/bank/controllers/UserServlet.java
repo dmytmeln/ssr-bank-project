@@ -43,11 +43,11 @@
 //            this.user = userService.find(userId);
 //
 //            req.setAttribute("user", this.user);
-//            req.getRequestDispatcher("/WEB-INF/html/user.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/user.html").forward(req, resp);
 //
 //        } catch (UserNotFound e) {
 //            req.setAttribute("errorMsg", "Account haven't been found");
-//            req.getRequestDispatcher("/WEB-INF/html/auth.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/auth.html").forward(req, resp);
 //        }
 //
 //    }
@@ -65,12 +65,12 @@
 //            resp.setStatus(HttpServletResponse.SC_CONFLICT);
 //            req.setAttribute("user", this.user);
 //            req.setAttribute("errorMsg", e.getMessage());
-//            req.getRequestDispatcher("/WEB-INF/html/user.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/user.html").forward(req, resp);
 //        } catch (UserNotFound e) {
 //            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
 //
 //            req.setAttribute("errorMsg", e.getMessage());
-//            req.getRequestDispatcher("/WEB-INF/html/auth.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/auth.html").forward(req, resp);
 //        }
 //
 //    }

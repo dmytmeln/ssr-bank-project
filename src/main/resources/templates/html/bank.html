@@ -1,0 +1,83 @@
+<%@ page import="bank.model.domain.BankAccount" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    BankAccount account = (BankAccount) request.getAttribute("bank");
+    Long bankId = account.getId();
+    String errorMsg = (String) request.getAttribute("errorMsg");
+%>
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Unicons -->
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+        <title>Bank</title>
+        <style>
+            <%@include file="../css/style.css"%>
+
+            .form_container.deposit {
+                left: 20%;
+            }
+
+            .form_container.withdrawal {
+                left: 80%;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- Header -->
+        <%@include file="header.html"%>
+
+        <!-- Home -->
+        <section class="home">
+
+            <h1 class="msg">Your balance is: <%=account.getBalance()%></h1>
+
+            <p class="error_msg"><%=errorMsg == null ? "" : errorMsg%></p>
+
+            <div class="form_container deposit">
+                <!-- Deposit -->
+                <div class="form">
+                    <form method="post" action="/bank/deposit?id=<%=bankId%>">
+                        <h2>Make Deposit</h2>
+
+                        <div class="input_box">
+                            <input type="number" name="money_amount" placeholder="Enter amount of money"/>
+                        </div>
+
+                        <div class="input_box">
+                            <input type="text" name="transaction_msg" placeholder="Enter message"/>
+                        </div>
+
+                        <button class="button">Make deposit</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="form_container withdrawal">
+                <div class="form">
+                    <form method="post" action="/bank/withdrawal?id=<%=bankId%>">
+                        <h2>Make Withdrawal</h2>
+
+                        <div class="input_box">
+                            <input type="number" name="money_amount" placeholder="Enter amount of money"/>
+                        </div>
+
+                        <div class="input_box">
+                            <input type="text" name="transaction_msg" placeholder="Enter message"/>
+                        </div>
+
+                        <button class="button">Make withdrawal</button>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+
+    </body>
+</html>

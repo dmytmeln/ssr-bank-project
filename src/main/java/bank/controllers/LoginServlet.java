@@ -47,7 +47,7 @@
 //        } catch (UserNotFound e) {
 //            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
 //            req.setAttribute("errorMsg", e.getMessage());
-//            req.getRequestDispatcher("/WEB-INF/html/auth.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/auth.html").forward(req, resp);
 //        }
 //
 //    }

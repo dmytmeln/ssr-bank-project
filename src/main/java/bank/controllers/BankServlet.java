@@ -36,12 +36,12 @@
 //
 //            BankAccount account = bankService.findBankAccountByUserId(userId);
 //            req.setAttribute("bank", account);
-//            req.getRequestDispatcher("/WEB-INF/html/bank.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/bank.html").forward(req, resp);
 //
 //        } catch (RuntimeException e) {
 //            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
 //            req.setAttribute("errorMsg", "Account haven't been found");
-//            req.getRequestDispatcher("/WEB-INF/html/auth.jsp").forward(req, resp);
+//            req.getRequestDispatcher("/WEB-INF/html/auth.html").forward(req, resp);
 //        }
 //
 //    }
