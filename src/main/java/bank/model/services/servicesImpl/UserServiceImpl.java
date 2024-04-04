@@ -1,6 +1,5 @@
 package bank.model.services.servicesImpl;
 
-import bank.model.domain.BankAccount;
 import bank.model.domain.User;
 import bank.model.repository.AccountRepository;
 import bank.model.repository.UserRepository;
