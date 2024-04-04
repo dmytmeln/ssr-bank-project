@@ -22,7 +22,7 @@ public class BankAccount {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount")
     @ToString.Exclude
-    private List<TransactionHistory> transactions;
+    private List<Transaction> transactions;
 
     @NotNull
     @PositiveOrZero

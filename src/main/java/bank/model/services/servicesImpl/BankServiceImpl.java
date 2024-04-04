@@ -1,0 +1,79 @@
+package bank.model.services.servicesImpl;
+
+import bank.model.domain.BankAccount;
+import bank.model.domain.Transaction;
+import bank.model.repository.AccountRepository;
+import bank.model.repository.TransactionRepository;
+import bank.model.services.BankService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+
+@Service
+public class BankServiceImpl implements BankService {
+
+    private AccountRepository accountRepo;
+    private TransactionRepository transactionRepo;
+
+    @Autowired
+    public BankServiceImpl(AccountRepository accountRepo, TransactionRepository transactionRepo) {
+        this.accountRepo = accountRepo;
+        this.transactionRepo = transactionRepo;
+    }
+
+    @Override
+    public BankAccount findById(Long accountId) {
+        return accountRepo.findById(accountId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        String.format("Account with id: %d not found!", accountId)
+                )
+        );
+    }
+
+    @Override
+    public BankAccount makeDeposit(Long accountId, Transaction transaction) {
+        BankAccount bankAccount = findById(accountId);
+        bankAccount.setBalance(bankAccount.getBalance() + transaction.getMoneyAmount());
+        update(bankAccount, transaction);
+
+        return bankAccount;
+    }
+
+    @Override
+    public BankAccount makeWithdrawal(Long accountId, Transaction transaction) {
+        BankAccount bankAccount = findById(accountId);
+
+        double balance = bankAccount.getBalance();
+        Double moneyAmount = transaction.getMoneyAmount();
+        double result = balance - moneyAmount;
+        if (result < 0) {
+            throw new IllegalArgumentException("You don't have enough money to withdraw " + moneyAmount);
+        }
+
+        bankAccount.setBalance(result);
+        update(bankAccount, transaction);
+
+        return bankAccount;
+    }
+
+    private void update(BankAccount bankAccount, Transaction transaction) {
+        transaction.setBankAccount(bankAccount);
+        if (transaction.getMsg().isBlank()) {
+            transaction.setMsg("Standard Transaction Message");
+        }
+
+        accountRepo.save(bankAccount);
+        transactionRepo.save(transaction);
+    }
+
+    @Override
+    public BankAccount findBankAccountByUserId(Long userId) {
+        return accountRepo.findBankAccountByUserId(userId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        String.format("Bank Account with user id: %d not found!", userId)
+                )
+        );
+    }
+
+}

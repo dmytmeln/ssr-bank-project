@@ -14,8 +14,8 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "transaction_histories")
-public class TransactionHistory {
+@Table(name = "transactions")
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class TransactionHistory {
 
     @NotNull(message = "Amount of money can't be null")
     @Column(name = "money_amount")
-    @Positive
+    @Positive(message = "Amount of money have to be bigger than zero")
     private Double moneyAmount;
 
     @Column(name = "transaction_date")
