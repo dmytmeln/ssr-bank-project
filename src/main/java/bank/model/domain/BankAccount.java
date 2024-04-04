@@ -17,7 +17,7 @@ public class BankAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bank_account_id")
+    @Column(name = "bank_account_id", nullable = false)
     private Long id;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount")
@@ -29,8 +29,8 @@ public class BankAccount {
     @Builder.Default
     private Double balance = 0D;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, optional = false)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @OneToOne(cascade = CascadeType.REMOVE, optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, unique = true)
     @ToString.Exclude
     private User user;
 
