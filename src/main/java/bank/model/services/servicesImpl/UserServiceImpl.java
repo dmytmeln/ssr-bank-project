@@ -1,15 +1,16 @@
 package bank.model.services.servicesImpl;
 
+import bank.model.domain.BankAccount;
 import bank.model.domain.User;
 import bank.model.repository.AccountRepository;
 import bank.model.repository.UserRepository;
 import bank.model.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.util.Objects;
 
 @Service
@@ -45,7 +46,14 @@ public class UserServiceImpl implements UserService {
             );
         }
 
-        return userRepo.save(user);
+        User savedUser = userRepo.save(user);
+
+        BankAccount bankAccount = BankAccount.builder()
+                .user(savedUser)
+                .build();
+        savedUser.setBankAccount(accountRepo.save(bankAccount));
+
+        return savedUser;
 
     }
 
