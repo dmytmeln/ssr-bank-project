@@ -37,7 +37,7 @@ public class Transaction {
 
     @NotNull(message = "Amount of money can't be null")
     @Column(name = "money_amount")
-    @Positive
+    @Positive(message = "Amount of money have to be bigger than zero")
     private Double moneyAmount;
 
     @Column(name = "transaction_date")
