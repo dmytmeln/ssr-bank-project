@@ -59,19 +59,18 @@
 
                         <div class="input_box">
                             <input type="email" name="email" placeholder="Enter your email" required th:field="*{email}"/>
-                            <p class="invalid_field" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</p>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</small>
                             <i class="uil uil-envelope-alt email"></i>
                         </div>
 
                         <div class="input_box">
                             <input type="text" name="firstname" placeholder="Enter your firstname" required th:field="*{firstName}"/>
-                            <p class="invalid_field" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name error</p>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name error</small>
                         </div>
 
                         <div class="input_box">
                             <input type="text" name="lastname" placeholder="Enter your lastname" required th:field="*{lastName}"/>
-                            <p class="invalid_field" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name error</p>
-
+                            <small class="invalid_field" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name error</small>
                         </div>
 
                         <div class="input_box">
@@ -79,12 +78,12 @@
                                    th:field="*{password}"/>
                             <i class="uil uil-lock password"></i>
                             <i class="uil uil-eye-slash pw_hide" id="signup_hide"></i>
-                            <p class="invalid_field" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</p>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</small>
                         </div>
 
                         <div class="input_box">
                             <input type="tel" name="phone_number" placeholder="Enter your phone number" required th:field="*{phoneNumber}"/>
-                            <p class="invalid_field" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Phone number error</p>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Phone number error</small>
                         </div>
 
                         <button class="button">Signup Now</button>
