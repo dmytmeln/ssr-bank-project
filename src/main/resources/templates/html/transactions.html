@@ -1,10 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
-<%String msg = (String) request.getAttribute("msg");%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:temporals="http://www.thymeleaf.org/extras/thymeleaf-temporals">
 
     <head>
         <meta charset="UTF-8" />
@@ -12,21 +8,17 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <!-- Unicons -->
             <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
-            <style>
-                <%@include file="../css/style.css"%>
-            </style>
+            <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
         <title>Transactions</title>
     </head>
 
     <body>
 
-    <!-- Header -->
-    <%@include file="header.html"%>
+        <!-- Header -->
+        <div th:replace="html/header :: header"></div>
 
         <!-- Home -->
         <section class="home">
-
-            <h1 class="msg"><%=msg == null ? "" : msg%></h1>
 
             <table>
                 <thead>
@@ -36,14 +28,12 @@
                     <th>Transaction Date</th>
                 </thead>
                 <tbody>
-                <c:forEach var="transaction" items="${transactions}">
-                    <tr>
-                        <td>${transaction.msg}</td>
-                        <td>${transaction.moneyAmount}</td>
-                        <td>${transaction.transactionType}</td>
-                        <td>${transaction.transactionDate.format(DateTimeFormatter.ISO_LOCAL_DATE)}</td>
+                    <tr th:each="transaction: ${transactions}">
+                        <td th:text="${transaction.msg}"></td>
+                        <td th:text="${transaction.moneyAmount}"></td>
+                        <td th:text="${transaction.transactionType}"></td>
+                        <td th:text="${#temporals.format(transaction.transactionDate, 'dd LLLL yyyy HH:mm')}"></td>
                     </tr>
-                </c:forEach>
                 </tbody>
             </table>
 

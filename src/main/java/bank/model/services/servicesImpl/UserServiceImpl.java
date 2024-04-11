@@ -63,8 +63,8 @@ public class UserServiceImpl implements UserService {
         String password = user.getPassword();
         return userRepo.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password).orElseThrow(
                 () -> new EntityNotFoundException(
-                        String.format("User with email: [%s], phone number: [%s] and password: [%s] not found!",
-                                email, phoneNumber, password)
+                        "User with email: [%s], phone number: [%s] and password: [%s] not found!"
+                                .formatted(email, phoneNumber, password)
                 )
         );
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
             if (userRepo.existsByEmailAndPhoneNumber(email, phoneNumber)) {
                 throw new EntityExistsException(
-                        String.format("User with email: [%s] and phone number: [%s] already exists!", email, phoneNumber)
+                        "User with email [%s] and phone number [%s] already exists!".formatted(email, phoneNumber)
                 );
             }
 
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
             if (userRepo.existsByEmail(email)) {
                 throw new EntityExistsException(
-                        String.format("User with email: [%s] already exists!", email)
+                       "User with email [%s] already exists!".formatted(email)
                 );
             }
 
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
             if (userRepo.existsByPhoneNumber(phoneNumber)) {
                 throw new EntityExistsException(
-                        String.format("User with phone number: [%s] already exists!", phoneNumber)
+                        "User with phone number [%s] already exists!".formatted(phoneNumber)
                 );
             }
 
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
     public void delete(long userId) {
         if (!userRepo.existsById(userId)) {
             throw new EntityNotFoundException(
-                    String.format("User with  userId: %d not found", userId)
+                    "User with  userId [%d] not found".formatted(userId)
             );
         }
 
