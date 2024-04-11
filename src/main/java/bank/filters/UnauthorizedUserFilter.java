@@ -2,9 +2,9 @@ package bank.filters;
 
 import bank.model.domain.User;
 import org.springframework.web.filter.OncePerRequestFilter;
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UnauthorizedUserFilter extends OncePerRequestFilter {
