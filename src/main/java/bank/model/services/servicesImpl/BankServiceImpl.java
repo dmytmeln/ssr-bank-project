@@ -5,22 +5,18 @@ import bank.model.domain.Transaction;
 import bank.model.repository.AccountRepository;
 import bank.model.repository.TransactionRepository;
 import bank.model.services.BankService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class BankServiceImpl implements BankService {
 
-    private AccountRepository accountRepo;
-    private TransactionRepository transactionRepo;
-
-    @Autowired
-    public BankServiceImpl(AccountRepository accountRepo, TransactionRepository transactionRepo) {
-        this.accountRepo = accountRepo;
-        this.transactionRepo = transactionRepo;
-    }
+    private final AccountRepository accountRepo;
+    private final TransactionRepository transactionRepo;
 
     @Override
     public BankAccount findById(Long accountId) {

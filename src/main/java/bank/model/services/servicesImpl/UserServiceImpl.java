@@ -5,24 +5,21 @@ import bank.model.domain.User;
 import bank.model.repository.AccountRepository;
 import bank.model.repository.UserRepository;
 import bank.model.services.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Objects;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    UserRepository userRepo;
-    AccountRepository accountRepo;
-    @Autowired
-    public UserServiceImpl(UserRepository userRepo, AccountRepository accountRepo) {
-        this.userRepo = userRepo;
-        this.accountRepo = accountRepo;
-    }
+    private final UserRepository userRepo;
+    private final AccountRepository accountRepo;
 
     @Override
     @Transactional
