@@ -2,13 +2,16 @@ package bank.controllers;
 
 import bank.model.domain.User;
 import bank.model.services.servicesImpl.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,16 +19,12 @@ import java.time.format.DateTimeFormatter;
 
 @Controller("UserController")
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    private UserServiceImpl userService;
+    private final UserServiceImpl userService;
 
     private String formattedDateTime;
-
-    @Autowired
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public String showUser(@SessionAttribute Long userId, Model model) {
@@ -44,9 +43,11 @@ public class UserController {
             Model model,
             @PathVariable Long userId,
             @ModelAttribute("user") @Valid User user,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            HttpSession session
     ) {
         model.addAttribute("formattedDate", formattedDateTime);
+        session.setAttribute("userId", userId);
         user.setId(userId);
         if (bindingResult.hasErrors()) {
             return "html/user";
