@@ -14,9 +14,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({EntityNotFoundException.class, EntityExistsException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleSignupLoginExceptions(Exception ex) {
+    public ModelAndView handleSignupLoginExceptions(Exception exception) {
         ModelAndView model = new ModelAndView("html/error");
-        model.addObject("exception", ex);
+        model.addObject("message", exception.getMessage());
         return model;
     }
 

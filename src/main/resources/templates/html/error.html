@@ -12,12 +12,11 @@
 
   <body>
     <!-- Header -->
-    <div th:replace="html/header :: header"></div>
+    <div th:replace="~{html/header ::header}"></div>
 
     <!-- Home -->
     <section class="home">
-      <!--/*@thymesVar id="exception" type="java.lang.Exception"*/-->
-      <h3 class="error_msg" th:text="${exception.message}"></h3>
+      <h3 class="error_msg" th:text="${message}"></h3>
     </section>
 
   </body>
