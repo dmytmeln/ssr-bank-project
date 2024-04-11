@@ -5,22 +5,18 @@ import bank.model.domain.Transaction;
 import bank.model.repository.AccountRepository;
 import bank.model.repository.TransactionRepository;
 import bank.model.services.BankService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class BankServiceImpl implements BankService {
 
-    private AccountRepository accountRepo;
-    private TransactionRepository transactionRepo;
-
-    @Autowired
-    public BankServiceImpl(AccountRepository accountRepo, TransactionRepository transactionRepo) {
-        this.accountRepo = accountRepo;
-        this.transactionRepo = transactionRepo;
-    }
+    private final AccountRepository accountRepo;
+    private final TransactionRepository transactionRepo;
 
     @Override
     public BankAccount findById(Long accountId) {
@@ -35,6 +31,9 @@ public class BankServiceImpl implements BankService {
     public BankAccount makeDeposit(Long accountId, Transaction transaction) {
         BankAccount bankAccount = findById(accountId);
         bankAccount.setBalance(bankAccount.getBalance() + transaction.getMoneyAmount());
+        if (transaction.getTransactionType().isBlank()) {
+            transaction.setTransactionType("Deposit");
+        }
         update(bankAccount, transaction);
 
         return bankAccount;
@@ -52,6 +51,9 @@ public class BankServiceImpl implements BankService {
         }
 
         bankAccount.setBalance(result);
+        if (transaction.getTransactionType().isBlank()) {
+            transaction.setTransactionType("Withdrawal");
+        }
         update(bankAccount, transaction);
 
         return bankAccount;

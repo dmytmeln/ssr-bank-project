@@ -1,10 +1,10 @@
 package bank.model.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.time.Instant;
 
 @Data
@@ -22,7 +22,6 @@ public class User {
     @Column(name = "user_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive(message = "Message should be greater than zero!")
-    @Setter(AccessLevel.NONE)
     private Long id;
 
     @Column(name = "firstname")
