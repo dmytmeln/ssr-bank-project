@@ -32,10 +32,8 @@ public class UserController {
     public String updateUser(
             @PathVariable Long userId,
             @ModelAttribute("user") @Valid User user,
-            BindingResult bindingResult,
-            HttpSession session
+            BindingResult bindingResult
     ) {
-        session.setAttribute("userId", userId);
         user.setId(userId);
         if (bindingResult.hasErrors()) {
             return USER_PAGE;
