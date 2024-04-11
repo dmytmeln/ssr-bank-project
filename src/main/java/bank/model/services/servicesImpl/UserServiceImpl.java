@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public User findById(Long userId) {
         return userRepo.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException(
-                        String.format("User with  id: %d not found", userId)
+                        "User with  id: %d not found".formatted(userId)
                 )
         );
     }
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         String phoneNumber = user.getPhoneNumber();
         if (userRepo.existsByEmailOrPhoneNumber(email, phoneNumber)) {
             throw new EntityExistsException(
-                    String.format("User with email: [%s] or phone number: [%s] already exists!", email, phoneNumber)
+                    "User with email: [%s] or phone number: [%s] already exists!".formatted(email, phoneNumber)
             );
         }
 
