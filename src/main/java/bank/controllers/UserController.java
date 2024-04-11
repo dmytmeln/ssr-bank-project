@@ -1,10 +1,8 @@
 package bank.controllers;
 
 import bank.model.domain.User;
-import bank.model.services.servicesImpl.UserServiceImpl;
+import bank.model.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final String USER_PAGE = "html/user";
 
     private String formattedDateTime;
