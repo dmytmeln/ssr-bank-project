@@ -59,8 +59,8 @@
                     <br>
 
                     <label class="edit_label" for="creation_date"><h4 class="user_name">Creation date: </h4></label>
-                    <!--/*@thymesVar id="formattedDate" type="java.lang.String"*/-->
-                    <input class="edit_input" disabled id="creation_date" name="creation_date" type="text" th:value="${formattedDate}">
+                    <input class="edit_input" disabled id="creation_date" name="creation_date" type="text"
+                           th:value="${#temporals.format(user.creationDate, 'dd LLLL yyyy HH:mm')}">
                     <input type="hidden" th:field="*{creationDate}">
                     <br>
 
