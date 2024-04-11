@@ -24,7 +24,7 @@ public class BankAccount {
     @ToString.Exclude
     private List<Transaction> transactions;
 
-    @NotNull
+    @NotNull(message = "Balance can't be null")
     @PositiveOrZero
     @Builder.Default
     private Double balance = 0D;
