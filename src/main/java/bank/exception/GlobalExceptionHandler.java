@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handleSignupLoginExceptions(Exception exception) {
         ModelAndView model = new ModelAndView("html/error");
-        model.addObject("exception", exception);
+        model.addObject("message", exception.getMessage());
         return model;
     }
 
