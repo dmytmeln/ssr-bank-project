@@ -17,16 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
 
     private final UserServiceImpl userService;
+    private final String AUTH_PAGE = "html/auth";
 
     @GetMapping
     public String showAuth(User user) {
-        return "html/auth";
+        return AUTH_PAGE;
     }
 
     @PostMapping("signup")
     public String signupUser(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "html/auth";
+            return AUTH_PAGE;
         }
 
         userService.signup(user);

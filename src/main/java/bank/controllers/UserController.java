@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 public class UserController {
 
     private final UserServiceImpl userService;
+    private final String USER_PAGE = "html/user";
 
     private String formattedDateTime;
 
@@ -35,7 +36,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("formattedDate", formattedDateTime);
 
-        return "html/user";
+        return USER_PAGE;
     }
 
     @PostMapping("update/{userId}")
@@ -50,7 +51,7 @@ public class UserController {
         session.setAttribute("userId", userId);
         user.setId(userId);
         if (bindingResult.hasErrors()) {
-            return "html/user";
+            return USER_PAGE;
         }
 
         userService.update(user);

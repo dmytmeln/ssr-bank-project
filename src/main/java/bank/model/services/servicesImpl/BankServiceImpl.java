@@ -5,11 +5,9 @@ import bank.model.domain.Transaction;
 import bank.model.repository.AccountRepository;
 import bank.model.repository.TransactionRepository;
 import bank.model.services.BankService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +20,7 @@ public class BankServiceImpl implements BankService {
     public BankAccount findById(Long accountId) {
         return accountRepo.findById(accountId).orElseThrow(
                 () -> new EntityNotFoundException(
-                        "Account with id: %d not found!".formatted(accountId)
+                        "Account with id [%d] not found!".formatted(accountId)
                 )
         );
     }
@@ -73,7 +71,7 @@ public class BankServiceImpl implements BankService {
     public BankAccount findBankAccountByUserId(Long userId) {
         return accountRepo.findBankAccountByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(
-                        "Bank Account with user id: %d not found!".formatted(userId)
+                        "Bank Account with user id [%d] not found!".formatted(userId)
                 )
         );
     }
