@@ -22,7 +22,7 @@ public class BankServiceImpl implements BankService {
     public BankAccount findById(Long accountId) {
         return accountRepo.findById(accountId).orElseThrow(
                 () -> new EntityNotFoundException(
-                        String.format("Account with id: %d not found!", accountId)
+                        "Account with id: %d not found!".formatted(accountId)
                 )
         );
     }
@@ -73,7 +73,7 @@ public class BankServiceImpl implements BankService {
     public BankAccount findBankAccountByUserId(Long userId) {
         return accountRepo.findBankAccountByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(
-                        String.format("Bank Account with user id: %d not found!", userId)
+                        "Bank Account with user id: %d not found!".formatted(userId)
                 )
         );
     }
