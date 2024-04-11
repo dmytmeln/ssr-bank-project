@@ -65,7 +65,7 @@
                     <br>
 
                     <button class="button" type="submit">Submit changes</button>
-                    <button class="button" type="reset">Reset changes</button>
+                    <a class="button" th:href="@{/user}">Reset changes</a>
 
                     <ul style="color: red; margin-top: 20px;">
                         <div th:if="${#fields.hasErrors('all')}">
