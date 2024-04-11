@@ -2,29 +2,21 @@ package bank.controllers;
 
 import bank.model.domain.User;
 import bank.model.services.servicesImpl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PersistenceException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    private UserServiceImpl userService;
-    @Autowired
-    public AuthController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+    private final UserServiceImpl userService;
 
     @GetMapping
     public String showAuth(User user) {

@@ -3,7 +3,7 @@ package bank.controllers;
 import bank.model.domain.BankAccount;
 import bank.model.domain.Transaction;
 import bank.model.services.servicesImpl.BankServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,13 +13,10 @@ import jakarta.validation.Valid;
 
 @Controller("BankController")
 @RequestMapping("/bank")
+@RequiredArgsConstructor
 public class BankController {
 
-    private BankServiceImpl bankService;
-    @Autowired
-    public BankController(BankServiceImpl bankService) {
-        this.bankService = bankService;
-    }
+    private final BankServiceImpl bankService;
 
     @GetMapping
     public String showBank(@SessionAttribute Long userId, Model model, Transaction transaction) {
