@@ -1,60 +1,32 @@
-//package bank.model.services;
-//
-//import bank.exceptions.NotFound;
-//import bank.exceptions.TransactionNotFound;
-//import bank.model.domain.AccountTransactions;
-//import bank.model.domain.BankAccount;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@Service
-//@Qualifier("TransactionService")
-//public class TransactionService {
-//
-//    private final BankAccountRepository accountRepo;
-//
-//    private final TransactionHistoryRepository transactionRepo;
-//
-//    private final AccountTransactionRepository accountTransactionRepo;
-//
-//    @Autowired
-//    public TransactionService(
-//            @Qualifier("BankAccountDao") BankAccountRepository accountRepo,
-//            @Qualifier("TransactionHistoryDao") TransactionHistoryRepository transactionRepo,
-//            @Qualifier("AccountTransactionRepositoryImpl") AccountTransactionRepository accountTransactionRepo
-//    ) {
-//        this.accountRepo = accountRepo;
-//        this.transactionRepo = transactionRepo;
-//        this.accountTransactionRepo = accountTransactionRepo;
-//    }
-//
-//    public List<TransactionHistory> getTransactionsByUserId(Long userId) throws NotFound {
-//
-//        BankAccount bankAccount = accountRepo.find(BankAccount.builder().userId(userId).build());
-//
-//        List<AccountTransactions> accountTransactions = accountTransactionRepo.findByAccountId(bankAccount.getId());
-//
-//        return accountTransactions.stream()
-//                .reduce(new ArrayList<>(),
-//                        this::addTransactionToList,
-//                        (list1, list2) -> {
-//                            list1.addAll(list2);
-//                            return list1;
-//                        });
-//
-//    }
-//
-//    private List<TransactionHistory> addTransactionToList(List<TransactionHistory> list, AccountTransactions transaction) {
-//        try {
-//            list.add(transactionRepo.findById(transaction.getTransactionId()));
-//            return list;
-//        } catch (TransactionNotFound e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//}
+package bank.model.services.servicesImpl;
+
+import bank.model.domain.BankAccount;
+import bank.model.domain.Transaction;
+import bank.model.repository.TransactionRepository;
+import bank.model.services.BankService;
+import bank.model.services.TransactionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class TransactionServiceImpl implements TransactionService {
+
+    private final TransactionRepository transactionRepo;
+    private final BankService bankService;
+
+    @Override
+    public List<Transaction> getBankAccountTransactions(Long bankAccountId) {
+        bankService.findById(bankAccountId);
+        return transactionRepo.findTransactionsByBankAccountId(bankAccountId);
+    }
+
+    @Override
+    public List<Transaction> getBankAccountTransactionsByUserId(Long userId) {
+        BankAccount bankAccount = bankService.findBankAccountByUserId(userId);
+        return getBankAccountTransactions(bankAccount.getId());
+    }
+
+}
