@@ -22,7 +22,7 @@ public class Transaction {
     @Column(name = "transaction_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "bank_account_id", nullable = false)
     @ToString.Exclude
     private BankAccount bankAccount;

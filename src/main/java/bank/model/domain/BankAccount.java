@@ -20,7 +20,7 @@ public class BankAccount {
     @Column(name = "bank_account_id", nullable = false)
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Transaction> transactions;
 

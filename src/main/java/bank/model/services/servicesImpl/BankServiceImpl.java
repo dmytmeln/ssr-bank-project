@@ -3,20 +3,20 @@ package bank.model.services.servicesImpl;
 import bank.model.domain.BankAccount;
 import bank.model.domain.Transaction;
 import bank.model.repository.AccountRepository;
-import bank.model.repository.TransactionRepository;
 import bank.model.services.BankService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class BankServiceImpl implements BankService {
 
     private final AccountRepository accountRepo;
-    private final TransactionRepository transactionRepo;
 
     @Override
+    @Transactional
     public BankAccount findById(Long accountId) {
         return accountRepo.findById(accountId).orElseThrow(
                 () -> new EntityNotFoundException(
@@ -26,6 +26,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
+    @Transactional
     public BankAccount makeDeposit(Long accountId, Transaction transaction) {
         BankAccount bankAccount = findById(accountId);
         bankAccount.setBalance(bankAccount.getBalance() + transaction.getMoneyAmount());
@@ -38,6 +39,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
+    @Transactional
     public BankAccount makeWithdrawal(Long accountId, Transaction transaction) {
         BankAccount bankAccount = findById(accountId);
 
@@ -52,22 +54,22 @@ public class BankServiceImpl implements BankService {
         if (transaction.getTransactionType().isBlank()) {
             transaction.setTransactionType("Withdrawal");
         }
-        update(bankAccount, transaction);
-
-        return bankAccount;
+        return update(bankAccount, transaction);
     }
 
-    private void update(BankAccount bankAccount, Transaction transaction) {
+    private BankAccount update(BankAccount bankAccount, Transaction transaction) {
         transaction.setBankAccount(bankAccount);
         if (transaction.getMsg().isBlank()) {
             transaction.setMsg("Standard Transaction Message");
         }
 
-        accountRepo.save(bankAccount);
-        transactionRepo.save(transaction);
+        bankAccount.getTransactions().add(transaction);
+
+        return accountRepo.save(bankAccount);
     }
 
     @Override
+    @Transactional
     public BankAccount findBankAccountByUserId(Long userId) {
         return accountRepo.findBankAccountByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(
