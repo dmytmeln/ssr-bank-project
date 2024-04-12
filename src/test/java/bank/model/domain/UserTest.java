@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -16,10 +15,11 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 public class UserTest {
 
     private User validUser;
+
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @BeforeEach
     void init() {
@@ -35,8 +35,6 @@ public class UserTest {
 
     @Test
     void checkValidUser() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
@@ -47,8 +45,6 @@ public class UserTest {
     void userWithInvalidEmail(String input, String errorValue) {
         validUser.setEmail(input);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
@@ -56,7 +52,7 @@ public class UserTest {
 
     private static Stream<Arguments> provideInvalidEmailUser() {
         return Stream.of(
-                Arguments.of("invalidEmail", "invalidEmail"),
+                Arguments.of("invalid", "invalid"),
                 Arguments.of("email@", "email@"),
                 Arguments.of("email@.", "email@."),
                 Arguments.of("email@.com", "email@.com"),
@@ -76,8 +72,6 @@ public class UserTest {
     void userWithValidEmail(String input) {
         validUser.setEmail(input);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
@@ -98,8 +92,6 @@ public class UserTest {
     void UserWithValidFirstName(String input) {
         validUser.setLastName(input);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
@@ -118,8 +110,6 @@ public class UserTest {
     void userWithInvalidFirstName(String input, String errorValue) {
         validUser.setFirstName(input);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
@@ -141,8 +131,6 @@ public class UserTest {
     void userWithInvalidLastName(String input) {
         validUser.setLastName(input);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
@@ -161,8 +149,6 @@ public class UserTest {
     void userWithInvalidLastName(String input, String errorValue) {
         validUser.setLastName(input);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
@@ -184,8 +170,6 @@ public class UserTest {
     void userWithValidPass(String password) {
         validUser.setPassword(password);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
@@ -204,8 +188,6 @@ public class UserTest {
     void userWithInvalidPass(String password, String errorValue) {
         validUser.setPassword(password);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(1, violations.size());
@@ -232,8 +214,6 @@ public class UserTest {
     void userWithInvalidPhoneNumber(String input, String errorValue) {
         validUser.setPhoneNumber(input);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(1, violations.size());
@@ -257,8 +237,6 @@ public class UserTest {
     void userWithValidPhoneNumber() {
         validUser.setPhoneNumber("380984305791");
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());

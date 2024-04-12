@@ -2,7 +2,7 @@ package bank.controllers;
 
 import bank.model.domain.BankAccount;
 import bank.model.domain.Transaction;
-import bank.model.services.servicesImpl.BankServiceImpl;
+import bank.model.services.BankService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +16,15 @@ import jakarta.validation.Valid;
 @RequiredArgsConstructor
 public class BankController {
 
-    private final BankServiceImpl bankService;
+    private final BankService bankService;
 
     private final String BANK_PAGE = "html/bank";
 
     @GetMapping
-    public String showBank(@SessionAttribute Long userId, Model model, Transaction transaction) {
+    public String showBank(@SessionAttribute Long userId, Model model) {
         BankAccount bankAccount = bankService.findBankAccountByUserId(userId);
         model.addAttribute("account", bankAccount);
+        model.addAttribute("transaction", new Transaction());
         return BANK_PAGE;
     }
 
@@ -36,8 +37,8 @@ public class BankController {
     ) {
 
         BankAccount bankAccount = bankService.findById(accountId);
-        model.addAttribute("account", bankAccount);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("account", bankAccount);
             return BANK_PAGE;
         }
 

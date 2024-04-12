@@ -1,7 +1,7 @@
 package bank.controllers;
 
 import bank.model.domain.User;
-import bank.model.services.servicesImpl.UserServiceImpl;
+import bank.model.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final String AUTH_PAGE = "html/auth";
 
     @GetMapping
