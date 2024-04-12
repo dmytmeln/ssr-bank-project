@@ -73,17 +73,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User update(User user) {
+        alreadyExists(user); // method throw exception if such user already exists or if he's not found
+        return userRepo.save(user);
+    }
 
+    // method to check whether user with such email or/and phone number already exists, because these fields are unique
+    @Override
+    @Transactional
+    public void alreadyExists(User user) throws EntityExistsException, EntityNotFoundException {
         User userDB = findById(user.getId());
-        String emailDB = userDB.getEmail();
-        String phoneNumberDB = userDB.getPhoneNumber();
 
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
 
-        // check whether new email and phone number (it they are new) are equal to old ones
-        boolean sameEmail = Objects.equals(emailDB, email);
-        boolean samePhoneNumber = Objects.equals(phoneNumberDB, phoneNumber);
+        // check whether new email and phone number (if they are new) are equal to old ones
+        boolean sameEmail = Objects.equals(userDB.getEmail(), email);
+        boolean samePhoneNumber = Objects.equals(userDB.getPhoneNumber(), phoneNumber);
         // if user changed both email and phone number -> check whether user with such info already exists
         if (!sameEmail && !samePhoneNumber) {
 
@@ -97,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
             if (userRepo.existsByEmail(email)) {
                 throw new EntityExistsException(
-                       "User with email [%s] already exists!".formatted(email)
+                        "User with email [%s] already exists!".formatted(email)
                 );
             }
 
@@ -110,10 +115,6 @@ public class UserServiceImpl implements UserService {
             }
 
         }
-
-        // otherwise -> update user
-        return userRepo.save(user);
-
     }
 
     @Override
