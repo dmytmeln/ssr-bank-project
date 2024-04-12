@@ -62,8 +62,6 @@ public class UserServiceTest {
 
     @Test
     void testInvalidFindById() {
-        when(userRepoMock.findById(1L)).thenReturn(Optional.ofNullable(null));
-
         assertThrows(EntityNotFoundException.class, () -> userService.findById(1L));
     }
 
@@ -92,7 +90,7 @@ public class UserServiceTest {
 
         User savedUser = userService.findById(actualId);
 
-        verify(userRepoMock, times(2)).save(userCaptor.capture());
+        verify(userRepoMock, times(1)).save(userCaptor.capture());
         verify(userRepoMock, times(1)).findById(actualId);
 
         assertEquals(expectedId, actualId);
@@ -138,8 +136,6 @@ public class UserServiceTest {
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
         String password = user.getPassword();
-
-        when(userRepoMock.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password)).thenReturn(Optional.ofNullable(null));
 
         assertThrows(EntityNotFoundException.class, () -> userService.login(user));
 
@@ -197,7 +193,6 @@ public class UserServiceTest {
     void testUpdateNonExistingUserTest() {
         long id = 1L;
         user.setId(id);
-        when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(null));
         assertThrows(EntityNotFoundException.class, () -> userService.update(user));
     }
 
