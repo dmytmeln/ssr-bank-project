@@ -29,7 +29,7 @@ public class TransactionControllerTest {
     private BankService bankService;
 
     @MockBean
-    private TransactionService transactionService;
+    private TransactionService transactionServiceMock;
 
     private static Long id;
     private static BankAccount bankAccount;
@@ -56,7 +56,7 @@ public class TransactionControllerTest {
     void setup() {
         when(bankService.findBankAccountByUserId(id)).thenReturn(bankAccount);
 
-        when(transactionService.getBankAccountTransactions(id)).thenReturn(List.of(transaction));
+        when(transactionServiceMock.getBankAccountTransactions(id)).thenReturn(List.of(transaction));
     }
 
     @Test
@@ -68,12 +68,12 @@ public class TransactionControllerTest {
                 .andExpect(view().name("html/transactions"));
 
         verify(bankService, times(1)).findBankAccountByUserId(id);
-        verify(transactionService, times(1)).getBankAccountTransactions(id);
+        verify(transactionServiceMock, times(1)).getBankAccountTransactions(id);
     }
 
     @Test
     void checkGetTransactionPage_WithNoTransactions() throws Exception {
-        when(transactionService.getBankAccountTransactions(id)).thenReturn(List.of());
+        when(transactionServiceMock.getBankAccountTransactions(id)).thenReturn(List.of());
 
         mockMvc.perform(get("/transactions").sessionAttr("userId", 1L))
                 .andExpect(status().isOk())
@@ -82,7 +82,7 @@ public class TransactionControllerTest {
                 .andExpect(view().name("html/transactions"));
 
         verify(bankService, times(1)).findBankAccountByUserId(id);
-        verify(transactionService, times(1)).getBankAccountTransactions(id);
+        verify(transactionServiceMock, times(1)).getBankAccountTransactions(id);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TransactionControllerTest {
                 .andExpect(view().name("html/error"));
 
         verify(bankService, times(1)).findBankAccountByUserId(id);
-        verify(transactionService, times(0)).getBankAccountTransactions(id);
+        verify(transactionServiceMock, times(0)).getBankAccountTransactions(id);
     }
 
 }

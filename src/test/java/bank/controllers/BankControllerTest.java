@@ -27,7 +27,7 @@ public class BankControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BankService bankService;
+    private BankService bankServiceMock;
 
     @Captor
     ArgumentCaptor<Transaction> transactionCaptor;
@@ -47,8 +47,8 @@ public class BankControllerTest {
 
     @BeforeEach
     void setup() {
-        when(bankService.findBankAccountByUserId(accountId)).thenReturn(bankAccount);
-        when(bankService.findById(accountId)).thenReturn(bankAccount);
+        when(bankServiceMock.findBankAccountByUserId(accountId)).thenReturn(bankAccount);
+        when(bankServiceMock.findById(accountId)).thenReturn(bankAccount);
     }
 
     @Test
@@ -61,14 +61,14 @@ public class BankControllerTest {
                 .andExpect(model().attribute("transaction", new Transaction()))
                 .andExpect(view().name("html/bank"));
 
-        verify(bankService, times(1)).findBankAccountByUserId(accountId);
+        verify(bankServiceMock, times(1)).findBankAccountByUserId(accountId);
     }
 
     @Test
     void checkInvalidShowBank() throws Exception {
         long id = -1;
 
-        when(bankService.findBankAccountByUserId(id)).thenThrow(new EntityNotFoundException(
+        when(bankServiceMock.findBankAccountByUserId(id)).thenThrow(new EntityNotFoundException(
                 "BankAccount with  id [%d] not found".formatted(id)
         ));
 
@@ -76,7 +76,7 @@ public class BankControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("html/error"));
 
-        verify(bankService, times(1)).findBankAccountByUserId(id);
+        verify(bankServiceMock, times(1)).findBankAccountByUserId(id);
     }
 
     @Test
@@ -86,10 +86,10 @@ public class BankControllerTest {
         String transactionType = "Type";
         double expectedBalance = bankAccount.getBalance() + 1000D;
 
-        when(bankService.makeDeposit(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
+        when(bankServiceMock.makeDeposit(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
             Long bankAccountId = invocationOnMock.getArgument(0);
             Transaction transaction = invocationOnMock.getArgument(1);
-            BankAccount account = bankService.findById(bankAccountId);
+            BankAccount account = bankServiceMock.findById(bankAccountId);
             account.setBalance(account.getBalance() + transaction.getMoneyAmount());
             transaction.setBankAccount(account);
             transaction.setId(bankAccountId);
@@ -105,8 +105,8 @@ public class BankControllerTest {
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
 
-        verify(bankService, times(2)).findById(accountId);
-        verify(bankService, times(1)).makeDeposit(eq(accountId), transactionCaptor.capture());
+        verify(bankServiceMock, times(2)).findById(accountId);
+        verify(bankServiceMock, times(1)).makeDeposit(eq(accountId), transactionCaptor.capture());
 
         Transaction captorValue = transactionCaptor.getValue();
 
@@ -135,10 +135,10 @@ public class BankControllerTest {
         String transactionType = "Type";
         double expectedBalance = bankAccount.getBalance() - 1000D;
 
-        when(bankService.makeWithdrawal(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
+        when(bankServiceMock.makeWithdrawal(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
             Long bankAccountId = invocationOnMock.getArgument(0);
             Transaction transaction = invocationOnMock.getArgument(1);
-            BankAccount account = bankService.findById(bankAccountId);
+            BankAccount account = bankServiceMock.findById(bankAccountId);
             account.setBalance(account.getBalance() - transaction.getMoneyAmount());
             transaction.setBankAccount(account);
             transaction.setId(bankAccountId);
@@ -154,8 +154,8 @@ public class BankControllerTest {
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
 
-        verify(bankService, times(2)).findById(accountId);
-        verify(bankService, times(1)).makeWithdrawal(eq(accountId), transactionCaptor.capture());
+        verify(bankServiceMock, times(2)).findById(accountId);
+        verify(bankServiceMock, times(1)).makeWithdrawal(eq(accountId), transactionCaptor.capture());
 
         Transaction captorValue = transactionCaptor.getValue();
 
