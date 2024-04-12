@@ -1,8 +1,10 @@
 package bank.model.services;
 
+import bank.model.domain.BankAccount;
 import bank.model.domain.User;
 import bank.model.repository.UserRepository;
 import bank.model.services.servicesImpl.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,7 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -32,26 +34,56 @@ public class UserServiceImplTest {
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
-    @Test
-    void checkSignupTest() {
-        String email = "john.doe@example.com";
-        String phoneNumber = "380984035792";
-        long expectedId = 2;
-        User user = User.builder()
+    private User user;
+
+    @BeforeEach
+    void init() {
+        user = User.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .password("12!@asAS")
-                .email(email)
-                .phoneNumber(phoneNumber)
+                .email("john.doe@example.com")
+                .phoneNumber("123123123123")
                 .build();
+    }
+
+    @Test
+    void checkValidFindById() {
+        long id = 1L;
+        user.setId(id);
+        when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(user));
+
+        User foundUser = userService.findById(id);
+
+        assertEquals(id, foundUser.getId());
+        assertEquals(user.getEmail(), foundUser.getEmail());
+        assertEquals(user.getPassword(), foundUser.getPassword());
+    }
+
+    @Test
+    void checkInvalidFindById() {
+        when(userRepoMock.findById(1L)).thenReturn(Optional.ofNullable(null));
+
+        assertThrows(EntityNotFoundException.class, () -> userService.findById(1L));
+    }
+
+    @Test
+    void checkSignupTest() {
+
+        String email = user.getEmail();
+        String phoneNumber = user.getPhoneNumber();
+        long expectedId = 2;
 
         when(userRepoMock.existsByEmailOrPhoneNumber(email, phoneNumber)).thenReturn(false);
         when(userRepoMock.save(any(User.class))).thenAnswer(invocationOnMock -> {
             User userToSave = invocationOnMock.getArgument(0);
             userToSave.setId(expectedId);
+            BankAccount bankAccount = userToSave.getBankAccount();
+            if (bankAccount != null) {
+                bankAccount.setId(expectedId);
+            }
             return userToSave;
         });
-
 
         User signupUser = userService.signup(user);
         Long actualId = signupUser.getId();
@@ -60,67 +92,97 @@ public class UserServiceImplTest {
 
         User savedUser = userService.findById(actualId);
 
+        verify(userRepoMock, times(2)).save(userCaptor.capture());
+        verify(userRepoMock, times(1)).findById(actualId);
+
         assertEquals(expectedId, actualId);
         assertEquals(user.getFirstName(), savedUser.getFirstName());
         assertEquals(user.getLastName(), savedUser.getLastName());
         assertEquals(user.getEmail(), savedUser.getEmail());
         assertEquals(user.getPhoneNumber(), savedUser.getPhoneNumber());
+        assertEquals(expectedId, signupUser.getBankAccount().getId());
+
     }
 
     @Test
     void checkSignupExistingUserTest() {
-        // Create a user that already exists in the database
-        User existingUser = new User();
-        existingUser.setFirstName("Dmytro");
-        existingUser.setLastName("Melnyk");
-        existingUser.setPassword("mdm281004");
-        existingUser.setEmail("dimamel28@gmail.com");
-        existingUser.setPhoneNumber("380984035791");
+        String email = user.getEmail();
+        String phoneNumber = user.getPhoneNumber();
 
-        assertThrows(EntityExistsException.class, () -> userService.signup(existingUser));
+        when(userRepoMock.existsByEmailOrPhoneNumber(email, phoneNumber)).thenReturn(true);
+
+        assertThrows(EntityExistsException.class, () -> userService.signup(user));
+        verify(userRepoMock, times(1)).existsByEmailOrPhoneNumber(email, phoneNumber);
     }
 
     @Test
     void checkLoginTest() {
-        User user = User.builder()
-                .email("dimamel28@gmail.com")
-                .phoneNumber("380984035791")
-                .password("mdm281004")
-                .build();
+        String email = user.getEmail();
+        String phoneNumber = user.getPhoneNumber();
+        String password = user.getPassword();
+
+        when(userRepoMock.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password)).thenReturn(Optional.of(user));
 
         User loggedInUser = userService.login(user);
 
+        verify(userRepoMock, times(1)).findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password);
+
         assertNotNull(loggedInUser);
-        assertEquals(user.getEmail(), loggedInUser.getEmail());
-        assertEquals(user.getPhoneNumber(), loggedInUser.getPhoneNumber());
-        assertEquals(user.getPassword(), loggedInUser.getPassword());
+        assertEquals(email, loggedInUser.getEmail());
+        assertEquals(phoneNumber, loggedInUser.getPhoneNumber());
+        assertEquals(password, loggedInUser.getPassword());
     }
 
     @Test
     void checkLoginNonexistentUserTest() {
-        User nonexistent = new User();
-        nonexistent.setEmail("invalid@example.com");
-        nonexistent.setPhoneNumber("380987654321");
-        nonexistent.setPassword("Mdm281004");
+        String email = user.getEmail();
+        String phoneNumber = user.getPhoneNumber();
+        String password = user.getPassword();
 
-        assertThrows(EntityNotFoundException.class, () -> userService.login(nonexistent));
+        when(userRepoMock.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password)).thenReturn(Optional.ofNullable(null));
+
+        assertThrows(EntityNotFoundException.class, () -> userService.login(user));
+
+        verify(userRepoMock, times(1)).findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password);
     }
 
 
     @Test
     void checkUpdateTest() {
+        long id = 1L;
+
+        String email = "email@gmail.com";
+        String phoneNumber = "380981258958";
         User userToUpdate = User.builder()
-                .id(1L)
+                .id(id)
                 .firstName("UpdatedFirstName")
                 .lastName("UpdatedLastName")
-                .phoneNumber("380981258958")
+                .phoneNumber(phoneNumber)
                 .password("12!@asAS")
-                .email("dimamel28@gmail.com")
+                .email(email)
                 .build();
 
-        User updatedUser = userService.update(userToUpdate);
+        user.setId(id);
+        when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(user));
+        when(userRepoMock.existsByEmailAndPhoneNumber(email, phoneNumber)).thenReturn(false);
+        when(userRepoMock.save(any(User.class))).thenAnswer(invocationOnMock -> {
+            User userToSave = invocationOnMock.getArgument(0);
+            return userToSave.toBuilder()
+                    .email(userToUpdate.getEmail())
+                    .password(userToUpdate.getPassword())
+                    .phoneNumber(userToUpdate.getPhoneNumber())
+                    .firstName(userToUpdate.getFirstName())
+                    .lastName(userToUpdate.getLastName())
+                    .build();
+        });
 
-        User fetchedUser = userService.findById(1L);
+        userService.update(userToUpdate);
+
+        verify(userRepoMock, times(1)).existsByEmailAndPhoneNumber(email, phoneNumber);
+        verify(userRepoMock, times(1)).findById(id);
+        verify(userRepoMock, times(1)).save(userCaptor.capture());
+
+        User updatedUser = userCaptor.getValue();
 
         assertNotNull(updatedUser);
         assertEquals(userToUpdate.getFirstName(), updatedUser.getFirstName());
@@ -129,44 +191,83 @@ public class UserServiceImplTest {
         assertEquals(userToUpdate.getPhoneNumber(), updatedUser.getPhoneNumber());
         assertEquals(userToUpdate.getPassword(), updatedUser.getPassword());
 
-        assertNotNull(fetchedUser);
-        assertEquals(userToUpdate.getFirstName(), fetchedUser.getFirstName());
-        assertEquals(userToUpdate.getLastName(), fetchedUser.getLastName());
-        assertEquals(userToUpdate.getEmail(), fetchedUser.getEmail());
-        assertEquals(userToUpdate.getPhoneNumber(), fetchedUser.getPhoneNumber());
-        assertEquals(userToUpdate.getPassword(), fetchedUser.getPassword());
     }
 
     @Test
     void checkUpdateNonExistingUserTest() {
-        User nonExistingUser = User.builder()
-                .id(2L)
-                .firstName("NonExistingFirstName")
-                .lastName("NonExistingLastName")
-                .phoneNumber("987654321")
-                .password("nonexistingpassword")
-                .email("non_existing_email@example.com")
-                .build();
-
-        assertThrows(EntityNotFoundException.class, () -> userService.update(nonExistingUser));
+        long id = 1L;
+        user.setId(id);
+        when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(null));
+        assertThrows(EntityNotFoundException.class, () -> userService.update(user));
     }
 
     @Test
-    void checkInvalidUpdate() {
-        long expectedId = 2;
-        User user = User.builder()
-                .firstName("John")
-                .lastName("Doe")
+    void checkUpdateWithAlreadyExistingEmailAndPhoneNumber() {
+        long id = 1L;
+        String email = "email@gmail.com";
+        String phoneNumber = "380981258958";
+        User userToUpdate = User.builder()
+                .id(id)
+                .firstName("UpdatedFirstName")
+                .lastName("UpdatedLastName")
+                .phoneNumber(phoneNumber)
                 .password("12!@asAS")
-                .email("john.doe@example.com")
-                .phoneNumber("380984035792")
+                .email(email)
                 .build();
-        userService.signup(user);
 
-        User savedUser = userService.findById(expectedId);
-        savedUser.setEmail("dimamel28@gmail.com");
+        user.setId(id);
+        when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(user));
+        when(userRepoMock.existsByEmailAndPhoneNumber(email, phoneNumber)).thenReturn(true);
 
-        assertThrows(EntityExistsException.class, () -> userService.update(savedUser));
+        assertThrows(EntityExistsException.class, () -> userService.update(userToUpdate));
+    }
+
+    @Test
+    void checkUpdateWithAlreadyExistingEmail() {
+        long id = 1L;
+        String email = "email@gmail.com";
+        User userToUpdate = User.builder()
+                .id(id)
+                .firstName("UpdatedFirstName")
+                .lastName("UpdatedLastName")
+                .phoneNumber(user.getPhoneNumber())
+                .password("12!@asAS")
+                .email(email)
+                .build();
+
+        user.setId(id);
+        when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(user));
+        when(userRepoMock.existsByEmail(email)).thenReturn(true);
+
+        assertThrows(EntityExistsException.class, () -> userService.update(userToUpdate));
+    }
+
+    @Test
+    void checkUpdateWithAlreadyExistingPhoneNumber() {
+        long id = 1L;
+        String phoneNumber = "380981258958";
+        User userToUpdate = User.builder()
+                .id(id)
+                .firstName("UpdatedFirstName")
+                .lastName("UpdatedLastName")
+                .phoneNumber(phoneNumber)
+                .password("12!@asAS")
+                .email(user.getEmail())
+                .build();
+
+        user.setId(id);
+        when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(user));
+        when(userRepoMock.existsByPhoneNumber(phoneNumber)).thenReturn(true);
+
+        assertThrows(EntityExistsException.class, () -> userService.update(userToUpdate));
+    }
+
+    @Test
+    void checkDeleteNonexistentUser() {
+        long id = 1L;
+        when(userRepoMock.existsById(id)).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> userService.delete(id));
     }
 
 }
