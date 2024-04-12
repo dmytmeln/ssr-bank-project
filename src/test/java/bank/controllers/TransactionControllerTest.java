@@ -60,7 +60,7 @@ public class TransactionControllerTest {
     }
 
     @Test
-    void checkGetTransactionPage() throws Exception {
+    void testGetTransactionPage() throws Exception {
         mockMvc.perform(get("/transactions").sessionAttr("userId", 1L))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("transactions"))
@@ -72,7 +72,7 @@ public class TransactionControllerTest {
     }
 
     @Test
-    void checkGetTransactionPage_WithNoTransactions() throws Exception {
+    void testGetTransactionPage_WithNoTransactions() throws Exception {
         when(transactionServiceMock.getBankAccountTransactions(id)).thenReturn(List.of());
 
         mockMvc.perform(get("/transactions").sessionAttr("userId", 1L))
@@ -86,7 +86,7 @@ public class TransactionControllerTest {
     }
 
     @Test
-    void checkInvalidGetTransactionPage_WithNonexistentAccount() throws Exception {
+    void testInvalidGetTransactionPage_WithNonexistentAccount() throws Exception {
         long id = -1;
 
         when(bankService.findBankAccountByUserId(id)).thenThrow(new EntityNotFoundException(

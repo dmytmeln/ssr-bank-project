@@ -52,7 +52,7 @@ public class BankControllerTest {
     }
 
     @Test
-    void checkShowBank() throws Exception {
+    void testShowBank() throws Exception {
         mockMvc.perform(get("/bank").sessionAttr("userId", 1L))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
@@ -65,7 +65,7 @@ public class BankControllerTest {
     }
 
     @Test
-    void checkInvalidShowBank() throws Exception {
+    void testInvalidShowBank() throws Exception {
         long id = -1;
 
         when(bankServiceMock.findBankAccountByUserId(id)).thenThrow(new EntityNotFoundException(
@@ -80,7 +80,7 @@ public class BankControllerTest {
     }
 
     @Test
-    void checkMakeDeposit() throws Exception {
+    void testMakeDeposit() throws Exception {
 
         String message = "Message";
         String transactionType = "Type";
@@ -119,7 +119,7 @@ public class BankControllerTest {
     }
 
     @Test
-    void checkInvalidMakeDeposit() throws Exception {
+    void testInvalidMakeDeposit() throws Exception {
         mockMvc.perform(post("/bank/deposit/{accountId}", accountId)
                         .param("moneyAmount", "-1000"))
                 .andExpect(status().isOk())
@@ -129,7 +129,7 @@ public class BankControllerTest {
     }
 
     @Test
-    void checkMakeWithdrawal() throws Exception {
+    void testMakeWithdrawal() throws Exception {
 
         String message = "Message";
         String transactionType = "Type";
@@ -168,7 +168,7 @@ public class BankControllerTest {
     }
 
     @Test
-    void checkInvalidMakeWithdrawal() throws Exception {
+    void testInvalidMakeWithdrawal() throws Exception {
         mockMvc.perform(post("/bank/withdrawal/{accountId}", accountId)
                         .param("moneyAmount", "-1000"))
                 .andExpect(status().isOk())

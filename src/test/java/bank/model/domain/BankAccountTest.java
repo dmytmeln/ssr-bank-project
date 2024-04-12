@@ -29,14 +29,14 @@ public class BankAccountTest {
     }
 
     @Test
-    void checkValidAccount() {
+    void testValidAccount() {
         Set<ConstraintViolation<BankAccount>> violations = validator.validate(validAccount);
         assertEquals(0, violations.size());
     }
 
     @ParameterizedTest
     @MethodSource("provideInvalidBalance")
-    void checkInvalidBalance(Double inputValue, Double errorValue) {
+    void testInvalidBalance(Double inputValue, Double errorValue) {
         validAccount.setBalance(inputValue);
 
         Set<ConstraintViolation<BankAccount>> violations = validator.validate(validAccount);

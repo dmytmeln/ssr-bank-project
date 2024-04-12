@@ -48,7 +48,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkValidFindById() {
+    void testValidFindById() {
         long id = 1L;
         user.setId(id);
         when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(user));
@@ -61,14 +61,14 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkInvalidFindById() {
+    void testInvalidFindById() {
         when(userRepoMock.findById(1L)).thenReturn(Optional.ofNullable(null));
 
         assertThrows(EntityNotFoundException.class, () -> userService.findById(1L));
     }
 
     @Test
-    void checkSignupTest() {
+    void testSignupTest() {
 
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
@@ -105,7 +105,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkSignupExistingUserTest() {
+    void testSignupExistingUserTest() {
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
 
@@ -116,7 +116,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkLoginTest() {
+    void testLoginTest() {
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
         String password = user.getPassword();
@@ -134,7 +134,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkLoginNonexistentUserTest() {
+    void testLoginNonexistentUserTest() {
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
         String password = user.getPassword();
@@ -148,7 +148,7 @@ public class UserServiceImplTest {
 
 
     @Test
-    void checkUpdateTest() {
+    void testUpdateTest() {
         long id = 1L;
 
         String email = "email@gmail.com";
@@ -194,7 +194,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkUpdateNonExistingUserTest() {
+    void testUpdateNonExistingUserTest() {
         long id = 1L;
         user.setId(id);
         when(userRepoMock.findById(id)).thenReturn(Optional.ofNullable(null));
@@ -202,7 +202,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkUpdateWithAlreadyExistingEmailAndPhoneNumber() {
+    void testUpdateWithAlreadyExistingEmailAndPhoneNumber() {
         long id = 1L;
         String email = "email@gmail.com";
         String phoneNumber = "380981258958";
@@ -223,7 +223,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkUpdateWithAlreadyExistingEmail() {
+    void testUpdateWithAlreadyExistingEmail() {
         long id = 1L;
         String email = "email@gmail.com";
         User userToUpdate = User.builder()
@@ -243,7 +243,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkUpdateWithAlreadyExistingPhoneNumber() {
+    void testUpdateWithAlreadyExistingPhoneNumber() {
         long id = 1L;
         String phoneNumber = "380981258958";
         User userToUpdate = User.builder()
@@ -263,7 +263,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkDeleteNonexistentUser() {
+    void testDeleteNonexistentUser() {
         long id = 1L;
         when(userRepoMock.existsById(id)).thenReturn(false);
 

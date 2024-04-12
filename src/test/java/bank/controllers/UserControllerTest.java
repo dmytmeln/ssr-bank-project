@@ -59,7 +59,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void checkGetShowHome() throws Exception {
+    void testGetShowHome() throws Exception {
         mockMvc.perform(get("/user").sessionAttr("userId", userId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("user"))
@@ -70,7 +70,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void checkInvalidGetShowHome() throws Exception {
+    void testInvalidGetShowHome() throws Exception {
         long id = -1L;
 
         when(userServiceMock.findById(id)).thenThrow(new EntityNotFoundException(
@@ -85,7 +85,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void checkValidUpdateUser() throws Exception {
+    void testValidUpdateUser() throws Exception {
         String updatedFirstName = "Jason";
 
         mockMvc.perform(post("/user/update/{userId}", userId)
@@ -106,7 +106,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void checkInvalidUpdateUser() throws Exception {
+    void testInvalidUpdateUser() throws Exception {
         mockMvc.perform(post("/user/update/{userId}", userId)
                         .param("firstName", "")
                         .param("lastName", user.getLastName())
