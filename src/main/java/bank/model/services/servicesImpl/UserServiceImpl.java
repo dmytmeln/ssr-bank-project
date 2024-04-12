@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     // method to check whether user with such email or/and phone number already exists, because these fields are unique
     @Override
     @Transactional
-    public void alreadyExists(User user) throws EntityExistsException, EntityNotFoundException {
+    public void alreadyExists(User user) {
         User userDB = findById(user.getId());
 
         String email = user.getEmail();

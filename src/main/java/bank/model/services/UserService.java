@@ -16,7 +16,7 @@ public interface UserService {
 
     User update(User user);
 
-    void alreadyExists(User user) throws EntityExistsException, EntityNotFoundException;
+    void alreadyExists(User user);
 
 
 }
