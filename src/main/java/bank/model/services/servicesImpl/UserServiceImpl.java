@@ -2,11 +2,9 @@ package bank.model.services.servicesImpl;
 
 import bank.model.domain.BankAccount;
 import bank.model.domain.User;
-import bank.model.repository.AccountRepository;
 import bank.model.repository.UserRepository;
 import bank.model.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
