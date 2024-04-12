@@ -86,8 +86,6 @@ public class UserControllerTest {
 
     @Test
     void checkValidUpdateUser() throws Exception {
-        when(userServiceMock.update(any(User.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-
         String updatedFirstName = "Jason";
 
         mockMvc.perform(post("/user/update/{userId}", userId)
