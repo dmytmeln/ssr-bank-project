@@ -31,13 +31,13 @@ public class TransactionTest {
     }
 
     @Test
-    void checkValidTransaction() {
+    void testValidTransaction() {
         Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
         assertEquals(0, violations.size());
     }
 
     @Test
-    void checkInvalidMsg() {
+    void testInvalidMsg() {
         validTransaction.setMsg(null);
 
         Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
@@ -47,7 +47,7 @@ public class TransactionTest {
     }
 
     @Test
-    void checkInvalidTransactionType() {
+    void testInvalidTransactionType() {
         validTransaction.setTransactionType(null);
 
         Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
@@ -58,7 +58,7 @@ public class TransactionTest {
 
     @ParameterizedTest
     @MethodSource("provideInvalidMoneyAmount")
-    void checkInvalidMoneyAmount(Double inputValue, Double errorValue) {
+    void testInvalidMoneyAmount(Double inputValue, Double errorValue) {
         validTransaction.setMoneyAmount(inputValue);
 
         Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);

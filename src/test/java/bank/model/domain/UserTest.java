@@ -34,7 +34,7 @@ public class UserTest {
     }
 
     @Test
-    void checkValidUser() {
+    void testValidUser() {
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());

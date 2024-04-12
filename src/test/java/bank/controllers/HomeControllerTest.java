@@ -16,7 +16,7 @@ public class HomeControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void checkGetShowHome() throws Exception {
+    void testGetShowHome() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"));

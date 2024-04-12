@@ -74,7 +74,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void checkUpdateUserTest() {
+    void testUpdateUserTest() {
         int expectedSize = 1;
         long expectedId = 1;
         String email = "dimon281@gmail.com";
@@ -98,7 +98,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void checkDeleteTest() {
+    void testDeleteTest() {
         long id = 1L;
         userRepository.deleteById(id);
 
@@ -106,7 +106,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void checkFindUserByEmailAndPhoneNumberAndPasswordTest() {
+    void testFindUserByEmailAndPhoneNumberAndPasswordTest() {
         String existingEmail = "dimamel28@gmail.com";
         String existingPhoneNumber = "380984035791";
         String existingPass = "Mdm281004";
@@ -125,7 +125,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void checkFindUserByEmailAndPhoneNumberAndPasswordTest_NonExistingUser() {
+    void testFindUserByEmailAndPhoneNumberAndPasswordTest_NonExistingUser() {
         String existingEmail = "dimamel28@gmail.com";
         String existingPhoneNumber = "380984035791";
         String nonExistingPass = "1234";
@@ -140,7 +140,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void checkExistsByEmailTest() {
+    void testExistsByEmailTest() {
         String existingEmail = "dimamel28@gmail.com";
         String nonExistingEmail = "123";
 
@@ -149,7 +149,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void checkExistsByPhoneNumberTest() {
+    void testExistsByPhoneNumberTest() {
         String existingPhoneNumber = "380984035791";
         String nonExistingPhoneNumber = "123";
 
@@ -158,7 +158,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void checkExistsByEmailAndPhoneNumber() {
+    void testExistsByEmailAndPhoneNumber() {
         String existingEmail = "dimamel28@gmail.com";
         String existingPhoneNumber = "380984035791";
         String nonExistingEmail = "123";

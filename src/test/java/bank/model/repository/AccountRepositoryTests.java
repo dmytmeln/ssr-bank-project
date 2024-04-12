@@ -28,7 +28,7 @@ public class AccountRepositoryTests {
     }
 
     @Test
-    void checkSaveAndFindAccountTest() {
+    void testSaveAndFindAccountTest() {
         User user = User.builder()
                 .email("dimon281@gmail.com")
                 .firstName("Peter")
@@ -56,7 +56,7 @@ public class AccountRepositoryTests {
     }
 
     @Test
-    void checkUpdateAccountTest() {
+    void testUpdateAccountTest() {
         long id = 1L;
         double balance = 20000.0;
         BankAccount bankAccount = BankAccount.builder()
@@ -75,7 +75,7 @@ public class AccountRepositoryTests {
     }
 
     @Test
-    void checkDeleteAccountTest() {
+    void testDeleteAccountTest() {
         long id = 1L;
 
         accountRepository.deleteById(id);

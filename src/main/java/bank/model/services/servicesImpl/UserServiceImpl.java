@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
                 .user(savedUser)
                 .build();
         savedUser.setBankAccount(bankAccount);
-        savedUser = userRepo.save(savedUser);
 
         return savedUser;
 

@@ -69,7 +69,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void checkShowAuth() throws Exception {
+    void testShowAuth() throws Exception {
         mockMvc.perform(get("/auth"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("user"))
@@ -77,7 +77,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void checkSignupUser() throws Exception {
+    void testSignupUser() throws Exception {
         mockMvc.perform(post("/auth/signup")
                         .param("email", user.getEmail())
                         .param("firstName", user.getFirstName())
@@ -95,7 +95,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void checkInvalidSignupUser() throws Exception {
+    void testInvalidSignupUser() throws Exception {
         mockMvc.perform(post("/auth/signup")
                         .param("email", user.getEmail())
                         .param("firstName", "")
@@ -108,7 +108,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void checkLoginUser() throws Exception {
+    void testLoginUser() throws Exception {
         mockMvc.perform(post("/auth/login")
                         .param("email", user.getEmail())
                         .param("password", user.getPassword())
