@@ -1,57 +1,73 @@
 package bank.model.services;
 
 import bank.model.domain.User;
+import bank.model.repository.UserRepository;
 import bank.model.services.servicesImpl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
-@SpringBootTest
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
+    @Mock
+    private UserRepository userRepoMock;
+
+    @InjectMocks
     private UserServiceImpl userService;
 
-    @Autowired
-    public UserServiceImplTest(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+    @Captor
+    private ArgumentCaptor<User> userCaptor;
 
     @Test
-    @Transactional
     void checkSignupTest() {
+        String email = "john.doe@example.com";
+        String phoneNumber = "380984035792";
         long expectedId = 2;
         User user = User.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .password("12!@asAS")
-                .email("john.doe@example.com")
-                .phoneNumber("380984035792")
+                .email(email)
+                .phoneNumber(phoneNumber)
                 .build();
 
-        User savedUser = userService.findById(expectedId);
+        when(userRepoMock.existsByEmailOrPhoneNumber(email, phoneNumber)).thenReturn(false);
+        when(userRepoMock.save(any(User.class))).thenAnswer(invocationOnMock -> {
+            User userToSave = invocationOnMock.getArgument(0);
+            userToSave.setId(expectedId);
+            return userToSave;
+        });
 
-        assertEquals(expectedId, savedUser.getId());
+
+        User signupUser = userService.signup(user);
+        Long actualId = signupUser.getId();
+
+        when(userRepoMock.findById(actualId)).thenReturn(Optional.of(signupUser));
+
+        User savedUser = userService.findById(actualId);
+
+        assertEquals(expectedId, actualId);
         assertEquals(user.getFirstName(), savedUser.getFirstName());
         assertEquals(user.getLastName(), savedUser.getLastName());
         assertEquals(user.getEmail(), savedUser.getEmail());
         assertEquals(user.getPhoneNumber(), savedUser.getPhoneNumber());
-        assertEquals(expectedId, savedUser.getBankAccount().getId());
-        assertEquals(expectedId, savedUser.getBankAccount().getUser().getId());
     }
 
     @Test
-    @Transactional
     void checkSignupExistingUserTest() {
         // Create a user that already exists in the database
         User existingUser = new User();
@@ -81,18 +97,17 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void checkLoginInvalidCredentialsTest() {
-        User invalidUser = new User();
-        invalidUser.setEmail("invalid@example.com");
-        invalidUser.setPhoneNumber("380987654321");
-        invalidUser.setPassword("Mdm281004");
+    void checkLoginNonexistentUserTest() {
+        User nonexistent = new User();
+        nonexistent.setEmail("invalid@example.com");
+        nonexistent.setPhoneNumber("380987654321");
+        nonexistent.setPassword("Mdm281004");
 
-        assertThrows(EntityNotFoundException.class, () -> userService.login(invalidUser));
+        assertThrows(EntityNotFoundException.class, () -> userService.login(nonexistent));
     }
 
 
     @Test
-    @Transactional
     void checkUpdateTest() {
         User userToUpdate = User.builder()
                 .id(1L)

@@ -29,7 +29,7 @@ public class BankAccount {
     @Builder.Default
     private Double balance = 0D;
 
-    @OneToOne(cascade = CascadeType.REMOVE, optional = false)
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, unique = true)
     @ToString.Exclude
     private User user;
