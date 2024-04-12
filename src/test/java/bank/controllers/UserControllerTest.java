@@ -28,7 +28,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private UserService userServiceMock;
 
     @Captor
     private ArgumentCaptor<User> userCaptor;
@@ -54,8 +54,8 @@ public class UserControllerTest {
 
     @BeforeEach
     void setup() {
-        when(userService.findById(userId)).thenReturn(user);
-        when(userService.update(any(User.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        when(userServiceMock.findById(userId)).thenReturn(user);
+        when(userServiceMock.update(any(User.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
     }
 
     @Test
@@ -66,14 +66,14 @@ public class UserControllerTest {
                 .andExpect(model().attribute("user", user))
                 .andExpect(view().name(USER_PAGE));
 
-        verify(userService, times(1)).findById(userId);
+        verify(userServiceMock, times(1)).findById(userId);
     }
 
     @Test
     void checkInvalidGetShowHome() throws Exception {
         long id = -1L;
 
-        when(userService.findById(id)).thenThrow(new EntityNotFoundException(
+        when(userServiceMock.findById(id)).thenThrow(new EntityNotFoundException(
                 "User with  id: %d not found".formatted(userId)
         ));
 
@@ -81,13 +81,11 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("html/error"));
 
-        verify(userService, times(1)).findById(id);
+        verify(userServiceMock, times(1)).findById(id);
     }
 
     @Test
     void checkValidUpdateUser() throws Exception {
-        when(userService.update(any(User.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-
         String updatedFirstName = "Jason";
 
         mockMvc.perform(post("/user/update/{userId}", userId)
@@ -100,7 +98,7 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/user"))
                 .andExpect(view().name("redirect:/user"));
 
-        verify(userService, times(1)).update(userCaptor.capture());
+        verify(userServiceMock, times(1)).update(userCaptor.capture());
         User updatedUser = userCaptor.getValue();
 
         assertEquals(updatedFirstName, updatedUser.getFirstName());

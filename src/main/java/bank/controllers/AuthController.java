@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,8 @@ public class AuthController {
     private final String AUTH_PAGE = "html/auth";
 
     @GetMapping
-    public String showAuth(User user) {
+    public String showAuth(Model model) {
+        model.addAttribute("user", new User());
         return AUTH_PAGE;
     }
 
