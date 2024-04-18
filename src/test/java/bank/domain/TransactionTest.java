@@ -25,7 +25,7 @@ public class TransactionTest {
         validTransaction =  Transaction.builder()
                 .id(1L)
                 .msg("Transaction Message")
-                .transactionType("Transaction Type")
+                .type("Transaction Type")
                 .moneyAmount(1000D)
                 .build();
     }
@@ -48,7 +48,7 @@ public class TransactionTest {
 
     @Test
     void testInvalidTransactionType() {
-        validTransaction.setTransactionType(null);
+        validTransaction.setType(null);
 
         Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
 

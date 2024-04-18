@@ -37,7 +37,7 @@ public class UserRepositoryTest {
         User user = userRepository.findById(id).get();
 
         assertEquals(id, user.getId());
-        assertEquals(expectedName, user.getFirstName());
+        assertEquals(expectedName, user.getFirstname());
     }
 
     @Test
@@ -55,8 +55,8 @@ public class UserRepositoryTest {
         String email = "dimon281@gmail.com";
         User user = User.builder()
                 .email(email)
-                .firstName("Peter")
-                .lastName("Stinger")
+                .firstname("Peter")
+                .lastname("Stinger")
                 .password("asAS!@12")
                 .phoneNumber("380981258958")
                 .build();
@@ -77,14 +77,16 @@ public class UserRepositoryTest {
         User user = User.builder()
                 .email(email)
                 .id(expectedId)
-                .firstName("Peter")
-                .lastName("Stinger")
+                .firstname("Peter")
+                .lastname("Stinger")
                 .password(password)
                 .phoneNumber("380981258958")
                 .build();
 
         userRepository.save(user);
         User updatedUser = userRepository.findById(expectedId).get();
+
+        System.out.println(user.getBankAccount());
 
         assertEquals(expectedSize, userRepository.findAll().size());
         assertEquals(expectedId, updatedUser.getId());
@@ -116,7 +118,7 @@ public class UserRepositoryTest {
         ).get();
 
         assertEquals(expectedId, user.getId());
-        assertEquals(expectedFirstName, user.getFirstName());
+        assertEquals(expectedFirstName, user.getFirstname());
     }
 
     @Test

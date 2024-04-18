@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{transactionType}"/>
+                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{type}"/>
                         </div>
 
                         <button class="button">Make deposit</button>
@@ -55,9 +55,9 @@
                         <ul style="color: red; margin-top: 20px;">
                             <div th:if="${#fields.hasErrors('all')}">
                                 <h1>Cannot Make Deposit</h1>
-                                <li th:errors="*{transactionType}">Transaction type error</li>
-                                <li th:errors="*{msg}">Message error error</li>
-                                <li th:errors="*{moneyAmount}">Money Amount error</li>
+                                <li th:errors="*{type}">Transaction type error</li>
+                                <li th:errors="*{msg}">Transaction Message error error</li>
+                                <li th:errors="*{moneyAmount}">Transaction Money Amount error</li>
                             </div>
                         </ul>
 
@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{transactionType}"/>
+                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{type}"/>
                         </div>
 
                         <button class="button">Make Withdrawal</button>
@@ -88,9 +88,9 @@
                         <ul style="color: red; margin-top: 20px;">
                             <div th:if="${#fields.hasErrors('all')}">
                                 <h1>Cannot Make Withdrawal</h1>
-                                <li th:errors="*{transactionType}">Transaction type error</li>
-                                <li th:errors="*{msg}">Message error error</li>
-                                <li th:errors="*{moneyAmount}">Money Amount error</li>
+                                <li th:errors="*{type}">Transaction type error</li>
+                                <li th:errors="*{msg}">Transaction Message error error</li>
+                                <li th:errors="*{moneyAmount}">Transaction Money Amount error</li>
                             </div>
                         </ul>
 

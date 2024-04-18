@@ -26,8 +26,8 @@ public class UserTest {
         validUser = User.builder()
                 .email("dimamel28@gmail.com")
                 .id(1L)
-                .firstName("Dmytro")
-                .lastName("Melnyk")
+                .firstname("Dmytro")
+                .lastname("Melnyk")
                 .password("qwQW12!@")
                 .phoneNumber("380984035791")
                 .build();
@@ -90,7 +90,7 @@ public class UserTest {
     @ParameterizedTest
     @MethodSource("provideValidFirstNameUser")
     void UserWithValidFirstName(String input) {
-        validUser.setLastName(input);
+        validUser.setLastname(input);
 
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
@@ -108,7 +108,7 @@ public class UserTest {
     @ParameterizedTest
     @MethodSource("provideInvalidFirstNameUser")
     void userWithInvalidFirstName(String input, String errorValue) {
-        validUser.setFirstName(input);
+        validUser.setFirstname(input);
 
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());
@@ -129,7 +129,7 @@ public class UserTest {
     @ParameterizedTest
     @MethodSource("provideValidLastNameUser")
     void userWithInvalidLastName(String input) {
-        validUser.setLastName(input);
+        validUser.setLastname(input);
 
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
 
@@ -147,7 +147,7 @@ public class UserTest {
     @ParameterizedTest
     @MethodSource("provideInvalidLastNameUser")
     void userWithInvalidLastName(String input, String errorValue) {
-        validUser.setLastName(input);
+        validUser.setLastname(input);
 
         Set<ConstraintViolation<User>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());

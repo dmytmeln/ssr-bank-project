@@ -111,7 +111,7 @@ public class BankControllerTest {
         Transaction captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
-        assertEquals(transactionType, captorValue.getTransactionType());
+        assertEquals(transactionType, captorValue.getType());
         assertEquals(bankAccount, captorValue.getBankAccount());
         assertEquals(accountId, captorValue.getId());
         assertEquals(expectedBalance, bankAccount.getBalance());
@@ -160,7 +160,7 @@ public class BankControllerTest {
         Transaction captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
-        assertEquals(transactionType, captorValue.getTransactionType());
+        assertEquals(transactionType, captorValue.getType());
         assertEquals(bankAccount, captorValue.getBankAccount());
         assertEquals(accountId, captorValue.getId());
         assertEquals(expectedBalance, bankAccount.getBalance());

@@ -32,14 +32,14 @@
             <!--/*@thymesVar id="user" type="bank.domain.User"*/-->
             <form action="#" th:action="@{/user/update/{userId}(userId=${user.id})}" th:object="${user}" method="post">
                 <div class="names">
-                    <label class="edit_label" for="first_name"><h4 class="user_name">Name: </h4></label>
-                    <input class="edit_input" id="first_name" name="first_name" type="text" th:field="*{firstName}">
-                    <label class="edit_label " for="first_name">edit</label>
+                    <label class="edit_label" for="firstname"><h4 class="user_name">Name: </h4></label>
+                    <input class="edit_input" id="firstname" name="firstname" type="text" th:field="*{firstname}">
+                    <label class="edit_label " for="firstname">edit</label>
                     <br>
 
-                    <label class="edit_label" for="last_name"><h4 class="user_name">Name: </h4></label>
-                    <input class="edit_input" id="last_name" name="last_name" type="text" th:field="*{lastName}">
-                    <label class="edit_label " for="last_name">edit</label>
+                    <label class="edit_label" for="lastname"><h4 class="user_name">Name: </h4></label>
+                    <input class="edit_input" id="lastname" name="lastname" type="text" th:field="*{lastname}">
+                    <label class="edit_label " for="lastname">edit</label>
                     <br>
 
                     <label class="edit_label" for="phone_number"><h4 class="user_name">Phone number: </h4></label>
@@ -70,8 +70,8 @@
                     <ul style="color: red; margin-top: 20px;">
                         <div th:if="${#fields.hasErrors('all')}">
                             <h1>Cannot update user</h1>
-                            <li th:errors="*{firstName}">First name error</li>
-                            <li th:errors="*{lastName}">Last name error</li>
+                            <li th:errors="*{firstname}">Firstname error</li>
+                            <li th:errors="*{lastname}">Lastname error</li>
                             <li th:errors="*{password}">Password error</li>
                             <li th:errors="*{phoneNumber}">Phone number error</li>
                             <li th:errors="*{email}">Email error</li>

@@ -46,8 +46,8 @@ public class UserControllerTest {
                 .email("dimamel28@gmail.com")
                 .password("12!@asAS")
                 .phoneNumber("380984035791")
-                .firstName("Dmytro")
-                .lastName("Melnyk")
+                .firstname("Dmytro")
+                .lastname("Melnyk")
                 .creationDate(Instant.now())
                 .build();
     }
@@ -90,7 +90,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/update/{userId}", userId)
                         .param("firstName", updatedFirstName)
-                        .param("lastName", user.getLastName())
+                        .param("lastName", user.getLastname())
                         .param("email", user.getEmail())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber()))
@@ -101,7 +101,7 @@ public class UserControllerTest {
         verify(userServiceMock, times(1)).update(userCaptor.capture());
         User updatedUser = userCaptor.getValue();
 
-        assertEquals(updatedFirstName, updatedUser.getFirstName());
+        assertEquals(updatedFirstName, updatedUser.getFirstname());
         assertEquals(userId, updatedUser.getId());
     }
 
@@ -109,7 +109,7 @@ public class UserControllerTest {
     void testInvalidUpdateUser() throws Exception {
         mockMvc.perform(post("/user/update/{userId}", userId)
                         .param("firstName", "")
-                        .param("lastName", user.getLastName())
+                        .param("lastName", user.getLastname())
                         .param("email", user.getEmail())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber()))

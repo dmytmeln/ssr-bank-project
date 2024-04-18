@@ -11,9 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -83,7 +81,7 @@ public class BankServiceTest {
         Transaction transaction = Transaction.builder()
                 .moneyAmount(moneyAmount)
                 .msg(expectedInfo)
-                .transactionType(expectedInfo)
+                .type(expectedInfo)
                 .build();
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
@@ -112,7 +110,7 @@ public class BankServiceTest {
         Transaction transaction = Transaction.builder()
                 .moneyAmount(moneyAmount)
                 .msg(expectedInfo)
-                .transactionType(expectedInfo)
+                .type(expectedInfo)
                 .build();
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
@@ -137,7 +135,7 @@ public class BankServiceTest {
         Transaction transaction = Transaction.builder()
                 .moneyAmount(moneyAmount)
                 .msg(expectedInfo)
-                .transactionType(expectedInfo)
+                .type(expectedInfo)
                 .build();
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));

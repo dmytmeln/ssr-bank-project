@@ -44,8 +44,8 @@ public class AuthControllerTest {
                 .email("dimamel28@gmail.com")
                 .password("12!@asAS")
                 .phoneNumber("380984035791")
-                .firstName("Dmytro")
-                .lastName("Melnyk")
+                .firstname("Dmytro")
+                .lastname("Melnyk")
                 .creationDate(Instant.now())
                 .build();
     }
@@ -61,8 +61,8 @@ public class AuthControllerTest {
         when(userServiceMock.login(any(User.class))).thenAnswer(invocationOnMock -> {
             User loginUser = invocationOnMock.getArgument(0);
             loginUser.setId(ID);
-            loginUser.setFirstName(user.getFirstName());
-            loginUser.setLastName(user.getLastName());
+            loginUser.setFirstname(user.getFirstname());
+            loginUser.setLastname(user.getLastname());
             loginUser.setCreationDate(user.getCreationDate());
             return loginUser;
         });
@@ -80,8 +80,8 @@ public class AuthControllerTest {
     void testSignupUser() throws Exception {
         mockMvc.perform(post("/auth/signup")
                         .param("email", user.getEmail())
-                        .param("firstName", user.getFirstName())
-                        .param("lastName", user.getLastName())
+                        .param("firstName", user.getFirstname())
+                        .param("lastName", user.getLastname())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber())
                         .param("creationDate", String.valueOf(user.getCreationDate())))
@@ -99,7 +99,7 @@ public class AuthControllerTest {
         mockMvc.perform(post("/auth/signup")
                         .param("email", user.getEmail())
                         .param("firstName", "")
-                        .param("lastName", user.getLastName())
+                        .param("lastName", user.getLastname())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber())
                         .param("creationDate", String.valueOf(user.getCreationDate())))

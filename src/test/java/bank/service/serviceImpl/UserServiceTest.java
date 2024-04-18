@@ -1,6 +1,5 @@
 package bank.service.serviceImpl;
 
-import bank.domain.BankAccount;
 import bank.domain.User;
 import bank.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
@@ -37,8 +36,8 @@ public class UserServiceTest {
     @BeforeEach
     void init() {
         user = User.builder()
-                .firstName("John")
-                .lastName("Doe")
+                .firstname("John")
+                .lastname("Doe")
                 .password("12!@asAS")
                 .email("john.doe@example.com")
                 .phoneNumber("123123123123")
@@ -139,8 +138,8 @@ public class UserServiceTest {
         String phoneNumber = "380981258958";
         User userToUpdate = User.builder()
                 .id(id)
-                .firstName("UpdatedFirstName")
-                .lastName("UpdatedLastName")
+                .firstname("UpdatedFirstName")
+                .lastname("UpdatedLastName")
                 .phoneNumber(phoneNumber)
                 .password("12!@asAS")
                 .email(email)
@@ -155,8 +154,8 @@ public class UserServiceTest {
                     .email(userToUpdate.getEmail())
                     .password(userToUpdate.getPassword())
                     .phoneNumber(userToUpdate.getPhoneNumber())
-                    .firstName(userToUpdate.getFirstName())
-                    .lastName(userToUpdate.getLastName())
+                    .firstname(userToUpdate.getFirstname())
+                    .lastname(userToUpdate.getLastname())
                     .build();
         });
 
@@ -187,8 +186,8 @@ public class UserServiceTest {
         String phoneNumber = "380981258958";
         User userToUpdate = User.builder()
                 .id(id)
-                .firstName("UpdatedFirstName")
-                .lastName("UpdatedLastName")
+                .firstname("UpdatedFirstName")
+                .lastname("UpdatedLastName")
                 .phoneNumber(phoneNumber)
                 .password("12!@asAS")
                 .email(email)
@@ -207,8 +206,8 @@ public class UserServiceTest {
         String email = "email@gmail.com";
         User userToUpdate = User.builder()
                 .id(id)
-                .firstName("UpdatedFirstName")
-                .lastName("UpdatedLastName")
+                .firstname("UpdatedFirstName")
+                .lastname("UpdatedLastName")
                 .phoneNumber(user.getPhoneNumber())
                 .password("12!@asAS")
                 .email(email)
@@ -227,8 +226,8 @@ public class UserServiceTest {
         String phoneNumber = "380981258958";
         User userToUpdate = User.builder()
                 .id(id)
-                .firstName("UpdatedFirstName")
-                .lastName("UpdatedLastName")
+                .firstname("UpdatedFirstName")
+                .lastname("UpdatedLastName")
                 .phoneNumber(phoneNumber)
                 .password("12!@asAS")
                 .email(user.getEmail())

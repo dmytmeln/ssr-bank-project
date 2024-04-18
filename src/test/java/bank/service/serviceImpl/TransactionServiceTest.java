@@ -42,7 +42,7 @@ public class TransactionServiceTest {
         Transaction transaction = Transaction.builder()
                 .id(ID)
                 .msg("Transaction Message")
-                .transactionType("Transaction Type")
+                .type("Transaction Type")
                 .moneyAmount(1000D)
                 .bankAccount(bankAccount)
                 .build();

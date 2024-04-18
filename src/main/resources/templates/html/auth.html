@@ -64,13 +64,13 @@
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="firstname" placeholder="Enter your firstname" required th:field="*{firstName}"/>
-                            <small class="invalid_field" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name error</small>
+                            <input type="text" name="firstname" placeholder="Enter your firstname" required th:field="*{firstname}"/>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}">First name error</small>
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="lastname" placeholder="Enter your lastname" required th:field="*{lastName}"/>
-                            <small class="invalid_field" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name error</small>
+                            <input type="text" name="lastname" placeholder="Enter your lastname" required th:field="*{lastname}"/>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}">Last name error</small>
                         </div>
 
                         <div class="input_box">
