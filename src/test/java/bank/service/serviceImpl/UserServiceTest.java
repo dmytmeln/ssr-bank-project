@@ -53,9 +53,7 @@ public class UserServiceTest {
 
         User foundUser = userService.findById(id);
 
-        assertEquals(id, foundUser.getId());
-        assertEquals(user.getEmail(), foundUser.getEmail());
-        assertEquals(user.getPassword(), foundUser.getPassword());
+        assertEquals(user, foundUser);
     }
 
     @Test
@@ -74,10 +72,6 @@ public class UserServiceTest {
         when(userRepoMock.save(any(User.class))).thenAnswer(invocationOnMock -> {
             User userToSave = invocationOnMock.getArgument(0);
             userToSave.setId(expectedId);
-            BankAccount bankAccount = userToSave.getBankAccount();
-            if (bankAccount != null) {
-                bankAccount.setId(expectedId);
-            }
             return userToSave;
         });
 
@@ -92,11 +86,7 @@ public class UserServiceTest {
         verify(userRepoMock, times(1)).findById(actualId);
 
         assertEquals(expectedId, actualId);
-        assertEquals(user.getFirstName(), savedUser.getFirstName());
-        assertEquals(user.getLastName(), savedUser.getLastName());
-        assertEquals(user.getEmail(), savedUser.getEmail());
-        assertEquals(user.getPhoneNumber(), savedUser.getPhoneNumber());
-        assertEquals(expectedId, signupUser.getBankAccount().getId());
+        assertEquals(user, savedUser);
 
     }
 
@@ -179,11 +169,7 @@ public class UserServiceTest {
         User updatedUser = userCaptor.getValue();
 
         assertNotNull(updatedUser);
-        assertEquals(userToUpdate.getFirstName(), updatedUser.getFirstName());
-        assertEquals(userToUpdate.getLastName(), updatedUser.getLastName());
-        assertEquals(userToUpdate.getEmail(), updatedUser.getEmail());
-        assertEquals(userToUpdate.getPhoneNumber(), updatedUser.getPhoneNumber());
-        assertEquals(userToUpdate.getPassword(), updatedUser.getPassword());
+        assertEquals(userToUpdate, updatedUser);
 
     }
 
