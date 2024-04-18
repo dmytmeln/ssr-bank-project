@@ -2,25 +2,22 @@ package bank.repository;
 
 import bank.domain.User;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
+@DataJpaTest
 @ActiveProfiles("test")
-@SpringBootTest
-public class UserRepositoryTests {
+public class UserRepositoryTest {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserRepositoryTests(UserRepository userRepository) {
+    public UserRepositoryTest(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -37,7 +34,7 @@ public class UserRepositoryTests {
     void readExistingUserByIdTest() {
         String expectedName = "dmytro";
         long id = 1L;
-        User user = userRepository.findById(id).orElse(new User());
+        User user = userRepository.findById(id).get();
 
         assertEquals(id, user.getId());
         assertEquals(expectedName, user.getFirstName());
@@ -52,7 +49,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void createUserByIdTest() {
+    void createUserTest() {
         int expectedSize = 2;
         long expectedId = 2;
         String email = "dimon281@gmail.com";
@@ -87,9 +84,9 @@ public class UserRepositoryTests {
                 .build();
 
         userRepository.save(user);
-        User updatedUser = userRepository.findById(expectedId).orElse(new User());
+        User updatedUser = userRepository.findById(expectedId).get();
 
-                assertEquals(expectedSize, userRepository.findAll().size());
+        assertEquals(expectedSize, userRepository.findAll().size());
         assertEquals(expectedId, updatedUser.getId());
         assertEquals(email, updatedUser.getEmail());
         assertEquals(password, updatedUser.getPassword());
@@ -107,7 +104,7 @@ public class UserRepositoryTests {
     void testFindUserByEmailAndPhoneNumberAndPasswordTest() {
         String existingEmail = "dimamel28@gmail.com";
         String existingPhoneNumber = "380984035791";
-        String existingPass = "Mdm281004";
+        String existingPass = "mdm281004";
 
         long expectedId = 1;
         String expectedFirstName = "dmytro";
@@ -116,7 +113,7 @@ public class UserRepositoryTests {
                 existingEmail,
                 existingPhoneNumber,
                 existingPass
-        ).orElse(new User());
+        ).get();
 
         assertEquals(expectedId, user.getId());
         assertEquals(expectedFirstName, user.getFirstName());
