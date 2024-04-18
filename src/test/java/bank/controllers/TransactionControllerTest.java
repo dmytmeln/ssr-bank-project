@@ -91,7 +91,7 @@ public class TransactionControllerTest {
 
         when(bankService.findBankAccountByUserId(id)).thenThrow(new EntityNotFoundException(
                 "BankAccount with  id [%d] not found".formatted(id)
-        ));;
+        ));
 
         mockMvc.perform(get("/transactions").sessionAttr("userId", id))
                 .andExpect(status().isNotFound())

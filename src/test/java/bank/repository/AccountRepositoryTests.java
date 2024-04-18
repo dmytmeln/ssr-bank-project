@@ -82,7 +82,6 @@ public class AccountRepositoryTests {
         Optional<BankAccount> found = accountRepository.findById(id);
 
         assertFalse(found.isPresent());
-        assertNull(found.orElse(null));
     }
 
 }

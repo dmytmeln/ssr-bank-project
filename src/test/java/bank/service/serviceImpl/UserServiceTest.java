@@ -3,7 +3,8 @@ package bank.service.serviceImpl;
 import bank.domain.BankAccount;
 import bank.domain.User;
 import bank.repository.UserRepository;
-import bank.service.serviceImpl.UserServiceImpl;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +13,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 
 import java.util.Optional;
 

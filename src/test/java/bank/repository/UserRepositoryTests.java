@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UserRepositoryTests {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserRepositoryTests(UserRepository userRepository) {
@@ -37,7 +37,7 @@ public class UserRepositoryTests {
     void readExistingUserByIdTest() {
         String expectedName = "dmytro";
         long id = 1L;
-        User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).orElse(new User());
 
         assertEquals(id, user.getId());
         assertEquals(expectedName, user.getFirstName());
@@ -87,7 +87,7 @@ public class UserRepositoryTests {
                 .build();
 
         userRepository.save(user);
-        User updatedUser = userRepository.findById(expectedId).get();
+        User updatedUser = userRepository.findById(expectedId).orElse(new User());
 
                 assertEquals(expectedSize, userRepository.findAll().size());
         assertEquals(expectedId, updatedUser.getId());
@@ -116,7 +116,7 @@ public class UserRepositoryTests {
                 existingEmail,
                 existingPhoneNumber,
                 existingPass
-        ).get();
+        ).orElse(new User());
 
         assertEquals(expectedId, user.getId());
         assertEquals(expectedFirstName, user.getFirstName());

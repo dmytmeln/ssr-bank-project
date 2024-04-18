@@ -2,6 +2,7 @@ package bank.repository;
 
 import bank.domain.BankAccount;
 import bank.domain.Transaction;
+import bank.domain.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class TransactionRepositoryTests {
 
-    private TransactionRepository transactionRepo;
+    private final TransactionRepository transactionRepo;
 
     @Autowired
     public TransactionRepositoryTests(TransactionRepository transactionRepo) {
@@ -66,7 +67,7 @@ public class TransactionRepositoryTests {
     @Test
     void updateTransactionHistory() {
         double moneyAmount = 10000.0;
-        Transaction transaction = transactionRepo.findById(1L).get();
+        Transaction transaction = transactionRepo.findById(1L).orElse(new Transaction());
         transaction = transaction.toBuilder()
                 .moneyAmount(moneyAmount)
                 .build();

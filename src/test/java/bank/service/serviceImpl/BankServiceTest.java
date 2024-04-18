@@ -3,7 +3,6 @@ package bank.service.serviceImpl;
 import bank.domain.BankAccount;
 import bank.domain.Transaction;
 import bank.repository.AccountRepository;
-import bank.service.serviceImpl.BankServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +67,7 @@ public class BankServiceTest {
     @Test
     void testInvalidFindByUserId() {
         long userId = 1;
-        when(accountRepoMock.findBankAccountByUserId(userId)).thenReturn(Optional.ofNullable(null));
+        when(accountRepoMock.findBankAccountByUserId(userId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> bankService.findBankAccountByUserId(userId));
     }
