@@ -1,7 +1,7 @@
 package bank.controllers;
 
-import bank.model.domain.User;
-import bank.model.services.UserService;
+import bank.domain.User;
+import bank.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -29,7 +29,7 @@
 
         <!-- Home -->
         <section class="home">
-            <!--/*@thymesVar id="user" type="bank.model.domain.User"*/-->
+            <!--/*@thymesVar id="user" type="bank.domain.User"*/-->
             <form action="#" th:action="@{/user/update/{userId}(userId=${user.id})}" th:object="${user}" method="post">
                 <div class="names">
                     <label class="edit_label" for="first_name"><h4 class="user_name">Name: </h4></label>

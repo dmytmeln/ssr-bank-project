@@ -1,7 +1,7 @@
 package bank.controllers;
 
-import bank.model.domain.User;
-import bank.model.services.UserService;
+import bank.domain.User;
+import bank.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

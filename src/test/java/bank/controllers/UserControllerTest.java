@@ -1,7 +1,7 @@
 package bank.controllers;
 
-import bank.model.domain.User;
-import bank.model.services.UserService;
+import bank.domain.User;
+import bank.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

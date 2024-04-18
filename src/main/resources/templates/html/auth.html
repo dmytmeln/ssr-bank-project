@@ -18,7 +18,7 @@
                 <a th:href="@{/}"><i class="uil uil-times form_close"></i></a>
                 <!-- Login From -->
                 <div class="form login_form">
-                    <!--/*@thymesVar id="user" type="bank.model.domain.User"*/-->
+                    <!--/*@thymesVar id="user" type="bank.domain.User"*/-->
                     <form action="#" th:action="@{/auth/login}" th:object="${user}" method="post">
                         <h2>Login</h2>
 
@@ -53,7 +53,7 @@
 
                 <!-- Signup From -->
                 <div class="form signup_form">
-                    <!--/*@thymesVar id="user" type="bank.model.domain.User"*/-->
+                    <!--/*@thymesVar id="user" type="bank.domain.User"*/-->
                     <form action="#" th:action="@{/auth/signup}" th:object="${user}" method="post">
                         <h2>Signup</h2>
 
