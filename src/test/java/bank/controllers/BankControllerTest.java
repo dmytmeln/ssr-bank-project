@@ -1,8 +1,8 @@
 package bank.controllers;
 
-import bank.model.domain.BankAccount;
-import bank.model.domain.Transaction;
-import bank.model.services.BankService;
+import bank.domain.BankAccount;
+import bank.domain.Transaction;
+import bank.service.BankService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

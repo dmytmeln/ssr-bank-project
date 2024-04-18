@@ -1,8 +1,8 @@
 package bank.controllers;
 
-import bank.model.domain.BankAccount;
-import bank.model.services.BankService;
-import bank.model.services.TransactionService;
+import bank.domain.BankAccount;
+import bank.service.BankService;
+import bank.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

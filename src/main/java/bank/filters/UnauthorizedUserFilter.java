@@ -1,6 +1,5 @@
 package bank.filters;
 
-import bank.model.domain.User;
 import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

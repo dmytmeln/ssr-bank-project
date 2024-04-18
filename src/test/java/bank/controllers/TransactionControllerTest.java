@@ -1,9 +1,9 @@
 package bank.controllers;
 
-import bank.model.domain.BankAccount;
-import bank.model.domain.Transaction;
-import bank.model.services.BankService;
-import bank.model.services.TransactionService;
+import bank.domain.BankAccount;
+import bank.domain.Transaction;
+import bank.service.BankService;
+import bank.service.TransactionService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,7 +91,7 @@ public class TransactionControllerTest {
 
         when(bankService.findBankAccountByUserId(id)).thenThrow(new EntityNotFoundException(
                 "BankAccount with  id [%d] not found".formatted(id)
-        ));;
+        ));
 
         mockMvc.perform(get("/transactions").sessionAttr("userId", id))
                 .andExpect(status().isNotFound())
