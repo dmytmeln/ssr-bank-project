@@ -26,7 +26,7 @@ public class BankAccount {
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
     @Override
