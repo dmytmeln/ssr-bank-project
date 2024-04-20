@@ -33,10 +33,9 @@ public class AuthControllerTest {
     private UserService userServiceMock;
 
     @Captor
-    private ArgumentCaptor<User> userCaptor;
-
-    @Captor
     private ArgumentCaptor<UserLogin> userLoginCaptor;
+    @Captor
+    private ArgumentCaptor<UserForm> userFormCaptor;
 
     private final String AUTH_PAGE = "html/auth";
 
@@ -58,11 +57,7 @@ public class AuthControllerTest {
 
     @BeforeEach
     void setup() {
-        when(userServiceMock.signup(any(User.class))).thenAnswer(invocationOnMock -> {
-            User user = invocationOnMock.getArgument(0);
-            user.setId(ID);
-            return user;
-        });
+        when(userServiceMock.signup(any(UserForm.class))).thenReturn(user);
 
         when(userServiceMock.login(any(UserLogin.class))).thenAnswer(invocationOnMock -> {
             UserLogin userLogin = invocationOnMock.getArgument(0);
@@ -89,11 +84,13 @@ public class AuthControllerTest {
 
     @Test
     void testSignupUser() throws Exception {
+        String email = user.getEmail();
+        String password = user.getPassword();
         mockMvc.perform(post("/auth/signup")
-                        .param("email", user.getEmail())
+                        .param("email", email)
                         .param("firstname", user.getFirstname())
                         .param("lastname", user.getLastname())
-                        .param("password", user.getPassword())
+                        .param("password", password)
                         .param("phoneNumber", user.getPhoneNumber())
                         .param("creationDate", String.valueOf(user.getCreationDate()))
                         .flashAttr("userLogin", new UserLogin())
@@ -101,10 +98,11 @@ public class AuthControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/auth"));
 
-        verify(userServiceMock, times(1)).signup(userCaptor.capture());
-        User captorValue = userCaptor.getValue();
+        verify(userServiceMock, times(1)).signup(userFormCaptor.capture());
+        UserForm captorValue = userFormCaptor.getValue();
 
-        assertEquals(user, captorValue);
+        assertEquals(email, captorValue.getEmail());
+        assertEquals(password, captorValue.getPassword());
     }
 
     @Test

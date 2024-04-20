@@ -3,7 +3,6 @@ package bank.controllers;
 import bank.domain.User;
 import bank.dto.UserForm;
 import bank.dto.UserLogin;
-import bank.dto.UserTransformer;
 import bank.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +36,7 @@ public class AuthController {
             return AUTH_PAGE;
         }
 
-        User user = UserTransformer.convertToEntity(userForm);
-        userService.signup(user);
+        userService.signup(userForm);
         return "redirect:/auth";
     }
 
