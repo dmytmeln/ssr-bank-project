@@ -16,17 +16,11 @@ import java.util.List;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class BankAccountDto {
-
-    @Positive(message = "Id should be greater than zero!")
-    private Long id;
+public class BankAccountForm {
 
     @NotNull(message = "Balance can't be null")
     @PositiveOrZero
     @Builder.Default
     private Double balance = 0D;
-
-    @Builder.Default
-    private List<Transaction> transactions = new ArrayList<>();
 
 }

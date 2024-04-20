@@ -1,9 +1,7 @@
 package bank.dto;
 
-import bank.domain.BankAccount;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +13,9 @@ import java.time.Instant;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserForm {
 
     private static final String NAME_REGEX = "^[A-Z][a-z]*(?:-[A-Z][a-z]*)*$";
-
-    @Positive(message = "Id should be greater than zero!")
-    private Long id;
 
     @NotNull(message = "First name can't be null")
     @Pattern(regexp = NAME_REGEX, message = "Invalid first name format")
@@ -44,7 +39,6 @@ public class UserDto {
     @Pattern(regexp = "\\d{12}", message = "Phone number has to contain 12 digits")
     private String phoneNumber;
 
-    @NotNull(message = "Creation Date can't be null")
     private Instant creationDate;
 
 }

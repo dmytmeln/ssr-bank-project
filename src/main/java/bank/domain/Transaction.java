@@ -29,7 +29,8 @@ public class Transaction {
     private String type;
 
     @Column
-    private Double moneyAmount;
+    @Builder.Default
+    private Double moneyAmount = 0D;
 
     @Column
     @CreationTimestamp

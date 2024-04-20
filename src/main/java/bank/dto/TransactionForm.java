@@ -13,10 +13,7 @@ import java.time.Instant;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionDto {
-
-    @Positive(message = "Id should be greater than zero!")
-    private Long id;
+public class TransactionForm {
 
     @NotNull(message = "Transaction msg can't be null")
     private String msg;
@@ -28,7 +25,6 @@ public class TransactionDto {
     @Positive(message = "Amount of money have to be bigger than zero")
     private Double moneyAmount;
 
-    @NotNull(message = "Transaction Date can't be null")
     private Instant transactionDate;
 
 }

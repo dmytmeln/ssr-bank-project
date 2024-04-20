@@ -1,6 +1,7 @@
 package bank.service;
 
 import bank.domain.User;
+import bank.dto.UserLogin;
 
 public interface UserService {
 
@@ -10,7 +11,7 @@ public interface UserService {
 
     User signup(User user);
 
-    User login(User user);
+    User login(UserLogin userLogin);
 
     User update(User user);
 

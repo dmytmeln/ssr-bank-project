@@ -29,8 +29,8 @@
 
         <!-- Home -->
         <section class="home">
-            <!--/*@thymesVar id="user" type="bank.domain.User"*/-->
-            <form action="#" th:action="@{/user/update/{userId}(userId=${user.id})}" th:object="${user}" method="post">
+            <!--/*@thymesVar id="userForm" type="bank.dto.UserForm"*/-->
+            <form action="#" th:action="@{/user/update/{userId}(userId=${userId})}" th:object="${userForm}" method="post">
                 <div class="names">
                     <label class="edit_label" for="firstname"><h4 class="user_name">Name: </h4></label>
                     <input class="edit_input" id="firstname" name="firstname" type="text" th:field="*{firstname}">
@@ -60,7 +60,7 @@
 
                     <label class="edit_label" for="creation_date"><h4 class="user_name">Creation date: </h4></label>
                     <input class="edit_input" disabled id="creation_date" name="creation_date" type="text"
-                           th:value="${#temporals.format(user.creationDate, 'dd LLLL yyyy HH:mm')}">
+                           th:value="${#temporals.format(userForm.creationDate, 'dd LLLL yyyy HH:mm')}">
                     <input type="hidden" th:field="*{creationDate}">
                     <br>
 

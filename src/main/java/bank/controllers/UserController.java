@@ -1,14 +1,15 @@
 package bank.controllers;
 
 import bank.domain.User;
+import bank.dto.UserForm;
+import bank.dto.UserTransformer;
 import bank.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 @Controller("UserController")
 @RequestMapping("/user")
@@ -21,25 +22,25 @@ public class UserController {
     @GetMapping
     public String showUser(@SessionAttribute Long userId, Model model) {
         User user = userService.findById(userId);
-
-        model.addAttribute("user", user);
-
+        System.out.println(user);
+        UserForm userForm = UserTransformer.convertToUserAuth(user);
+        System.out.println(userForm);
+        model.addAttribute("userForm", userForm);
+        model.addAttribute("userId", userId);
         return USER_PAGE;
     }
 
     @PostMapping("update/{userId}")
     public String updateUser(
             @PathVariable Long userId,
-            @ModelAttribute("user") @Valid User user,
-            BindingResult bindingResult
+            @ModelAttribute("user") @Validated UserForm userForm, BindingResult bindingResult
     ) {
-        user.setId(userId);
         if (bindingResult.hasErrors()) {
             return USER_PAGE;
         }
 
+        User user = UserTransformer.convertToEntity(userForm, userId);
         userService.update(user);
-
         return "redirect:/user";
     }
 

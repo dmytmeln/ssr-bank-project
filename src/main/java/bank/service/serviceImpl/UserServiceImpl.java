@@ -2,6 +2,7 @@ package bank.service.serviceImpl;
 
 import bank.domain.BankAccount;
 import bank.domain.User;
+import bank.dto.UserLogin;
 import bank.repository.UserRepository;
 import bank.service.UserService;
 import lombok.AllArgsConstructor;
@@ -53,11 +54,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User login(User user) {
+    public User login(UserLogin userLogin) {
         // find user by email, phone number and password (info that user provide when he tries to log in)
-        String email = user.getEmail();
-        String phoneNumber = user.getPhoneNumber();
-        String password = user.getPassword();
+        String email = userLogin.getEmail();
+        String phoneNumber = userLogin.getPhoneNumber();
+        String password = userLogin.getPassword();
+
         return userRepo.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password).orElseThrow(
                 () -> new EntityNotFoundException(
                         "User with email: [%s], phone number: [%s] and password: [%s] not found!"

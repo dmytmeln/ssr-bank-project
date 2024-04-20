@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,13 +22,15 @@ public class BankAccount {
     private Long id;
 
     @Column
-    private Double balance;
+    @Builder.Default
+    private Double balance = 0D;
 
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     private User user;
 
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
-    private List<Transaction> transactions;
+    @Builder.Default
+    private List<Transaction> transactions = new ArrayList<>();
 
     @Override
     public String toString() {
