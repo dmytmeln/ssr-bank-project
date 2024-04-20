@@ -31,7 +31,7 @@ public class BankControllerTest {
     private BankService bankServiceMock;
 
     @Captor
-    ArgumentCaptor<Transaction> transactionCaptor;
+    ArgumentCaptor<TransactionForm> transactionCaptor;
 
     private static Long accountId;
     private static BankAccount bankAccount;
@@ -88,13 +88,11 @@ public class BankControllerTest {
         String type = "Type";
         double expectedBalance = bankAccount.getBalance() + 1000D;
 
-        when(bankServiceMock.makeDeposit(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
+        when(bankServiceMock.makeDeposit(eq(accountId), any(TransactionForm.class))).thenAnswer(invocationOnMock -> {
             Long bankAccountId = invocationOnMock.getArgument(0);
-            Transaction transaction = invocationOnMock.getArgument(1);
+            TransactionForm transaction = invocationOnMock.getArgument(1);
             BankAccount account = bankServiceMock.findById(bankAccountId);
             account.setBalance(account.getBalance() + transaction.getMoneyAmount());
-            transaction.setBankAccount(account);
-            transaction.setId(bankAccountId);
 
             return account;
         });
@@ -110,12 +108,10 @@ public class BankControllerTest {
         verify(bankServiceMock, times(1)).findById(accountId);
         verify(bankServiceMock, times(1)).makeDeposit(eq(accountId), transactionCaptor.capture());
 
-        Transaction captorValue = transactionCaptor.getValue();
+        TransactionForm captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
         assertEquals(type, captorValue.getType());
-        assertEquals(bankAccount, captorValue.getBankAccount());
-        assertEquals(accountId, captorValue.getId());
         assertEquals(expectedBalance, bankAccount.getBalance());
     }
 
@@ -136,13 +132,11 @@ public class BankControllerTest {
         String type = "Type";
         double expectedBalance = bankAccount.getBalance() - 1000D;
 
-        when(bankServiceMock.makeWithdrawal(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
+        when(bankServiceMock.makeWithdrawal(eq(accountId), any(TransactionForm.class))).thenAnswer(invocationOnMock -> {
             Long bankAccountId = invocationOnMock.getArgument(0);
-            Transaction transaction = invocationOnMock.getArgument(1);
+            TransactionForm transaction = invocationOnMock.getArgument(1);
             BankAccount account = bankServiceMock.findById(bankAccountId);
             account.setBalance(account.getBalance() - transaction.getMoneyAmount());
-            transaction.setBankAccount(account);
-            transaction.setId(bankAccountId);
 
             return account;
         });
@@ -158,12 +152,10 @@ public class BankControllerTest {
         verify(bankServiceMock, times(1)).findById(accountId);
         verify(bankServiceMock, times(1)).makeWithdrawal(eq(accountId), transactionCaptor.capture());
 
-        Transaction captorValue = transactionCaptor.getValue();
+        TransactionForm captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
         assertEquals(type, captorValue.getType());
-        assertEquals(bankAccount, captorValue.getBankAccount());
-        assertEquals(accountId, captorValue.getId());
         assertEquals(expectedBalance, bankAccount.getBalance());
 
     }

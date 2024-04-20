@@ -2,10 +2,13 @@ package bank.service.serviceImpl;
 
 import bank.domain.BankAccount;
 import bank.domain.Transaction;
+import bank.dto.TransactionForm;
 import bank.repository.AccountRepository;
 import bank.service.BankService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BankServiceImpl implements BankService {
 
     private final AccountRepository accountRepo;
+    private final ModelMapper modelMapper;
 
     @Override
     @Transactional
@@ -27,7 +31,7 @@ public class BankServiceImpl implements BankService {
 
     @Override
     @Transactional
-    public BankAccount makeDeposit(Long accountId, Transaction transaction) {
+    public BankAccount makeDeposit(Long accountId, TransactionForm transaction) {
         BankAccount bankAccount = findById(accountId);
         bankAccount.setBalance(bankAccount.getBalance() + transaction.getMoneyAmount());
         if (transaction.getType().isBlank()) {
@@ -40,7 +44,7 @@ public class BankServiceImpl implements BankService {
 
     @Override
     @Transactional
-    public BankAccount makeWithdrawal(Long accountId, Transaction transaction) {
+    public BankAccount makeWithdrawal(Long accountId, TransactionForm transaction) {
         BankAccount bankAccount = findById(accountId);
 
         double balance = bankAccount.getBalance();
@@ -57,14 +61,14 @@ public class BankServiceImpl implements BankService {
         return update(bankAccount, transaction);
     }
 
-    private BankAccount update(BankAccount bankAccount, Transaction transaction) {
+    private BankAccount update(BankAccount bankAccount, TransactionForm transactionForm) {
+        Transaction transaction = modelMapper.map(transactionForm, Transaction.class);
         transaction.setBankAccount(bankAccount);
         if (transaction.getMsg().isBlank()) {
             transaction.setMsg("Standard Transaction Message");
         }
 
         bankAccount.getTransactions().add(transaction);
-
         return accountRepo.save(bankAccount);
     }
 

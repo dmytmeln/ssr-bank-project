@@ -1,9 +1,7 @@
 package bank.controllers;
 
-import bank.domain.BankAccount;
 import bank.domain.Transaction;
 import bank.dto.TransactionForm;
-import bank.dto.TransactionTransformer;
 import bank.service.BankService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -40,8 +38,7 @@ public class BankController {
             return BANK_PAGE;
         }
 
-        Transaction transaction = TransactionTransformer.convertToEntity(transactionForm);
-        bankService.makeDeposit(accountId, transaction);
+        bankService.makeDeposit(accountId, transactionForm);
         return "redirect:/bank";
     }
 
@@ -56,8 +53,7 @@ public class BankController {
             return BANK_PAGE;
         }
 
-        Transaction transaction = TransactionTransformer.convertToEntity(transactionForm);
-        bankService.makeWithdrawal(accountId, transaction);
+        bankService.makeWithdrawal(accountId, transactionForm);
         return "redirect:/bank";
     }
 
