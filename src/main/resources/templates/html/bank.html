@@ -34,8 +34,8 @@
             <div class="form_container deposit">
                 <!-- Deposit -->
                 <div class="form">
-                    <!--/*@thymesVar id="transaction" type="bank.domain.Transaction"*/-->
-                    <form action="#" method="post" th:object="${transaction}" th:action="@{/bank/deposit/{id}(id=${account.id})}">
+                    <!--/*@thymesVar id="transactionForm" type="bank.dto.TransactionForm"*/-->
+                    <form action="#" method="post" th:object="${transactionForm}" th:action="@{/bank/deposit/{id}(id=${account.id})}">
                         <h2>Make Deposit</h2>
 
                         <div class="input_box">
@@ -67,8 +67,8 @@
 
             <div class="form_container withdrawal">
                 <div class="form">
-                    <!--/*@thymesVar id="transaction" type="bank.domain.Transaction"*/-->
-                    <form action="#" method="post" th:object="${transaction}" th:action="@{/bank/withdrawal/{id}(id=${account.id})}">
+                    <!--/*@thymesVar id="transactionForm" type="bank.dto.TransactionForm"*/-->
+                    <form action="#" method="post" th:object="${transactionForm}" th:action="@{/bank/withdrawal/{id}(id=${account.id})}">
                         <h2>Make Withdrawal</h2>
 
                         <div class="input_box">

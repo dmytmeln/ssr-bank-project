@@ -2,14 +2,15 @@ package bank.controllers;
 
 import bank.domain.BankAccount;
 import bank.domain.Transaction;
+import bank.dto.TransactionForm;
+import bank.dto.TransactionTransformer;
 import bank.service.BankService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 @Controller("BankController")
 @RequestMapping("/bank")
@@ -24,7 +25,7 @@ public class BankController {
     public String showBank(@SessionAttribute Long userId, Model model) {
         BankAccount bankAccount = bankService.findBankAccountByUserId(userId);
         model.addAttribute("account", bankAccount);
-        model.addAttribute("transaction", new Transaction());
+        model.addAttribute("transactionForm", new TransactionForm());
         return BANK_PAGE;
     }
 
@@ -32,16 +33,14 @@ public class BankController {
     public String makeDeposit(
             Model model,
             @PathVariable Long accountId,
-            @ModelAttribute("transaction") @Valid Transaction transaction,
-            BindingResult bindingResult
+            @ModelAttribute("transaction") @Validated TransactionForm transactionForm, BindingResult bindingResult
     ) {
-
-        BankAccount bankAccount = bankService.findById(accountId);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("account", bankAccount);
+            model.addAttribute("account", bankService.findById(accountId));
             return BANK_PAGE;
         }
 
+        Transaction transaction = TransactionTransformer.convertToEntity(transactionForm);
         bankService.makeDeposit(accountId, transaction);
 
         return "redirect:/bank";
@@ -51,16 +50,14 @@ public class BankController {
     public String makeWithdrawal(
             Model model,
             @PathVariable Long accountId,
-            @ModelAttribute("transaction") @Valid Transaction transaction,
-            BindingResult bindingResult
+            @ModelAttribute("transaction") @Validated TransactionForm transactionForm, BindingResult bindingResult
     ) {
-
-        BankAccount bankAccount = bankService.findById(accountId);
-        model.addAttribute("account", bankAccount);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("account", bankService.findById(accountId));
             return BANK_PAGE;
         }
 
+        Transaction transaction = TransactionTransformer.convertToEntity(transactionForm);
         bankService.makeWithdrawal(accountId, transaction);
 
         return "redirect:/bank";

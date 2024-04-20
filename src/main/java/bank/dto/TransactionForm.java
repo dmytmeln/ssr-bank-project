@@ -25,6 +25,4 @@ public class TransactionForm {
     @Positive(message = "Amount of money have to be bigger than zero")
     private Double moneyAmount;
 
-    private Instant transactionDate;
-
 }
