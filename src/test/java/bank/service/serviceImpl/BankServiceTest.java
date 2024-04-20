@@ -2,6 +2,7 @@ package bank.service.serviceImpl;
 
 import bank.domain.BankAccount;
 import bank.domain.Transaction;
+import bank.dto.TransactionForm;
 import bank.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,10 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -23,6 +23,9 @@ public class BankServiceTest {
 
     @Mock
     private AccountRepository accountRepoMock;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private BankServiceImpl bankService;
@@ -80,14 +83,21 @@ public class BankServiceTest {
 
         String expectedInfo = "Transaction Test Deposit";
         double moneyAmount = 1000.;
-        Transaction transaction = Transaction.builder()
+        TransactionForm transaction = TransactionForm.builder()
                 .moneyAmount(moneyAmount)
                 .msg(expectedInfo)
-                .transactionType(expectedInfo)
+                .type(expectedInfo)
                 .build();
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
         when(accountRepoMock.save(bankAccount)).thenReturn(bankAccount);
+        when(modelMapper.map(transaction, Transaction.class)).thenReturn(
+                Transaction.builder()
+                        .moneyAmount(moneyAmount)
+                        .type(expectedInfo)
+                        .msg(expectedInfo)
+                        .build()
+        );
 
         BankAccount bankAccount = bankService.makeDeposit(id, transaction);
         List<Transaction> transactions = bankAccount.getTransactions();
@@ -97,8 +107,9 @@ public class BankServiceTest {
         assertEquals(expectedSize, transactions.size());
         assertEquals(expectedBalance, bankAccount.getBalance());
 
-        transaction.setBankAccount(bankAccount);
-        assertEquals(transaction, transactionDB);
+        assertEquals(transaction.getType(), transactionDB.getType());
+        assertEquals(transaction.getMsg(), transactionDB.getMsg());
+        assertEquals(transaction.getMoneyAmount(), transactionDB.getMoneyAmount());
     }
 
     @Test
@@ -109,14 +120,21 @@ public class BankServiceTest {
         int expectedSize = 1;
 
         double moneyAmount = 1000.;
-        Transaction transaction = Transaction.builder()
+        TransactionForm transaction = TransactionForm.builder()
                 .moneyAmount(moneyAmount)
                 .msg(expectedInfo)
-                .transactionType(expectedInfo)
+                .type(expectedInfo)
                 .build();
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
         when(accountRepoMock.save(bankAccount)).thenReturn(bankAccount);
+        when(modelMapper.map(transaction, Transaction.class)).thenReturn(
+                Transaction.builder()
+                        .moneyAmount(moneyAmount)
+                        .type(expectedInfo)
+                        .msg(expectedInfo)
+                        .build()
+        );
 
         BankAccount bankAccount = bankService.makeWithdrawal(ID, transaction);
         List<Transaction> transactions = bankAccount.getTransactions();
@@ -126,8 +144,9 @@ public class BankServiceTest {
         assertEquals(expectedSize, transactions.size());
         assertEquals(expectedBalance, bankAccount.getBalance());
 
-        transaction.setBankAccount(bankAccount);
-        assertEquals(transaction, transactionDB);
+        assertEquals(transaction.getType(), transactionDB.getType());
+        assertEquals(transaction.getMoneyAmount(), transactionDB.getMoneyAmount());
+        assertEquals(transaction.getMsg(), transactionDB.getMsg());
     }
 
     @Test
@@ -137,12 +156,12 @@ public class BankServiceTest {
         Transaction transaction = Transaction.builder()
                 .moneyAmount(moneyAmount)
                 .msg(expectedInfo)
-                .transactionType(expectedInfo)
+                .type(expectedInfo)
                 .build();
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
 
-        assertThrows(IllegalArgumentException.class, () -> bankService.makeWithdrawal(ID, transaction));
+        assertThrows(IllegalArgumentException.class, () -> bankService.makeWithdrawal(ID, modelMapper.map(transaction, TransactionForm.class)));
     }
 
 

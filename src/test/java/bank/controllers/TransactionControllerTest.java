@@ -42,7 +42,7 @@ public class TransactionControllerTest {
         transaction = Transaction.builder()
                 .moneyAmount(1000D)
                 .msg("Message")
-                .transactionType("Type")
+                .type("Type")
                 .id(id)
                 .build();
 

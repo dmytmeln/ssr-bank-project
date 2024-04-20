@@ -1,15 +1,14 @@
 package bank.controllers;
 
-import bank.domain.BankAccount;
 import bank.domain.Transaction;
+import bank.dto.TransactionForm;
 import bank.service.BankService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 @Controller("BankController")
 @RequestMapping("/bank")
@@ -22,47 +21,39 @@ public class BankController {
 
     @GetMapping
     public String showBank(@SessionAttribute Long userId, Model model) {
-        BankAccount bankAccount = bankService.findBankAccountByUserId(userId);
-        model.addAttribute("account", bankAccount);
-        model.addAttribute("transaction", new Transaction());
+        model.addAttribute("account", bankService.findBankAccountByUserId(userId));
+        model.addAttribute("transactionFormW", new TransactionForm());
+        model.addAttribute("transactionFormD", new TransactionForm());
         return BANK_PAGE;
     }
 
     @PostMapping("deposit/{accountId}")
     public String makeDeposit(
-            Model model,
-            @PathVariable Long accountId,
-            @ModelAttribute("transaction") @Valid Transaction transaction,
-            BindingResult bindingResult
+            @PathVariable Long accountId, Model model,
+            @ModelAttribute("transactionFormD") @Validated TransactionForm transactionForm, BindingResult bindingResult
     ) {
-
-        BankAccount bankAccount = bankService.findById(accountId);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("account", bankAccount);
+            model.addAttribute("account", bankService.findById(accountId));
+            model.addAttribute("transactionFormW", new TransactionForm());
             return BANK_PAGE;
         }
 
-        bankService.makeDeposit(accountId, transaction);
-
+        bankService.makeDeposit(accountId, transactionForm);
         return "redirect:/bank";
     }
 
     @PostMapping("withdrawal/{accountId}")
     public String makeWithdrawal(
-            Model model,
-            @PathVariable Long accountId,
-            @ModelAttribute("transaction") @Valid Transaction transaction,
-            BindingResult bindingResult
+            @PathVariable Long accountId, Model model,
+            @ModelAttribute("transactionFormW") @Validated TransactionForm transactionForm, BindingResult bindingResult
     ) {
-
-        BankAccount bankAccount = bankService.findById(accountId);
-        model.addAttribute("account", bankAccount);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("account", bankService.findById(accountId));
+            model.addAttribute("transactionFormD", new TransactionForm());
             return BANK_PAGE;
         }
 
-        bankService.makeWithdrawal(accountId, transaction);
-
+        bankService.makeWithdrawal(accountId, transactionForm);
         return "redirect:/bank";
     }
 

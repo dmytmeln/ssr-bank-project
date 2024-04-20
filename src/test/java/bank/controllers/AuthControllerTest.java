@@ -1,6 +1,8 @@
 package bank.controllers;
 
 import bank.domain.User;
+import bank.dto.UserForm;
+import bank.dto.UserLogin;
 import bank.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,8 @@ import java.time.Instant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
@@ -30,7 +33,9 @@ public class AuthControllerTest {
     private UserService userServiceMock;
 
     @Captor
-    private ArgumentCaptor<User> userCaptor;
+    private ArgumentCaptor<UserLogin> userLoginCaptor;
+    @Captor
+    private ArgumentCaptor<UserForm> userFormCaptor;
 
     private final String AUTH_PAGE = "html/auth";
 
@@ -44,27 +49,27 @@ public class AuthControllerTest {
                 .email("dimamel28@gmail.com")
                 .password("12!@asAS")
                 .phoneNumber("380984035791")
-                .firstName("Dmytro")
-                .lastName("Melnyk")
+                .firstname("Dmytro")
+                .lastname("Melnyk")
                 .creationDate(Instant.now())
                 .build();
     }
 
     @BeforeEach
     void setup() {
-        when(userServiceMock.signup(any(User.class))).thenAnswer(invocationOnMock -> {
-            User user = invocationOnMock.getArgument(0);
-            user.setId(ID);
-            return user;
-        });
+        when(userServiceMock.signup(any(UserForm.class))).thenReturn(user);
 
-        when(userServiceMock.login(any(User.class))).thenAnswer(invocationOnMock -> {
-            User loginUser = invocationOnMock.getArgument(0);
-            loginUser.setId(ID);
-            loginUser.setFirstName(user.getFirstName());
-            loginUser.setLastName(user.getLastName());
-            loginUser.setCreationDate(user.getCreationDate());
-            return loginUser;
+        when(userServiceMock.login(any(UserLogin.class))).thenAnswer(invocationOnMock -> {
+            UserLogin userLogin = invocationOnMock.getArgument(0);
+            return User.builder()
+                    .id(ID)
+                    .firstname(user.getFirstname())
+                    .lastname(user.getLastname())
+                    .email(userLogin.getEmail())
+                    .password(userLogin.getPassword())
+                    .phoneNumber(userLogin.getPhoneNumber())
+                    .creationDate(user.getCreationDate())
+                    .build();
         });
     }
 
@@ -72,54 +77,68 @@ public class AuthControllerTest {
     void testShowAuth() throws Exception {
         mockMvc.perform(get("/auth"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("userForm"))
+                .andExpect(model().attributeExists("userLogin"))
                 .andExpect(view().name(AUTH_PAGE));
     }
 
     @Test
     void testSignupUser() throws Exception {
+        String email = user.getEmail();
+        String password = user.getPassword();
         mockMvc.perform(post("/auth/signup")
-                        .param("email", user.getEmail())
-                        .param("firstName", user.getFirstName())
-                        .param("lastName", user.getLastName())
-                        .param("password", user.getPassword())
+                        .param("email", email)
+                        .param("firstname", user.getFirstname())
+                        .param("lastname", user.getLastname())
+                        .param("password", password)
                         .param("phoneNumber", user.getPhoneNumber())
-                        .param("creationDate", String.valueOf(user.getCreationDate())))
+                        .param("creationDate", String.valueOf(user.getCreationDate()))
+                        .flashAttr("userLogin", new UserLogin())
+                        .flashAttr("userForm", new UserForm()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/auth"));
 
-        verify(userServiceMock, times(1)).signup(userCaptor.capture());
-        User captorValue = userCaptor.getValue();
+        verify(userServiceMock, times(1)).signup(userFormCaptor.capture());
+        UserForm captorValue = userFormCaptor.getValue();
 
-        assertEquals(user, captorValue);
+        assertEquals(email, captorValue.getEmail());
+        assertEquals(password, captorValue.getPassword());
     }
 
     @Test
     void testInvalidSignupUser() throws Exception {
         mockMvc.perform(post("/auth/signup")
                         .param("email", user.getEmail())
-                        .param("firstName", "")
-                        .param("lastName", user.getLastName())
+                        .param("firstname", "")
+                        .param("lastname", user.getLastname())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber())
-                        .param("creationDate", String.valueOf(user.getCreationDate())))
+                        .param("creationDate", String.valueOf(user.getCreationDate()))
+                        .flashAttr("userLogin", new UserLogin())
+                        .flashAttr("userForm", new UserForm()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(AUTH_PAGE));
     }
 
     @Test
     void testLoginUser() throws Exception {
+        String email = user.getEmail();
+        String password = user.getPassword();
+        String phoneNumber = user.getPhoneNumber();
         mockMvc.perform(post("/auth/login")
-                        .param("email", user.getEmail())
-                        .param("password", user.getPassword())
-                        .param("phoneNumber", user.getPhoneNumber()))
+                        .param("email", email)
+                        .param("password", password)
+                        .param("phoneNumber", phoneNumber)
+                        .flashAttr("userLogin", new UserLogin())
+                        .flashAttr("userForm", new UserForm()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user"));
 
-        verify(userServiceMock, times(1)).login(userCaptor.capture());
-        User captorValue = userCaptor.getValue();
+        verify(userServiceMock, times(1)).login(userLoginCaptor.capture());
+        UserLogin captorValue = userLoginCaptor.getValue();
 
-        assertEquals(user, captorValue);
+        UserLogin userLogin = new UserLogin(password, email, phoneNumber);
+        assertEquals(userLogin, captorValue);
     }
 
 }

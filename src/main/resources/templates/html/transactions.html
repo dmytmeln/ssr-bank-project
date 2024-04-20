@@ -24,14 +24,14 @@
                 <thead>
                     <th>Message</th>
                     <th>Amount of Money</th>
-                    <th>Transaction Type</th>
+                    <th>Type</th>
                     <th>Transaction Date</th>
                 </thead>
                 <tbody>
                     <tr th:each="transaction: ${transactions}">
                         <td th:text="${transaction.msg}"></td>
                         <td th:text="${transaction.moneyAmount}"></td>
-                        <td th:text="${transaction.transactionType}"></td>
+                        <td th:text="${transaction.type}"></td>
                         <td th:text="${#temporals.format(transaction.transactionDate, 'dd LLLL yyyy HH:mm')}"></td>
                     </tr>
                 </tbody>

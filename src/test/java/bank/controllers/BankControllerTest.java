@@ -2,6 +2,7 @@ package bank.controllers;
 
 import bank.domain.BankAccount;
 import bank.domain.Transaction;
+import bank.dto.TransactionForm;
 import bank.service.BankService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,7 +31,7 @@ public class BankControllerTest {
     private BankService bankServiceMock;
 
     @Captor
-    ArgumentCaptor<Transaction> transactionCaptor;
+    ArgumentCaptor<TransactionForm> transactionCaptor;
 
     private static Long accountId;
     private static BankAccount bankAccount;
@@ -57,8 +58,10 @@ public class BankControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
-                .andExpect(model().attributeExists("transaction"))
-                .andExpect(model().attribute("transaction", new Transaction()))
+                .andExpect(model().attributeExists("transactionFormD"))
+                .andExpect(model().attribute("transactionFormD", new TransactionForm()))
+                .andExpect(model().attributeExists("transactionFormW"))
+                .andExpect(model().attribute("transactionFormW", new TransactionForm()))
                 .andExpect(view().name("html/bank"));
 
         verify(bankServiceMock, times(1)).findBankAccountByUserId(accountId);
@@ -81,18 +84,15 @@ public class BankControllerTest {
 
     @Test
     void testMakeDeposit() throws Exception {
-
         String message = "Message";
-        String transactionType = "Type";
+        String type = "Type";
         double expectedBalance = bankAccount.getBalance() + 1000D;
 
-        when(bankServiceMock.makeDeposit(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
+        when(bankServiceMock.makeDeposit(eq(accountId), any(TransactionForm.class))).thenAnswer(invocationOnMock -> {
             Long bankAccountId = invocationOnMock.getArgument(0);
-            Transaction transaction = invocationOnMock.getArgument(1);
+            TransactionForm transaction = invocationOnMock.getArgument(1);
             BankAccount account = bankServiceMock.findById(bankAccountId);
             account.setBalance(account.getBalance() + transaction.getMoneyAmount());
-            transaction.setBankAccount(account);
-            transaction.setId(bankAccountId);
 
             return account;
         });
@@ -100,22 +100,19 @@ public class BankControllerTest {
         mockMvc.perform(post("/bank/deposit/{accountId}", accountId)
                         .param("moneyAmount", "1000")
                         .param("msg", message)
-                        .param("transactionType", transactionType))
+                        .param("type", type))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
 
-        verify(bankServiceMock, times(2)).findById(accountId);
+        verify(bankServiceMock, times(1)).findById(accountId);
         verify(bankServiceMock, times(1)).makeDeposit(eq(accountId), transactionCaptor.capture());
 
-        Transaction captorValue = transactionCaptor.getValue();
+        TransactionForm captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
-        assertEquals(transactionType, captorValue.getTransactionType());
-        assertEquals(bankAccount, captorValue.getBankAccount());
-        assertEquals(accountId, captorValue.getId());
+        assertEquals(type, captorValue.getType());
         assertEquals(expectedBalance, bankAccount.getBalance());
-
     }
 
     @Test
@@ -132,16 +129,14 @@ public class BankControllerTest {
     void testMakeWithdrawal() throws Exception {
 
         String message = "Message";
-        String transactionType = "Type";
+        String type = "Type";
         double expectedBalance = bankAccount.getBalance() - 1000D;
 
-        when(bankServiceMock.makeWithdrawal(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
+        when(bankServiceMock.makeWithdrawal(eq(accountId), any(TransactionForm.class))).thenAnswer(invocationOnMock -> {
             Long bankAccountId = invocationOnMock.getArgument(0);
-            Transaction transaction = invocationOnMock.getArgument(1);
+            TransactionForm transaction = invocationOnMock.getArgument(1);
             BankAccount account = bankServiceMock.findById(bankAccountId);
             account.setBalance(account.getBalance() - transaction.getMoneyAmount());
-            transaction.setBankAccount(account);
-            transaction.setId(bankAccountId);
 
             return account;
         });
@@ -149,20 +144,18 @@ public class BankControllerTest {
         mockMvc.perform(post("/bank/withdrawal/{accountId}", accountId)
                         .param("moneyAmount", "1000")
                         .param("msg", message)
-                        .param("transactionType", transactionType))
+                        .param("type", type))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
 
-        verify(bankServiceMock, times(2)).findById(accountId);
+        verify(bankServiceMock, times(1)).findById(accountId);
         verify(bankServiceMock, times(1)).makeWithdrawal(eq(accountId), transactionCaptor.capture());
 
-        Transaction captorValue = transactionCaptor.getValue();
+        TransactionForm captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
-        assertEquals(transactionType, captorValue.getTransactionType());
-        assertEquals(bankAccount, captorValue.getBankAccount());
-        assertEquals(accountId, captorValue.getId());
+        assertEquals(type, captorValue.getType());
         assertEquals(expectedBalance, bankAccount.getBalance());
 
     }

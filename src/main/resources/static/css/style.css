@@ -247,7 +247,6 @@ th, td {
 .edit_input:focus {
   outline: none;
   border-bottom: 1px solid white;
-
 }
 
 .invalid_field {

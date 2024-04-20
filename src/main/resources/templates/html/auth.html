@@ -18,8 +18,8 @@
                 <a th:href="@{/}"><i class="uil uil-times form_close"></i></a>
                 <!-- Login From -->
                 <div class="form login_form">
-                    <!--/*@thymesVar id="user" type="bank.domain.User"*/-->
-                    <form action="#" th:action="@{/auth/login}" th:object="${user}" method="post">
+                    <!--/*@thymesVar id="userLogin" type="bank.dto.UserLogin"*/-->
+                    <form action="#" th:action="@{/auth/login}" th:object="${userLogin}" method="post">
                         <h2>Login</h2>
 
                         <div class="input_box">
@@ -53,8 +53,8 @@
 
                 <!-- Signup From -->
                 <div class="form signup_form">
-                    <!--/*@thymesVar id="user" type="bank.domain.User"*/-->
-                    <form action="#" th:action="@{/auth/signup}" th:object="${user}" method="post">
+                    <!--/*@thymesVar id="userForm" type="bank.dto.UserForm"*/-->
+                    <form action="#" th:action="@{/auth/signup}" th:object="${userForm}" method="post">
                         <h2>Signup</h2>
 
                         <div class="input_box">
@@ -64,13 +64,13 @@
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="firstname" placeholder="Enter your firstname" required th:field="*{firstName}"/>
-                            <small class="invalid_field" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name error</small>
+                            <input type="text" name="firstname" placeholder="Enter your firstname" required th:field="*{firstname}"/>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}">First name error</small>
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="lastname" placeholder="Enter your lastname" required th:field="*{lastName}"/>
-                            <small class="invalid_field" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name error</small>
+                            <input type="text" name="lastname" placeholder="Enter your lastname" required th:field="*{lastname}"/>
+                            <small class="invalid_field" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}">Last name error</small>
                         </div>
 
                         <div class="input_box">

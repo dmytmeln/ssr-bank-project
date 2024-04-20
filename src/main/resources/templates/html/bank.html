@@ -18,6 +18,17 @@
             .form_container.withdrawal {
                 left: 80%;
             }
+
+            small {
+                color: red;
+                font-size: 10px;
+            }
+
+            .div_error {
+                color: red;
+                margin-top: 20px;
+                text-align: center;
+            }
         </style>
     </head>
 
@@ -34,32 +45,29 @@
             <div class="form_container deposit">
                 <!-- Deposit -->
                 <div class="form">
-                    <!--/*@thymesVar id="transaction" type="bank.domain.Transaction"*/-->
-                    <form action="#" method="post" th:object="${transaction}" th:action="@{/bank/deposit/{id}(id=${account.id})}">
+                    <form action="#" method="post" th:object="${transactionFormD}" th:action="@{/bank/deposit/{id}(id=${account.id})}">
                         <h2>Make Deposit</h2>
+
+                        <div class="div_error" th:if="${#fields.hasAnyErrors()}">
+                            <h1>Cannot Make Deposit</h1>
+                        </div>
 
                         <div class="input_box">
                             <input type="number" name="money_amount" placeholder="Enter amount of money" th:field="*{moneyAmount}"/>
+                            <small th:errors="*{moneyAmount}"></small>
                         </div>
 
                         <div class="input_box">
                             <input type="text" name="transaction_msg" placeholder="Enter message" th:field="*{msg}"/>
+                            <small th:errors="*{msg}"></small>
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{transactionType}"/>
+                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{type}"/>
+                            <small th:errors="*{type}"></small>
                         </div>
 
                         <button class="button">Make deposit</button>
-
-                        <ul style="color: red; margin-top: 20px;">
-                            <div th:if="${#fields.hasErrors('all')}">
-                                <h1>Cannot Make Deposit</h1>
-                                <li th:errors="*{transactionType}">Transaction type error</li>
-                                <li th:errors="*{msg}">Message error error</li>
-                                <li th:errors="*{moneyAmount}">Money Amount error</li>
-                            </div>
-                        </ul>
 
                     </form>
                 </div>
@@ -67,32 +75,29 @@
 
             <div class="form_container withdrawal">
                 <div class="form">
-                    <!--/*@thymesVar id="transaction" type="bank.domain.Transaction"*/-->
-                    <form action="#" method="post" th:object="${transaction}" th:action="@{/bank/withdrawal/{id}(id=${account.id})}">
+                    <form action="#" method="post" th:object="${transactionFormW}" th:action="@{/bank/withdrawal/{id}(id=${account.id})}">
                         <h2>Make Withdrawal</h2>
+
+                        <div class="div_error" th:if="${#fields.hasAnyErrors()}">
+                            <h1>Cannot Make Withdrawal</h1>
+                        </div>
 
                         <div class="input_box">
                             <input type="number" name="money_amount" placeholder="Enter amount of money" th:field="*{moneyAmount}"/>
+                            <small th:errors="*{moneyAmount}"></small>
                         </div>
 
                         <div class="input_box">
                             <input type="text" name="transaction_msg" placeholder="Enter message" th:field="*{msg}"/>
+                            <small th:errors="*{msg}"></small>
                         </div>
 
                         <div class="input_box">
-                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{transactionType}"/>
+                            <input type="text" name="transaction_type" placeholder="Enter transaction type" th:field="*{type}"/>
+                            <small th:errors="*{type}"></small>
                         </div>
 
                         <button class="button">Make Withdrawal</button>
-
-                        <ul style="color: red; margin-top: 20px;">
-                            <div th:if="${#fields.hasErrors('all')}">
-                                <h1>Cannot Make Withdrawal</h1>
-                                <li th:errors="*{transactionType}">Transaction type error</li>
-                                <li th:errors="*{msg}">Message error error</li>
-                                <li th:errors="*{moneyAmount}">Money Amount error</li>
-                            </div>
-                        </ul>
 
                     </form>
                 </div>

@@ -1,6 +1,8 @@
 package bank.service;
 
 import bank.domain.User;
+import bank.dto.UserForm;
+import bank.dto.UserLogin;
 
 public interface UserService {
 
@@ -8,13 +10,13 @@ public interface UserService {
 
     User findById(Long userId);
 
-    User signup(User user);
+    User signup(UserForm user);
 
-    User login(User user);
+    User login(UserLogin userLogin);
 
-    User update(User user);
+    User update(UserForm user, Long userId);
 
-    void alreadyExists(User user);
+    void alreadyExists(UserForm user, Long userId);
 
 
 }
