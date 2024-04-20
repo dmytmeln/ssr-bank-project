@@ -2,9 +2,9 @@ package bank.controllers;
 
 import bank.domain.User;
 import bank.dto.UserForm;
-import bank.dto.UserTransformer;
 import bank.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,12 +18,11 @@ public class UserController {
 
     private final UserService userService;
     private final String USER_PAGE = "html/user";
+    private final ModelMapper modelMapper;
 
     @GetMapping
     public String showUser(@SessionAttribute Long userId, Model model) {
-        User user = userService.findById(userId);
-        UserForm userForm = UserTransformer.convertToUserForm(user);
-        model.addAttribute("userForm", userForm);
+        model.addAttribute("userForm", modelMapper.map(userService.findById(userId), UserForm.class));
         model.addAttribute("userId", userId);
         return USER_PAGE;
     }
@@ -37,8 +36,7 @@ public class UserController {
             return USER_PAGE;
         }
 
-        User user = UserTransformer.convertToEntity(userForm, userId);
-        userService.update(user);
+        userService.update(userForm, userId);
         return "redirect:/user";
     }
 

@@ -2,10 +2,12 @@ package bank.service.serviceImpl;
 
 import bank.domain.BankAccount;
 import bank.domain.User;
+import bank.dto.UserForm;
 import bank.dto.UserLogin;
 import bank.repository.UserRepository;
 import bank.service.UserService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepo;
+    private final ModelMapper modelMapper;
 
     @Override
     @Transactional
@@ -31,17 +34,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User signup(User user) {
-        // check if a user exists with the email and phone number provided during registration (these fields must be unique)
-        String email = user.getEmail();
-        String phoneNumber = user.getPhoneNumber();
+    public User signup(UserForm userForm) {
+        // check if a userForm exists with the email and phone number provided during registration (these fields must be unique)
+        String email = userForm.getEmail();
+        String phoneNumber = userForm.getPhoneNumber();
         if (userRepo.existsByEmailOrPhoneNumber(email, phoneNumber)) {
             throw new EntityExistsException(
                     "User with email: [%s] or phone number: [%s] already exists!".formatted(email, phoneNumber)
             );
         }
 
-        User savedUser = userRepo.save(user);
+        User savedUser = userRepo.save(modelMapper.map(userForm, User.class));
 
         BankAccount bankAccount = BankAccount.builder()
                 .user(savedUser)
@@ -71,24 +74,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User update(User user) {
-        alreadyExists(user); // method throw exception if such user already exists or if he's not found
+    public User update(UserForm userForm, Long userId) {
+        alreadyExists(userForm, userId); // method throw exception if such user already exists or if he's not found
+        User user = modelMapper.map(userForm, User.class);
+        user.setId(userId);
         return userRepo.save(user);
     }
 
-    // method to check whether user with such email or/and phone number already exists, because these fields are unique
+    // method to check whether userForm with such email or/and phone number already exists, because these fields are unique
     @Override
     @Transactional
-    public void alreadyExists(User user) {
-        User userDB = findById(user.getId());
+    public void alreadyExists(UserForm userForm, Long userId) {
+        User userDB = findById(userId);
 
-        String email = user.getEmail();
-        String phoneNumber = user.getPhoneNumber();
+        String email = userForm.getEmail();
+        String phoneNumber = userForm.getPhoneNumber();
 
         // check whether new email and phone number (if they are new) are equal to old ones
         boolean sameEmail = Objects.equals(userDB.getEmail(), email);
         boolean samePhoneNumber = Objects.equals(userDB.getPhoneNumber(), phoneNumber);
-        // if user changed both email and phone number -> check whether user with such info already exists
+        // if userForm changed both email and phone number -> check whether userForm with such info already exists
         if (!sameEmail && !samePhoneNumber) {
 
             if (userRepo.existsByEmailAndPhoneNumber(email, phoneNumber)) {
@@ -97,7 +102,7 @@ public class UserServiceImpl implements UserService {
                 );
             }
 
-        } else if (!sameEmail) { // if user change only email -> check whether user with such email already exists
+        } else if (!sameEmail) { // if userForm change only email -> check whether userForm with such email already exists
 
             if (userRepo.existsByEmail(email)) {
                 throw new EntityExistsException(
@@ -105,7 +110,7 @@ public class UserServiceImpl implements UserService {
                 );
             }
 
-        } else if (!samePhoneNumber) { //if user change only phone number -> check whether user with such phone number already exists
+        } else if (!samePhoneNumber) { //if userForm change only phone number -> check whether userForm with such phone number already exists
 
             if (userRepo.existsByPhoneNumber(phoneNumber)) {
                 throw new EntityExistsException(
