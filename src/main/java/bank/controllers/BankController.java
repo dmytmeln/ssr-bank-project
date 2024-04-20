@@ -23,43 +23,41 @@ public class BankController {
 
     @GetMapping
     public String showBank(@SessionAttribute Long userId, Model model) {
-        BankAccount bankAccount = bankService.findBankAccountByUserId(userId);
-        model.addAttribute("account", bankAccount);
-        model.addAttribute("transactionForm", new TransactionForm());
+        model.addAttribute("account", bankService.findBankAccountByUserId(userId));
+        model.addAttribute("transactionFormW", new TransactionForm());
+        model.addAttribute("transactionFormD", new TransactionForm());
         return BANK_PAGE;
     }
 
     @PostMapping("deposit/{accountId}")
     public String makeDeposit(
-            Model model,
-            @PathVariable Long accountId,
-            @ModelAttribute("transaction") @Validated TransactionForm transactionForm, BindingResult bindingResult
+            @PathVariable Long accountId, Model model,
+            @ModelAttribute("transactionFormD") @Validated TransactionForm transactionForm, BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("account", bankService.findById(accountId));
+            model.addAttribute("transactionFormW", new TransactionForm());
             return BANK_PAGE;
         }
 
         Transaction transaction = TransactionTransformer.convertToEntity(transactionForm);
         bankService.makeDeposit(accountId, transaction);
-
         return "redirect:/bank";
     }
 
     @PostMapping("withdrawal/{accountId}")
     public String makeWithdrawal(
-            Model model,
-            @PathVariable Long accountId,
-            @ModelAttribute("transaction") @Validated TransactionForm transactionForm, BindingResult bindingResult
+            @PathVariable Long accountId, Model model,
+            @ModelAttribute("transactionFormW") @Validated TransactionForm transactionForm, BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("account", bankService.findById(accountId));
+            model.addAttribute("transactionFormD", new TransactionForm());
             return BANK_PAGE;
         }
 
         Transaction transaction = TransactionTransformer.convertToEntity(transactionForm);
         bankService.makeWithdrawal(accountId, transaction);
-
         return "redirect:/bank";
     }
 
