@@ -1,6 +1,8 @@
 package bank.controllers;
 
 import bank.domain.User;
+import bank.dto.UserForm;
+import bank.dto.UserLogin;
 import bank.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.Instant;
 
@@ -31,6 +34,9 @@ public class AuthControllerTest {
 
     @Captor
     private ArgumentCaptor<User> userCaptor;
+
+    @Captor
+    private ArgumentCaptor<UserLogin> userLoginCaptor;
 
     private final String AUTH_PAGE = "html/auth";
 
@@ -58,13 +64,17 @@ public class AuthControllerTest {
             return user;
         });
 
-        when(userServiceMock.login(any(User.class))).thenAnswer(invocationOnMock -> {
-            User loginUser = invocationOnMock.getArgument(0);
-            loginUser.setId(ID);
-            loginUser.setFirstname(user.getFirstname());
-            loginUser.setLastname(user.getLastname());
-            loginUser.setCreationDate(user.getCreationDate());
-            return loginUser;
+        when(userServiceMock.login(any(UserLogin.class))).thenAnswer(invocationOnMock -> {
+            UserLogin userLogin = invocationOnMock.getArgument(0);
+            return User.builder()
+                    .id(ID)
+                    .firstname(user.getFirstname())
+                    .lastname(user.getLastname())
+                    .email(userLogin.getEmail())
+                    .password(userLogin.getPassword())
+                    .phoneNumber(userLogin.getPhoneNumber())
+                    .creationDate(user.getCreationDate())
+                    .build();
         });
     }
 
@@ -72,7 +82,8 @@ public class AuthControllerTest {
     void testShowAuth() throws Exception {
         mockMvc.perform(get("/auth"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("userForm"))
+                .andExpect(model().attributeExists("userLogin"))
                 .andExpect(view().name(AUTH_PAGE));
     }
 
@@ -80,11 +91,13 @@ public class AuthControllerTest {
     void testSignupUser() throws Exception {
         mockMvc.perform(post("/auth/signup")
                         .param("email", user.getEmail())
-                        .param("firstName", user.getFirstname())
-                        .param("lastName", user.getLastname())
+                        .param("firstname", user.getFirstname())
+                        .param("lastname", user.getLastname())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber())
-                        .param("creationDate", String.valueOf(user.getCreationDate())))
+                        .param("creationDate", String.valueOf(user.getCreationDate()))
+                        .flashAttr("userLogin", new UserLogin())
+                        .flashAttr("userForm", new UserForm()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/auth"));
 
@@ -98,28 +111,36 @@ public class AuthControllerTest {
     void testInvalidSignupUser() throws Exception {
         mockMvc.perform(post("/auth/signup")
                         .param("email", user.getEmail())
-                        .param("firstName", "")
-                        .param("lastName", user.getLastname())
+                        .param("firstname", "")
+                        .param("lastname", user.getLastname())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber())
-                        .param("creationDate", String.valueOf(user.getCreationDate())))
+                        .param("creationDate", String.valueOf(user.getCreationDate()))
+                        .flashAttr("userLogin", new UserLogin())
+                        .flashAttr("userForm", new UserForm()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(AUTH_PAGE));
     }
 
     @Test
     void testLoginUser() throws Exception {
+        String email = user.getEmail();
+        String password = user.getPassword();
+        String phoneNumber = user.getPhoneNumber();
         mockMvc.perform(post("/auth/login")
-                        .param("email", user.getEmail())
-                        .param("password", user.getPassword())
-                        .param("phoneNumber", user.getPhoneNumber()))
+                        .param("email", email)
+                        .param("password", password)
+                        .param("phoneNumber", phoneNumber)
+                        .flashAttr("userLogin", new UserLogin())
+                        .flashAttr("userForm", new UserForm()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user"));
 
-        verify(userServiceMock, times(1)).login(userCaptor.capture());
-        User captorValue = userCaptor.getValue();
+        verify(userServiceMock, times(1)).login(userLoginCaptor.capture());
+        UserLogin captorValue = userLoginCaptor.getValue();
 
-        assertEquals(user, captorValue);
+        UserLogin userLogin = new UserLogin(password, email, phoneNumber);
+        assertEquals(userLogin, captorValue);
     }
 
 }

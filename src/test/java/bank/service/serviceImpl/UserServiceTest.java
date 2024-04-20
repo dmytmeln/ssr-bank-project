@@ -1,6 +1,7 @@
 package bank.service.serviceImpl;
 
 import bank.domain.User;
+import bank.dto.UserLogin;
 import bank.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -108,10 +109,10 @@ public class UserServiceTest {
 
         when(userRepoMock.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password)).thenReturn(Optional.of(user));
 
-        User loggedInUser = userService.login(user);
+        UserLogin userLogin = new UserLogin(password, email, phoneNumber);
+        User loggedInUser = userService.login(userLogin);
 
         verify(userRepoMock, times(1)).findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password);
-
         assertNotNull(loggedInUser);
         assertEquals(email, loggedInUser.getEmail());
         assertEquals(phoneNumber, loggedInUser.getPhoneNumber());
@@ -124,7 +125,8 @@ public class UserServiceTest {
         String phoneNumber = user.getPhoneNumber();
         String password = user.getPassword();
 
-        assertThrows(EntityNotFoundException.class, () -> userService.login(user));
+        UserLogin userLogin = new UserLogin(password, email, phoneNumber);
+        assertThrows(EntityNotFoundException.class, () -> userService.login(userLogin));
 
         verify(userRepoMock, times(1)).findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password);
     }
