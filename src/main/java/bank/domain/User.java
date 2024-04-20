@@ -1,10 +1,7 @@
 package bank.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -37,10 +34,12 @@ public class User {
     private String phoneNumber;
 
     @OneToOne(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
+    @EqualsAndHashCode.Exclude
     private BankAccount bankAccount;
 
     @Column
     @CreationTimestamp
+    @EqualsAndHashCode.Exclude
     private Instant creationDate;
 
 }

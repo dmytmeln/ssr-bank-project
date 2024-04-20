@@ -20,6 +20,7 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private BankAccount bankAccount;
 
     @Column
@@ -34,6 +35,7 @@ public class Transaction {
 
     @Column
     @CreationTimestamp
+    @EqualsAndHashCode.Exclude
     private Instant transactionDate;
 
 }

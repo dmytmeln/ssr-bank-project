@@ -1,10 +1,7 @@
 package bank.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +23,12 @@ public class BankAccount {
     private Double balance = 0D;
 
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @EqualsAndHashCode.Exclude
     private User user;
 
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
     @Builder.Default
+    @EqualsAndHashCode.Exclude
     private List<Transaction> transactions = new ArrayList<>();
 
     @Override
