@@ -58,8 +58,10 @@ public class BankControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
-                .andExpect(model().attributeExists("transactionForm"))
-                .andExpect(model().attribute("transactionForm", new TransactionForm()))
+                .andExpect(model().attributeExists("transactionFormD"))
+                .andExpect(model().attribute("transactionFormD", new TransactionForm()))
+                .andExpect(model().attributeExists("transactionFormW"))
+                .andExpect(model().attribute("transactionFormW", new TransactionForm()))
                 .andExpect(view().name("html/bank"));
 
         verify(bankServiceMock, times(1)).findBankAccountByUserId(accountId);
@@ -100,8 +102,7 @@ public class BankControllerTest {
         mockMvc.perform(post("/bank/deposit/{accountId}", accountId)
                         .param("moneyAmount", "1000")
                         .param("msg", message)
-                        .param("type", type)
-                        .flashAttr("transactionForm", new TransactionForm()))
+                        .param("type", type))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
@@ -121,8 +122,7 @@ public class BankControllerTest {
     @Test
     void testInvalidMakeDeposit() throws Exception {
         mockMvc.perform(post("/bank/deposit/{accountId}", accountId)
-                        .param("moneyAmount", "-1000")
-                        .flashAttr("transactionForm", new TransactionForm()))
+                        .param("moneyAmount", "-1000"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
@@ -150,8 +150,7 @@ public class BankControllerTest {
         mockMvc.perform(post("/bank/withdrawal/{accountId}", accountId)
                         .param("moneyAmount", "1000")
                         .param("msg", message)
-                        .param("type", type)
-                        .flashAttr("transactionForm", new TransactionForm()))
+                        .param("type", type))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
@@ -172,8 +171,7 @@ public class BankControllerTest {
     @Test
     void testInvalidMakeWithdrawal() throws Exception {
         mockMvc.perform(post("/bank/withdrawal/{accountId}", accountId)
-                        .param("moneyAmount", "-1000")
-                        .flashAttr("transactionForm", new TransactionForm()))
+                        .param("moneyAmount", "-1000"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
