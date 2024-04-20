@@ -27,7 +27,7 @@ public class UserTransformer {
                 .build();
     }
 
-    public static UserForm convertToUserAuth(User user) {
+    public static UserForm convertToUserForm(User user) {
         return UserForm.builder()
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())

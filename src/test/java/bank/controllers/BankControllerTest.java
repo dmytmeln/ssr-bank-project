@@ -2,6 +2,7 @@ package bank.controllers;
 
 import bank.domain.BankAccount;
 import bank.domain.Transaction;
+import bank.dto.TransactionForm;
 import bank.service.BankService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,8 +58,8 @@ public class BankControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
-                .andExpect(model().attributeExists("transaction"))
-                .andExpect(model().attribute("transaction", new Transaction()))
+                .andExpect(model().attributeExists("transactionForm"))
+                .andExpect(model().attribute("transactionForm", new TransactionForm()))
                 .andExpect(view().name("html/bank"));
 
         verify(bankServiceMock, times(1)).findBankAccountByUserId(accountId);
@@ -81,9 +82,8 @@ public class BankControllerTest {
 
     @Test
     void testMakeDeposit() throws Exception {
-
         String message = "Message";
-        String transactionType = "Type";
+        String type = "Type";
         double expectedBalance = bankAccount.getBalance() + 1000D;
 
         when(bankServiceMock.makeDeposit(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
@@ -100,28 +100,29 @@ public class BankControllerTest {
         mockMvc.perform(post("/bank/deposit/{accountId}", accountId)
                         .param("moneyAmount", "1000")
                         .param("msg", message)
-                        .param("transactionType", transactionType))
+                        .param("type", type)
+                        .flashAttr("transactionForm", new TransactionForm()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
 
-        verify(bankServiceMock, times(2)).findById(accountId);
+        verify(bankServiceMock, times(1)).findById(accountId);
         verify(bankServiceMock, times(1)).makeDeposit(eq(accountId), transactionCaptor.capture());
 
         Transaction captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
-        assertEquals(transactionType, captorValue.getType());
+        assertEquals(type, captorValue.getType());
         assertEquals(bankAccount, captorValue.getBankAccount());
         assertEquals(accountId, captorValue.getId());
         assertEquals(expectedBalance, bankAccount.getBalance());
-
     }
 
     @Test
     void testInvalidMakeDeposit() throws Exception {
         mockMvc.perform(post("/bank/deposit/{accountId}", accountId)
-                        .param("moneyAmount", "-1000"))
+                        .param("moneyAmount", "-1000")
+                        .flashAttr("transactionForm", new TransactionForm()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
@@ -132,7 +133,7 @@ public class BankControllerTest {
     void testMakeWithdrawal() throws Exception {
 
         String message = "Message";
-        String transactionType = "Type";
+        String type = "Type";
         double expectedBalance = bankAccount.getBalance() - 1000D;
 
         when(bankServiceMock.makeWithdrawal(eq(accountId), any(Transaction.class))).thenAnswer(invocationOnMock -> {
@@ -149,18 +150,19 @@ public class BankControllerTest {
         mockMvc.perform(post("/bank/withdrawal/{accountId}", accountId)
                         .param("moneyAmount", "1000")
                         .param("msg", message)
-                        .param("transactionType", transactionType))
+                        .param("type", type)
+                        .flashAttr("transactionForm", new TransactionForm()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bank"))
                 .andExpect(view().name("redirect:/bank"));
 
-        verify(bankServiceMock, times(2)).findById(accountId);
+        verify(bankServiceMock, times(1)).findById(accountId);
         verify(bankServiceMock, times(1)).makeWithdrawal(eq(accountId), transactionCaptor.capture());
 
         Transaction captorValue = transactionCaptor.getValue();
 
         assertEquals(message, captorValue.getMsg());
-        assertEquals(transactionType, captorValue.getType());
+        assertEquals(type, captorValue.getType());
         assertEquals(bankAccount, captorValue.getBankAccount());
         assertEquals(accountId, captorValue.getId());
         assertEquals(expectedBalance, bankAccount.getBalance());
@@ -170,7 +172,8 @@ public class BankControllerTest {
     @Test
     void testInvalidMakeWithdrawal() throws Exception {
         mockMvc.perform(post("/bank/withdrawal/{accountId}", accountId)
-                        .param("moneyAmount", "-1000"))
+                        .param("moneyAmount", "-1000")
+                        .flashAttr("transactionForm", new TransactionForm()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))

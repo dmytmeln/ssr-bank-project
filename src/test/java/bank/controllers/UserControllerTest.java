@@ -1,6 +1,8 @@
 package bank.controllers;
 
 import bank.domain.User;
+import bank.dto.UserForm;
+import bank.dto.UserTransformer;
 import bank.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
@@ -62,8 +64,10 @@ public class UserControllerTest {
     void testGetShowHome() throws Exception {
         mockMvc.perform(get("/user").sessionAttr("userId", userId))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("user"))
-                .andExpect(model().attribute("user", user))
+                .andExpect(model().attributeExists("userForm"))
+                .andExpect(model().attribute("userForm", UserTransformer.convertToUserForm(user)))
+                .andExpect(model().attributeExists("userId"))
+                .andExpect(model().attribute("userId", userId))
                 .andExpect(view().name(USER_PAGE));
 
         verify(userServiceMock, times(1)).findById(userId);
@@ -89,11 +93,12 @@ public class UserControllerTest {
         String updatedFirstName = "Jason";
 
         mockMvc.perform(post("/user/update/{userId}", userId)
-                        .param("firstName", updatedFirstName)
-                        .param("lastName", user.getLastname())
+                        .param("firstname", updatedFirstName)
+                        .param("lastname", user.getLastname())
                         .param("email", user.getEmail())
                         .param("password", user.getPassword())
-                        .param("phoneNumber", user.getPhoneNumber()))
+                        .param("phoneNumber", user.getPhoneNumber())
+                        .flashAttr("userForm", new UserForm()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user"))
                 .andExpect(view().name("redirect:/user"));
@@ -108,13 +113,13 @@ public class UserControllerTest {
     @Test
     void testInvalidUpdateUser() throws Exception {
         mockMvc.perform(post("/user/update/{userId}", userId)
-                        .param("firstName", "")
-                        .param("lastName", user.getLastname())
+                        .param("firstname", "")
+                        .param("lastname", user.getLastname())
                         .param("email", user.getEmail())
                         .param("password", user.getPassword())
                         .param("phoneNumber", user.getPhoneNumber()))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("user", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("userForm", "firstname"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(USER_PAGE));
     }

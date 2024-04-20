@@ -34,6 +34,6 @@ public class BankAccount {
 
     @Override
     public String toString() {
-        return "BankAccount(id=" + this.id + ", balance=" + this.balance + ", user=" + this.user.getFirstname() + " " + this.user.getLastname() + ", transactions=" + this.transactions + ")";
+        return "BankAccount(id=" + this.id + ", balance=" + this.balance + ", transactions=" + this.transactions + ")";
     }
 }

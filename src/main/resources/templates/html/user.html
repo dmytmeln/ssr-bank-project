@@ -29,7 +29,6 @@
 
         <!-- Home -->
         <section class="home">
-            <!--/*@thymesVar id="userForm" type="bank.dto.UserForm"*/-->
             <form action="#" th:action="@{/user/update/{userId}(userId=${userId})}" th:object="${userForm}" method="post">
                 <div class="names">
                     <label class="edit_label" for="firstname"><h4 class="user_name">Name: </h4></label>

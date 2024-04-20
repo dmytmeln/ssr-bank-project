@@ -22,9 +22,7 @@ public class UserController {
     @GetMapping
     public String showUser(@SessionAttribute Long userId, Model model) {
         User user = userService.findById(userId);
-        System.out.println(user);
-        UserForm userForm = UserTransformer.convertToUserAuth(user);
-        System.out.println(userForm);
+        UserForm userForm = UserTransformer.convertToUserForm(user);
         model.addAttribute("userForm", userForm);
         model.addAttribute("userId", userId);
         return USER_PAGE;
@@ -33,7 +31,7 @@ public class UserController {
     @PostMapping("update/{userId}")
     public String updateUser(
             @PathVariable Long userId,
-            @ModelAttribute("user") @Validated UserForm userForm, BindingResult bindingResult
+            @ModelAttribute("userForm") @Validated UserForm userForm, BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             return USER_PAGE;

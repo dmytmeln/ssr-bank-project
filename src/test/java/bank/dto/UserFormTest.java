@@ -1,5 +1,6 @@
-package bank.domain;
+package bank.dto;
 
+import bank.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,17 +16,16 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserTest {
+public class UserFormTest {
 
-    private User validUser;
+    private UserForm validUser;
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @BeforeEach
     void init() {
-        validUser = User.builder()
+        validUser = UserForm.builder()
                 .email("dimamel28@gmail.com")
-                .id(1L)
                 .firstname("Dmytro")
                 .lastname("Melnyk")
                 .password("qwQW12!@")
@@ -35,7 +35,7 @@ public class UserTest {
 
     @Test
     void testValidUser() {
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
     }
@@ -45,7 +45,7 @@ public class UserTest {
     void userWithInvalidEmail(String input, String errorValue) {
         validUser.setEmail(input);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
     }
@@ -72,7 +72,7 @@ public class UserTest {
     void userWithValidEmail(String input) {
         validUser.setEmail(input);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
     }
@@ -92,7 +92,7 @@ public class UserTest {
     void UserWithValidFirstName(String input) {
         validUser.setLastname(input);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
     }
@@ -110,7 +110,7 @@ public class UserTest {
     void userWithInvalidFirstName(String input, String errorValue) {
         validUser.setFirstname(input);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
     }
@@ -131,7 +131,7 @@ public class UserTest {
     void userWithInvalidLastName(String input) {
         validUser.setLastname(input);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
     }
@@ -149,7 +149,7 @@ public class UserTest {
     void userWithInvalidLastName(String input, String errorValue) {
         validUser.setLastname(input);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
     }
@@ -170,7 +170,7 @@ public class UserTest {
     void userWithValidPass(String password) {
         validUser.setPassword(password);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
     }
@@ -188,7 +188,7 @@ public class UserTest {
     void userWithInvalidPass(String password, String errorValue) {
         validUser.setPassword(password);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
@@ -214,7 +214,7 @@ public class UserTest {
     void userWithInvalidPhoneNumber(String input, String errorValue) {
         validUser.setPhoneNumber(input);
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
@@ -237,7 +237,7 @@ public class UserTest {
     void userWithValidPhoneNumber() {
         validUser.setPhoneNumber("380984305791");
 
-        Set<ConstraintViolation<User>> violations = validator.validate(validUser);
+        Set<ConstraintViolation<UserForm>> violations = validator.validate(validUser);
 
         assertEquals(0, violations.size());
     }

@@ -1,5 +1,6 @@
-package bank.domain;
+package bank.dto;
 
+import bank.domain.Transaction;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -14,16 +15,15 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TransactionTest {
+public class TransactionFormTest {
 
-    private Transaction validTransaction;
+    private TransactionForm validTransaction;
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @BeforeEach
     void init() {
-        validTransaction =  Transaction.builder()
-                .id(1L)
+        validTransaction =  TransactionForm.builder()
                 .msg("Transaction Message")
                 .type("Transaction Type")
                 .moneyAmount(1000D)
@@ -32,7 +32,7 @@ public class TransactionTest {
 
     @Test
     void testValidTransaction() {
-        Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
+        Set<ConstraintViolation<TransactionForm>> violations = validator.validate(validTransaction);
         assertEquals(0, violations.size());
     }
 
@@ -40,7 +40,7 @@ public class TransactionTest {
     void testInvalidMsg() {
         validTransaction.setMsg(null);
 
-        Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
+        Set<ConstraintViolation<TransactionForm>> violations = validator.validate(validTransaction);
 
         assertEquals(1, violations.size());
         assertEquals("Transaction msg can't be null", violations.iterator().next().getMessage());
@@ -50,7 +50,7 @@ public class TransactionTest {
     void testInvalidTransactionType() {
         validTransaction.setType(null);
 
-        Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
+        Set<ConstraintViolation<TransactionForm>> violations = validator.validate(validTransaction);
 
         assertEquals(1, violations.size());
         assertEquals("Transaction type can't be null", violations.iterator().next().getMessage());
@@ -61,7 +61,7 @@ public class TransactionTest {
     void testInvalidMoneyAmount(Double inputValue, Double errorValue) {
         validTransaction.setMoneyAmount(inputValue);
 
-        Set<ConstraintViolation<Transaction>> violations = validator.validate(validTransaction);
+        Set<ConstraintViolation<TransactionForm>> violations = validator.validate(validTransaction);
 
         assertEquals(1, violations.size());
         assertEquals(errorValue, violations.iterator().next().getInvalidValue());
