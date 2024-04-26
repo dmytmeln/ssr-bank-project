@@ -1,5 +1,6 @@
 package bank.configuration;
 
+import bank.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ public class WebSecurityConfig  {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/", "/login", "/register").permitAll()
+                                .requestMatchers("/user/**").hasAuthority(Role.ROLE_USER.name())
                                 .anyRequest().authenticated())
                 .formLogin(form ->
                         form

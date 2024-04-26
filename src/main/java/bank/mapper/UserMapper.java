@@ -18,7 +18,7 @@ public class UserMapper {
 
         Converter<String, String> passwordConverter = converter -> passwordEncoder.encode(converter.getSource());
         this.typeMap = modelMapper.createTypeMap(UserForm.class, User.class)
-                .setProvider(p -> User.builder().role(Role.USER).build())
+                .setProvider(p -> User.builder().role(Role.ROLE_USER).build())
                 .addMappings(
                         mapper -> mapper.using(passwordConverter).map(UserForm::getPassword, User::setPassword)
                 );

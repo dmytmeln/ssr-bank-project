@@ -1,5 +1,5 @@
 INSERT INTO users(firstname, lastname, password, email, phone_number, role)
-VALUES ('Dmytro', 'Melnyk', 'asAS12!@', 'dimamel28@gmail.com', '380984035791', 'USER');
+VALUES ('Dmytro', 'Melnyk', 'asAS12!@', 'dimamel28@gmail.com', '380984035791', 'ROLE_USER');
 
 INSERT INTO bank_accounts(id, balance, user_id)
 VALUES (1, 1000, 1);
