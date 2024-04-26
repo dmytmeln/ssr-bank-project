@@ -1,18 +1,20 @@
 package bank.service.serviceImpl;
 
-import bank.model.BankAccount;
-import bank.model.User;
 import bank.dto.UserForm;
 import bank.dto.UserLogin;
+import bank.mapper.UserMapper;
+import bank.model.BankAccount;
+import bank.model.User;
 import bank.repository.UserRepository;
 import bank.service.UserService;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.Objects;
 
 @Service
@@ -20,14 +22,13 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepo;
-    private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
     @Override
-    @Transactional
     public User findById(Long userId) {
         return userRepo.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException(
-                        "User with  id: %d not found".formatted(userId)
+                        "User with  id [%d] not found".formatted(userId)
                 )
         );
     }
@@ -35,6 +36,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User signup(UserForm userForm) {
+
+        checkIfUserExistsByEmailOrPhoneNumber(userForm);
+
+        User map = userMapper.mapToUser(userForm);
+        User savedUser = userRepo.save(map);
+
+        BankAccount bankAccount = BankAccount.builder()
+                .user(savedUser)
+                .build();
+        savedUser.setBankAccount(bankAccount);
+
+        return savedUser;
+    }
+
+    @Override
+    public void checkIfUserExistsByEmailOrPhoneNumber(UserForm userForm) {
         // check if a userForm exists with the email and phone number provided during registration (these fields must be unique)
         String email = userForm.getEmail();
         String phoneNumber = userForm.getPhoneNumber();
@@ -43,20 +60,9 @@ public class UserServiceImpl implements UserService {
                     "User with email: [%s] or phone number: [%s] already exists!".formatted(email, phoneNumber)
             );
         }
-
-        User savedUser = userRepo.save(modelMapper.map(userForm, User.class));
-
-        BankAccount bankAccount = BankAccount.builder()
-                .user(savedUser)
-                .build();
-        savedUser.setBankAccount(bankAccount);
-
-        return savedUser;
-
     }
 
     @Override
-    @Transactional
     public User login(UserLogin userLogin) {
         // find user by email, phone number and password (info that user provide when he tries to log in)
         String email = userLogin.getEmail();
@@ -69,15 +75,13 @@ public class UserServiceImpl implements UserService {
                                 .formatted(email, phoneNumber, password)
                 )
         );
-
     }
 
     @Override
     @Transactional
     public User update(UserForm userForm, Long userId) {
         alreadyExists(userForm, userId); // method throw exception if such user already exists or if he's not found
-        User user = modelMapper.map(userForm, User.class);
-        user.setId(userId);
+        User user = userMapper.mapToUser(userForm, userId);
         return userRepo.save(user);
     }
 
@@ -85,6 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void alreadyExists(UserForm userForm, Long userId) {
+
         User userDB = findById(userId);
 
         String email = userForm.getEmail();
@@ -122,7 +127,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void delete(long userId) {
         if (!userRepo.existsById(userId)) {
             throw new EntityNotFoundException(
@@ -133,4 +137,11 @@ public class UserServiceImpl implements UserService {
         userRepo.deleteById(userId);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepo.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User with username [%s] not found!".formatted(username)
+                ));
+    }
 }
