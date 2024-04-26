@@ -1,7 +1,6 @@
 package bank.controllers;
 
 import bank.dto.UserForm;
-import bank.dto.UserLogin;
 import bank.model.User;
 import bank.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,9 +29,6 @@ public class AuthControllerTest {
 
     @MockBean
     private UserService userServiceMock;
-
-    @Captor
-    private ArgumentCaptor<UserLogin> userLoginCaptor;
     @Captor
     private ArgumentCaptor<UserForm> userFormCaptor;
 
@@ -57,37 +53,14 @@ public class AuthControllerTest {
     @BeforeEach
     void setup() {
         when(userServiceMock.signup(any(UserForm.class))).thenReturn(user);
-
-        when(userServiceMock.login(any(UserLogin.class))).thenAnswer(invocationOnMock -> {
-            UserLogin userLogin = invocationOnMock.getArgument(0);
-            if (userLogin.getEmail().isBlank()) {
-                throw new EntityNotFoundException();
-            }
-            return User.builder()
-                    .id(ID)
-                    .firstname(user.getFirstname())
-                    .lastname(user.getLastname())
-                    .email(userLogin.getEmail())
-                    .password(userLogin.getPassword())
-                    .phoneNumber(userLogin.getPhoneNumber())
-                    .build();
-        });
     }
 
     @Test
-    void testShowAuthSignup() throws Exception {
+    void testShowSignup() throws Exception {
         mockMvc.perform(get("/auth/signup"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("userForm"))
                 .andExpect(view().name(SIGNUP_PAGE));
-    }
-
-    @Test
-    void testShowAuthLogin() throws Exception {
-        mockMvc.perform(get("/auth/login"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("userLogin"))
-                .andExpect(view().name(LOGIN_PAGE));
     }
 
     @Test
@@ -121,35 +94,6 @@ public class AuthControllerTest {
                 .andExpect(model().attributeHasFieldErrors("userForm", "firstname"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(SIGNUP_PAGE));
-    }
-
-    @Test
-    void testLoginUser() throws Exception {
-        String email = user.getEmail();
-        String password = user.getPassword();
-        String phoneNumber = user.getPhoneNumber();
-        mockMvc.perform(post("/auth/login")
-                        .param("email", email)
-                        .param("password", password)
-                        .param("phoneNumber", phoneNumber))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/user"));
-
-        verify(userServiceMock, times(1)).login(userLoginCaptor.capture());
-        UserLogin captorValue = userLoginCaptor.getValue();
-
-        UserLogin userLogin = new UserLogin(password, email, phoneNumber);
-        assertEquals(userLogin, captorValue);
-    }
-
-    @Test
-    void testInvalidLoginUser() throws Exception {
-        mockMvc.perform(post("/auth/login")
-                        .param("email", "")
-                        .param("password", user.getPassword())
-                        .param("phoneNumber", user.getPhoneNumber()))
-                .andExpect(status().isNotFound())
-                .andExpect(view().name("error"));
     }
 
 }

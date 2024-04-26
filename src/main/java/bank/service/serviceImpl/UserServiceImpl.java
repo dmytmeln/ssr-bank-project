@@ -1,7 +1,6 @@
 package bank.service.serviceImpl;
 
 import bank.dto.UserForm;
-import bank.dto.UserLogin;
 import bank.mapper.UserMapper;
 import bank.model.BankAccount;
 import bank.model.User;
@@ -60,21 +59,6 @@ public class UserServiceImpl implements UserService {
                     "User with email: [%s] or phone number: [%s] already exists!".formatted(email, phoneNumber)
             );
         }
-    }
-
-    @Override
-    public User login(UserLogin userLogin) {
-        // find user by email, phone number and password (info that user provide when he tries to log in)
-        String email = userLogin.getEmail();
-        String phoneNumber = userLogin.getPhoneNumber();
-        String password = userLogin.getPassword();
-
-        return userRepo.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password).orElseThrow(
-                () -> new EntityNotFoundException(
-                        "User with email: [%s], phone number: [%s] and password: [%s] not found!"
-                                .formatted(email, phoneNumber, password)
-                )
-        );
     }
 
     @Override

@@ -1,7 +1,6 @@
 package bank.mapper;
 
 import bank.dto.UserForm;
-import bank.dto.UserLogin;
 import bank.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -51,29 +50,6 @@ public class UserMapperTest {
         assertEquals(mappedForm.getLastname(), mappedUser.getLastname());
         assertEquals(mappedForm.getPassword(), mappedUser.getPassword());
         assertEquals(mappedForm.getPhoneNumber(), mappedUser.getPhoneNumber());
-
-    }
-
-    @Test
-    void testMapFromUserToUserLogin() {
-
-        UserLogin mapped = modelMapper.map(user, UserLogin.class);
-
-        assertEquals(user.getEmail(), mapped.getEmail());
-        assertEquals(user.getPassword(), mapped.getPassword());
-        assertEquals(user.getPhoneNumber(), mapped.getPhoneNumber());
-
-    }
-
-    @Test
-    void testMapFromUserLoginToUser() {
-
-        UserLogin mappedLogin = modelMapper.map(user, UserLogin.class);
-        User mappedUser = modelMapper.map(mappedLogin, User.class);
-
-        assertEquals(mappedLogin.getEmail(), mappedUser.getEmail());
-        assertEquals(mappedLogin.getPassword(), mappedUser.getPassword());
-        assertEquals(mappedLogin.getPhoneNumber(), mappedUser.getPhoneNumber());
 
     }
 
