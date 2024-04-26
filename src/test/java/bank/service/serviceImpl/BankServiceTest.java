@@ -1,7 +1,7 @@
 package bank.service.serviceImpl;
 
-import bank.domain.BankAccount;
-import bank.domain.Transaction;
+import bank.model.BankAccount;
+import bank.model.Transaction;
 import bank.dto.TransactionForm;
 import bank.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;

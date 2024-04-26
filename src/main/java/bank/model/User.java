@@ -1,4 +1,4 @@
-package bank.domain;
+package bank.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,10 +36,5 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     private BankAccount bankAccount;
-
-    @Column
-    @CreationTimestamp
-    @EqualsAndHashCode.Exclude
-    private Instant creationDate;
 
 }

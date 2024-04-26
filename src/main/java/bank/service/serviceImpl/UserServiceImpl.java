@@ -1,7 +1,7 @@
 package bank.service.serviceImpl;
 
-import bank.domain.BankAccount;
-import bank.domain.User;
+import bank.model.BankAccount;
+import bank.model.User;
 import bank.dto.UserForm;
 import bank.dto.UserLogin;
 import bank.repository.UserRepository;

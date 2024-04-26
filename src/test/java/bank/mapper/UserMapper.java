@@ -1,6 +1,6 @@
 package bank.mapper;
 
-import bank.domain.User;
+import bank.model.User;
 import bank.dto.UserForm;
 import bank.dto.UserLogin;
 import org.junit.jupiter.api.BeforeAll;

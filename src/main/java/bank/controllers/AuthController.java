@@ -1,6 +1,5 @@
 package bank.controllers;
 
-import bank.domain.User;
 import bank.dto.UserForm;
 import bank.dto.UserLogin;
 import bank.service.UserService;
@@ -21,29 +20,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
 
     private final UserService userService;
-    private final String AUTH_PAGE = "html/auth";
+    private final String SIGNUP_PAGE = "auth-signup";
+    private final String LOGIN_PAGE = "auth-login";
 
-    @GetMapping
-    public String showAuth(Model model) {
-        model.addAttribute("userForm", new UserForm());
+    @GetMapping("/login")
+    public String showLogin(Model model) {
         model.addAttribute("userLogin", new UserLogin());
-        return AUTH_PAGE;
+        return LOGIN_PAGE;
     }
 
-    @PostMapping("signup")
-    public String signupUser(@ModelAttribute @Validated UserForm userForm, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return AUTH_PAGE;
-        }
-
-        userService.signup(userForm);
-        return "redirect:/auth";
-    }
-
-    @PostMapping("login")
+    @PostMapping("/login")
     public String loginUser(UserLogin userLogin, HttpSession session) {
         session.setAttribute("userId", userService.login(userLogin).getId());
         return "redirect:/user";
     }
+
+    @GetMapping("/signup")
+    public String showSignup(Model model) {
+        model.addAttribute("userForm", new UserForm());
+        return SIGNUP_PAGE;
+    }
+
+    @PostMapping("/signup")
+    public String signupUser(@ModelAttribute @Validated UserForm userForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return SIGNUP_PAGE;
+        }
+
+        userService.signup(userForm);
+        return "redirect:/auth/login";
+    }
+
 
 }

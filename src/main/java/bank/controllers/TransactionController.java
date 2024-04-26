@@ -1,6 +1,6 @@
 package bank.controllers;
 
-import bank.domain.BankAccount;
+import bank.model.BankAccount;
 import bank.service.BankService;
 import bank.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final BankService bankService;
 
-    private final String TRANSACTION_PAGE = "html/transactions";
+    private final String TRANSACTION_PAGE = "transactions";
 
     @GetMapping
     public String getTransactionPage(@SessionAttribute Long userId, Model model) {

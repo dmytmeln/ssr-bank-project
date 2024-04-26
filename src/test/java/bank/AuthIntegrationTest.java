@@ -1,7 +1,7 @@
 package bank;
 
-import bank.domain.BankAccount;
-import bank.domain.User;
+import bank.model.BankAccount;
+import bank.model.User;
 import bank.service.BankService;
 import bank.service.UserService;
 import org.junit.jupiter.api.Test;

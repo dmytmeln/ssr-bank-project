@@ -1,6 +1,6 @@
 package bank;
 
-import bank.domain.Transaction;
+import bank.model.Transaction;
 import bank.service.TransactionService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

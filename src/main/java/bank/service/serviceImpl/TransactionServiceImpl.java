@@ -1,7 +1,7 @@
 package bank.service.serviceImpl;
 
-import bank.domain.BankAccount;
-import bank.domain.Transaction;
+import bank.model.BankAccount;
+import bank.model.Transaction;
 import bank.repository.TransactionRepository;
 import bank.service.BankService;
 import bank.service.TransactionService;

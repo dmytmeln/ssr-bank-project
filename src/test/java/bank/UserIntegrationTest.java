@@ -1,6 +1,6 @@
 package bank;
 
-import bank.domain.User;
+import bank.model.User;
 import bank.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

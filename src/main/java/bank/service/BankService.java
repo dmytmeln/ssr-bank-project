@@ -1,7 +1,6 @@
 package bank.service;
 
-import bank.domain.BankAccount;
-import bank.domain.Transaction;
+import bank.model.BankAccount;
 import bank.dto.TransactionForm;
 
 public interface BankService {

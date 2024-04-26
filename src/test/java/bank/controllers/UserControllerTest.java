@@ -1,6 +1,6 @@
 package bank.controllers;
 
-import bank.domain.User;
+import bank.model.User;
 import bank.dto.UserForm;
 import bank.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
