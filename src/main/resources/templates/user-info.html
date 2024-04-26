@@ -50,15 +50,15 @@
                             <b th:text="${user.phoneNumber}"></b>
                         </td>
                     </tr>
-                    <!--                <tr>-->
-                    <!--                    <td>Role:</td>-->
-                    <!--                    <td>-->
-                    <!--                        <b th:text="${user.role.name}"></b>-->
-                    <!--                    </td>-->
-                    <!--                </tr>-->
+                    <tr>
+                        <td>Role:</td>
+                        <td>
+                            <b th:text="${user.role.name}"></b>
+                        </td>
+                    </tr>
                 </table>
                 <div>
-                    <a th:href="@{|/user/update/${user.id}|}">Edit</a>
+                    <a th:href="@{/user/update}">Edit</a>
                 </div>
             </div>
         </div>

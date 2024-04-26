@@ -20,7 +20,7 @@
             <h2>Update Existing User</h2>
         </div>
         <div>
-            <form class="form-horizontal" method="post" th:action="@{|/user/update/${userId}|}" th:object="${userForm}">
+            <form class="form-horizontal" method="post" th:action="@{/user/update}" th:object="${userForm}">
                 <h3 th:if="${#fields.hasAnyErrors()}" class="text-danger">Error Updating User!</h3>
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="id">ID:</label>

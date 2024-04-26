@@ -5,6 +5,8 @@ import bank.model.User;
 import bank.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,36 +24,39 @@ public class UserController {
     private final String USER_PAGE = "user-info";
     private final String USER_UPDATE_PAGE = "user-update";
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
-    public String showUserInfo(@SessionAttribute Long userId, Model model) {
-        model.addAttribute("user", userService.findById(userId));
+    public String showUserInfo(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
         return USER_PAGE;
     }
 
-    @GetMapping("/update/{userId}")
-    public String showUpdateUser(@PathVariable Long userId, Model model) {
-        model.addAttribute("userForm", modelMapper.map(userService.findById(userId), UserForm.class));
-        model.addAttribute("userId", userId);
+    @GetMapping("/update")
+    public String showUpdateUser(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("userForm", modelMapper.map(user, UserForm.class));
+        model.addAttribute("userId", user.getId());
         return USER_UPDATE_PAGE;
     }
 
-    @PostMapping("update/{userId}")
+    @PostMapping("update")
     public String updateUser(
-            Model model, @PathVariable Long userId, @RequestParam("password") String password,
+            Model model, @AuthenticationPrincipal User user, @RequestParam("password") String password,
             @ModelAttribute("userForm") @Validated UserForm userForm, BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             return USER_UPDATE_PAGE;
         }
 
-        User user = userService.findById(userId);
-        if (!Objects.equals(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             model.addAttribute("incorrectPassword",
                     "Incorrect password! It doesn't match with the old one!");
+            model.addAttribute("userForm", modelMapper.map(user, UserForm.class));
+            model.addAttribute("userId", user.getId());
+            return USER_UPDATE_PAGE;
         }
 
-        userService.update(userForm, userId);
+        userService.update(userForm, user.getId());
         return "redirect:/user";
     }
 
