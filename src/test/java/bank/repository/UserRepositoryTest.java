@@ -32,7 +32,7 @@ public class UserRepositoryTest {
 
     @Test
     void readExistingUserByIdTest() {
-        String expectedName = "dmytro";
+        String expectedName = "Dmytro";
         long id = 1L;
         User user = userRepository.findById(id).get();
 
@@ -106,10 +106,10 @@ public class UserRepositoryTest {
     void testFindUserByEmailAndPhoneNumberAndPasswordTest() {
         String existingEmail = "dimamel28@gmail.com";
         String existingPhoneNumber = "380984035791";
-        String existingPass = "mdm281004";
+        String existingPass = "asAS12!@";
 
         long expectedId = 1;
-        String expectedFirstName = "dmytro";
+        String expectedFirstName = "Dmytro";
 
         User user = userRepository.findUserByEmailAndPhoneNumberAndPassword(
                 existingEmail,
