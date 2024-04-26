@@ -51,7 +51,7 @@ public class AuthIntegrationTest {
                         .param("password", expectedUser.getPassword())
                         .param("phoneNumber", expectedUser.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/auth"));
+                .andExpect(view().name("redirect:/auth/login"));
 
         User actualUser = userService.findById(expectedId);
         BankAccount actualBankAccount = bankService.findBankAccountByUserId(expectedId);
