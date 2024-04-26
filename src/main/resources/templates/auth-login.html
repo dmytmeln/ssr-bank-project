@@ -30,7 +30,9 @@
                                 <label for="phone_number">Phone Number:</label>
                                 <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Enter your phone number" required th:field="*{phoneNumber}" />
                             </div>
-                            <button type="submit" class="btn btn-primary">Login Now</button>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Login Now</button>
+                            </div>
                             <p class="mt-3">Don't have an account?
                                 <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
                                    th:href="@{/auth/signup}">Signup</a>
