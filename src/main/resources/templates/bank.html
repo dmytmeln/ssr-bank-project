@@ -40,6 +40,7 @@
                                     <small class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></small>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Make deposit</button>
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             </form>
                         </div>
                     </div>
@@ -66,6 +67,7 @@
                                     <small class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></small>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Make Withdrawal</button>
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             </form>
 
                         </div>

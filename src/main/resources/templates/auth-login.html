@@ -10,40 +10,47 @@
 </head>
 
 <body>
-<section class="home">
-    <div class="container">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-md-6">
-                <div class="card mt-5">
-                    <div class="card-body">
-                        <h2 class="card-title">Login</h2>
-                        <form action="#" method="post" th:action="@{/auth/login}" th:object="${userLogin}">
-                            <div class="mb-3">
-                                <label for="email">Email:</label>
-                                <input type="email" id="email" class="form-control" name="email" placeholder="Enter your email" required th:field="*{email}" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="password">Password:</label>
-                                <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" required th:field="*{password}" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone_number">Phone Number:</label>
-                                <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Enter your phone number" required th:field="*{phoneNumber}" />
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Login Now</button>
-                            </div>
-                            <p class="mt-3">Don't have an account?
-                                <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                   th:href="@{/auth/signup}">Signup</a>
-                            </p>
-                        </form>
+
+    <!-- Header -->
+    <div th:replace="~{header.html}"></div>
+
+    <section class="home">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-6">
+                    <div class="card mt-5">
+                        <div class="card-body">
+                            <p th:if="${param.error}" style="color: red;">Username or password is not correct!</p>
+                            <h2 class="card-title">Login</h2>
+                            <form method="post" action="/login">
+                                <div class="mb-3">
+                                    <label for="username">Email:</label>
+                                    <input type="email" id="username" class="form-control" name="username" placeholder="Enter your email" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password">Password:</label>
+                                    <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone_number">Phone Number:</label>
+                                    <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Enter your phone number" required />
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">Login Now</button>
+                                </div>
+                                <p class="mt-3">Don't have an account?
+                                    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                                       th:href="@{/register}">Signup</a>
+                                </p>
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
 </body>
 
 </html>
