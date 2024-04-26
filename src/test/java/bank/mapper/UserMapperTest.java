@@ -1,17 +1,15 @@
 package bank.mapper;
 
-import bank.model.User;
 import bank.dto.UserForm;
 import bank.dto.UserLogin;
+import bank.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-import java.time.Instant;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserMapper {
+public class UserMapperTest {
 
     private static User user;
 

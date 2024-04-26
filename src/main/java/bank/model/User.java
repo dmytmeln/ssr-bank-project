@@ -2,9 +2,6 @@ package bank.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.Instant;
 
 @Data
 @AllArgsConstructor

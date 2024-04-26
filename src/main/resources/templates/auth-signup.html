@@ -21,23 +21,28 @@
                         <form action="#" method="post" th:action="@{/auth/signup}" th:object="${userForm}">
                             <h3 th:if="${#fields.hasAnyErrors()}" class="text-danger">Error Creating User!</h3>
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="firstname" placeholder="Enter your firstname" required th:field="*{firstname}" />
+                                <label for="firstname">First Name:</label>
+                                <input type="text" id="firstname" class="form-control" name="firstname" placeholder="Enter your firstname" required th:field="*{firstname}" />
                                 <small class="text-danger" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></small>
                             </div>
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="lastname" placeholder="Enter your lastname" required th:field="*{lastname}" />
+                                <label for="lastname">Last Name:</label>
+                                <input type="text" id="lastname" class="form-control" name="lastname" placeholder="Enter your lastname" required th:field="*{lastname}" />
                                 <small class="text-danger" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></small>
                             </div>
                             <div class="mb-3">
-                                <input type="email" class="form-control" name="email" placeholder="Enter your email" required th:field="*{email}" />
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" class="form-control" name="email" placeholder="Enter your email" required th:field="*{email}" />
                                 <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
                             </div>
                             <div class="mb-3">
-                                <input type="tel" class="form-control" name="phone_number" placeholder="Enter your phone number" required th:field="*{phoneNumber}" />
+                                <label for="phone_number">Phone Number:</label>
+                                <input type="tel" id="phone_number" class="form-control" name="phone_number" placeholder="Enter your phone number" required th:field="*{phoneNumber}" />
                                 <small class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></small>
                             </div>
                             <div class="mb-3">
-                                <input type="password" class="form-control" name="password" placeholder="Create password" required th:field="*{password}" />
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" class="form-control" name="password" placeholder="Create password" required th:field="*{password}" />
                                 <small class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
                             </div>
                             <button type="submit" class="btn btn-primary">Signup Now</button>
