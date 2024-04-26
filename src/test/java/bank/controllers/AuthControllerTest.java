@@ -3,7 +3,6 @@ package bank.controllers;
 import bank.dto.UserForm;
 import bank.model.User;
 import bank.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
