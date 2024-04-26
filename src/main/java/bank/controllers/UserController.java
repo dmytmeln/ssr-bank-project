@@ -13,8 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 @Controller("UserController")
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -28,12 +26,14 @@ public class UserController {
 
     @GetMapping
     public String showUserInfo(@AuthenticationPrincipal User user, Model model) {
+        user = userService.findById(user.getId());
         model.addAttribute("user", user);
         return USER_PAGE;
     }
 
     @GetMapping("/update")
     public String showUpdateUser(@AuthenticationPrincipal User user, Model model) {
+        user = userService.findById(user.getId());
         model.addAttribute("userForm", modelMapper.map(user, UserForm.class));
         model.addAttribute("userId", user.getId());
         return USER_UPDATE_PAGE;
@@ -41,7 +41,7 @@ public class UserController {
 
     @PostMapping("update")
     public String updateUser(
-            Model model, @AuthenticationPrincipal User user, @RequestParam("password") String password,
+            Model model, @AuthenticationPrincipal User user, @RequestParam("oldPassword") String password,
             @ModelAttribute("userForm") @Validated UserForm userForm, BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
@@ -51,8 +51,6 @@ public class UserController {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             model.addAttribute("incorrectPassword",
                     "Incorrect password! It doesn't match with the old one!");
-            model.addAttribute("userForm", modelMapper.map(user, UserForm.class));
-            model.addAttribute("userId", user.getId());
             return USER_UPDATE_PAGE;
         }
 
