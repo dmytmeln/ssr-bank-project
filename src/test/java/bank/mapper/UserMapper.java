@@ -26,7 +26,6 @@ public class UserMapper {
                 .password("12!@asAS")
                 .email("john.doe@example.com")
                 .phoneNumber("123123123123")
-                .creationDate(Instant.now())
                 .build();
     }
 
@@ -40,7 +39,6 @@ public class UserMapper {
         assertEquals(user.getLastname(), mapped.getLastname());
         assertEquals(user.getPassword(), mapped.getPassword());
         assertEquals(user.getPhoneNumber(), mapped.getPhoneNumber());
-        assertEquals(user.getCreationDate(), mapped.getCreationDate());
 
     }
 
@@ -55,7 +53,6 @@ public class UserMapper {
         assertEquals(mappedForm.getLastname(), mappedUser.getLastname());
         assertEquals(mappedForm.getPassword(), mappedUser.getPassword());
         assertEquals(mappedForm.getPhoneNumber(), mappedUser.getPhoneNumber());
-        assertEquals(mappedForm.getCreationDate(), mappedUser.getCreationDate());
 
     }
 

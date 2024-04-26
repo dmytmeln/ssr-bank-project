@@ -38,7 +38,8 @@ public class UserControllerTest {
     @Captor
     private ArgumentCaptor<UserForm> userCaptor;
 
-    private final String USER_PAGE = "html/user";
+    private final String USER_UPDATE_PAGE = "user-update";
+    private final String USER_PAGE = "user-info";
 
     private final static Long USER_ID = 1L;
     private static UserForm userForm;
@@ -46,23 +47,26 @@ public class UserControllerTest {
 
     @BeforeAll
     static void init() {
+        String email = "dimamel28@gmail.com";
+        String password = "12!@asAS";
+        String phoneNumber = "380984035791";
+        String firstname = "Dmytro";
+        String lastname = "Melnyk";
         userForm = UserForm.builder()
-                .email("dimamel28@gmail.com")
-                .password("12!@asAS")
-                .phoneNumber("380984035791")
-                .firstname("Dmytro")
-                .lastname("Melnyk")
-                .creationDate(Instant.now())
+                .email(email)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .firstname(firstname)
+                .lastname(lastname)
                 .build();
 
         user = User.builder()
                 .id(USER_ID)
-                .email("dimamel28@gmail.com")
-                .password("12!@asAS")
-                .phoneNumber("380984035791")
-                .firstname("Dmytro")
-                .lastname("Melnyk")
-                .creationDate(Instant.now())
+                .email(email)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .firstname(firstname)
+                .lastname(lastname)
                 .build();
 
     }
@@ -78,10 +82,8 @@ public class UserControllerTest {
     void testGetShowHome() throws Exception {
         mockMvc.perform(get("/user").sessionAttr("userId", USER_ID))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("userForm"))
-                .andExpect(model().attribute("userForm", userForm))
-                .andExpect(model().attributeExists("userId"))
-                .andExpect(model().attribute("userId", USER_ID))
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attribute("user", user))
                 .andExpect(view().name(USER_PAGE));
 
         verify(userServiceMock, times(1)).findById(USER_ID);
@@ -97,22 +99,34 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/user").sessionAttr("userId", id))
                 .andExpect(status().isNotFound())
-                .andExpect(view().name("html/error"));
+                .andExpect(view().name("error"));
 
         verify(userServiceMock, times(1)).findById(id);
     }
 
     @Test
+    void testShowUpdate() throws Exception {
+        mockMvc.perform(get("/user/update/{userId}", USER_ID))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("userForm"))
+                .andExpect(model().attribute("userForm", userForm))
+                .andExpect(model().attributeExists("userId"))
+                .andExpect(model().attribute("userId", USER_ID))
+                .andExpect(view().name(USER_UPDATE_PAGE));
+
+        verify(userServiceMock, times(1)).findById(USER_ID);
+    }
+
+    @Test
     void testValidUpdateUser() throws Exception {
         String updatedFirstName = "Jason";
-
+        String email = userForm.getEmail();
         mockMvc.perform(post("/user/update/{userId}", USER_ID)
                         .param("firstname", updatedFirstName)
                         .param("lastname", userForm.getLastname())
-                        .param("email", userForm.getEmail())
+                        .param("email", email)
                         .param("password", userForm.getPassword())
-                        .param("phoneNumber", userForm.getPhoneNumber())
-                        .flashAttr("userForm", new UserForm()))
+                        .param("phoneNumber", userForm.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user"))
                 .andExpect(view().name("redirect:/user"));
@@ -121,6 +135,7 @@ public class UserControllerTest {
         UserForm updatedUser = userCaptor.getValue();
 
         assertEquals(updatedFirstName, updatedUser.getFirstname());
+        assertEquals(email, updatedUser.getEmail());
     }
 
     @Test
@@ -134,7 +149,7 @@ public class UserControllerTest {
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("userForm", "firstname"))
                 .andExpect(status().isOk())
-                .andExpect(view().name(USER_PAGE));
+                .andExpect(view().name(USER_UPDATE_PAGE));
     }
 
 

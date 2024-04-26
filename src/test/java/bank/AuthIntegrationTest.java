@@ -43,15 +43,13 @@ public class AuthIntegrationTest {
                 .phoneNumber("380984035792")
                 .firstname("Dmytro")
                 .lastname("Melnyk")
-                .creationDate(Instant.now())
                 .build();
         mockMvc.perform(post("/auth/signup")
                         .param("email", expectedUser.getEmail())
                         .param("firstname", expectedUser.getFirstname())
                         .param("lastname", expectedUser.getLastname())
                         .param("password", expectedUser.getPassword())
-                        .param("phoneNumber", expectedUser.getPhoneNumber())
-                        .param("creationDate", String.valueOf(expectedUser.getCreationDate())))
+                        .param("phoneNumber", expectedUser.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/auth"));
 

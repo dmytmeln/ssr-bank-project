@@ -4,6 +4,7 @@ import bank.model.User;
 import bank.dto.UserForm;
 import bank.dto.UserLogin;
 import bank.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,8 @@ public class AuthControllerTest {
     @Captor
     private ArgumentCaptor<UserForm> userFormCaptor;
 
-    private final String AUTH_PAGE = "html/auth";
+    private final String SIGNUP_PAGE = "auth-signup";
+    private final String LOGIN_PAGE = "auth-login";
 
     private static final Long ID = 1L;
     private static User user;
@@ -51,7 +53,6 @@ public class AuthControllerTest {
                 .phoneNumber("380984035791")
                 .firstname("Dmytro")
                 .lastname("Melnyk")
-                .creationDate(Instant.now())
                 .build();
     }
 
@@ -61,6 +62,9 @@ public class AuthControllerTest {
 
         when(userServiceMock.login(any(UserLogin.class))).thenAnswer(invocationOnMock -> {
             UserLogin userLogin = invocationOnMock.getArgument(0);
+            if (userLogin.getEmail().isBlank()) {
+                throw new EntityNotFoundException();
+            }
             return User.builder()
                     .id(ID)
                     .firstname(user.getFirstname())
@@ -68,18 +72,24 @@ public class AuthControllerTest {
                     .email(userLogin.getEmail())
                     .password(userLogin.getPassword())
                     .phoneNumber(userLogin.getPhoneNumber())
-                    .creationDate(user.getCreationDate())
                     .build();
         });
     }
 
     @Test
-    void testShowAuth() throws Exception {
-        mockMvc.perform(get("/auth"))
+    void testShowAuthSignup() throws Exception {
+        mockMvc.perform(get("/auth/signup"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("userForm"))
+                .andExpect(view().name(SIGNUP_PAGE));
+    }
+
+    @Test
+    void testShowAuthLogin() throws Exception {
+        mockMvc.perform(get("/auth/login"))
+                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("userLogin"))
-                .andExpect(view().name(AUTH_PAGE));
+                .andExpect(view().name(LOGIN_PAGE));
     }
 
     @Test
@@ -91,12 +101,9 @@ public class AuthControllerTest {
                         .param("firstname", user.getFirstname())
                         .param("lastname", user.getLastname())
                         .param("password", password)
-                        .param("phoneNumber", user.getPhoneNumber())
-                        .param("creationDate", String.valueOf(user.getCreationDate()))
-                        .flashAttr("userLogin", new UserLogin())
-                        .flashAttr("userForm", new UserForm()))
+                        .param("phoneNumber", user.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/auth"));
+                .andExpect(view().name("redirect:/auth/login"));
 
         verify(userServiceMock, times(1)).signup(userFormCaptor.capture());
         UserForm captorValue = userFormCaptor.getValue();
@@ -112,12 +119,10 @@ public class AuthControllerTest {
                         .param("firstname", "")
                         .param("lastname", user.getLastname())
                         .param("password", user.getPassword())
-                        .param("phoneNumber", user.getPhoneNumber())
-                        .param("creationDate", String.valueOf(user.getCreationDate()))
-                        .flashAttr("userLogin", new UserLogin())
-                        .flashAttr("userForm", new UserForm()))
+                        .param("phoneNumber", user.getPhoneNumber()))
+                .andExpect(model().attributeHasFieldErrors("userForm", "firstname"))
                 .andExpect(status().isOk())
-                .andExpect(view().name(AUTH_PAGE));
+                .andExpect(view().name(SIGNUP_PAGE));
     }
 
     @Test
@@ -128,9 +133,7 @@ public class AuthControllerTest {
         mockMvc.perform(post("/auth/login")
                         .param("email", email)
                         .param("password", password)
-                        .param("phoneNumber", phoneNumber)
-                        .flashAttr("userLogin", new UserLogin())
-                        .flashAttr("userForm", new UserForm()))
+                        .param("phoneNumber", phoneNumber))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user"));
 
@@ -139,6 +142,16 @@ public class AuthControllerTest {
 
         UserLogin userLogin = new UserLogin(password, email, phoneNumber);
         assertEquals(userLogin, captorValue);
+    }
+
+    @Test
+    void testInvalidLoginUser() throws Exception {
+        mockMvc.perform(post("/auth/login")
+                        .param("email", "")
+                        .param("password", user.getPassword())
+                        .param("phoneNumber", user.getPhoneNumber()))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("error"));
     }
 
 }

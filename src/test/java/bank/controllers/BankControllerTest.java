@@ -35,6 +35,8 @@ public class BankControllerTest {
     private static Long accountId;
     private static BankAccount bankAccount;
 
+    private static final String BANK_PAGE = "bank";
+
     @BeforeAll
     static void init() {
         accountId = 1L;
@@ -61,7 +63,7 @@ public class BankControllerTest {
                 .andExpect(model().attribute("transactionFormD", new TransactionForm()))
                 .andExpect(model().attributeExists("transactionFormW"))
                 .andExpect(model().attribute("transactionFormW", new TransactionForm()))
-                .andExpect(view().name("html/bank"));
+                .andExpect(view().name(BANK_PAGE));
 
         verify(bankServiceMock, times(1)).findBankAccountByUserId(accountId);
     }
@@ -69,14 +71,13 @@ public class BankControllerTest {
     @Test
     void testInvalidShowBank() throws Exception {
         long id = -1;
-
         when(bankServiceMock.findBankAccountByUserId(id)).thenThrow(new EntityNotFoundException(
                 "BankAccount with  id [%d] not found".formatted(id)
         ));
 
         mockMvc.perform(get("/bank").sessionAttr("userId", id))
                 .andExpect(status().isNotFound())
-                .andExpect(view().name("html/error"));
+                .andExpect(view().name("error"));
 
         verify(bankServiceMock, times(1)).findBankAccountByUserId(id);
     }
@@ -85,7 +86,8 @@ public class BankControllerTest {
     void testMakeDeposit() throws Exception {
         String message = "Message";
         String type = "Type";
-        double expectedBalance = bankAccount.getBalance() + 1000D;
+        Double moneyAmount = 1000D;
+        double expectedBalance = bankAccount.getBalance() + moneyAmount;
 
         when(bankServiceMock.makeDeposit(eq(accountId), any(TransactionForm.class))).thenAnswer(invocationOnMock -> {
             Long bankAccountId = invocationOnMock.getArgument(0);
@@ -97,7 +99,7 @@ public class BankControllerTest {
         });
 
         mockMvc.perform(post("/bank/deposit/{accountId}", accountId)
-                        .param("moneyAmount", "1000")
+                        .param("moneyAmount", moneyAmount.toString())
                         .param("msg", message)
                         .param("type", type))
                 .andExpect(status().is3xxRedirection())
@@ -121,7 +123,7 @@ public class BankControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
-                .andExpect(view().name("html/bank"));
+                .andExpect(view().name(BANK_PAGE));
     }
 
     @Test
@@ -166,7 +168,7 @@ public class BankControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("account", bankAccount))
-                .andExpect(view().name("html/bank"));
+                .andExpect(view().name(BANK_PAGE));
     }
 
 }

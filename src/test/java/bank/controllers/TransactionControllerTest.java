@@ -35,6 +35,8 @@ public class TransactionControllerTest {
     private static BankAccount bankAccount;
     private static Transaction transaction;
 
+    private static final String TRANSACTION_PAGE = "transactions";
+
     @BeforeAll
     static void init() {
         id = 1L;
@@ -65,7 +67,7 @@ public class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("transactions"))
                 .andExpect(model().attribute("transactions", List.of(transaction)))
-                .andExpect(view().name("html/transactions"));
+                .andExpect(view().name(TRANSACTION_PAGE));
 
         verify(bankService, times(1)).findBankAccountByUserId(id);
         verify(transactionServiceMock, times(1)).getBankAccountTransactions(id);
@@ -79,7 +81,7 @@ public class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("transactions"))
                 .andExpect(model().attribute("transactions", List.of()))
-                .andExpect(view().name("html/transactions"));
+                .andExpect(view().name(TRANSACTION_PAGE));
 
         verify(bankService, times(1)).findBankAccountByUserId(id);
         verify(transactionServiceMock, times(1)).getBankAccountTransactions(id);
@@ -95,7 +97,7 @@ public class TransactionControllerTest {
 
         mockMvc.perform(get("/transactions").sessionAttr("userId", id))
                 .andExpect(status().isNotFound())
-                .andExpect(view().name("html/error"));
+                .andExpect(view().name("error"));
 
         verify(bankService, times(1)).findBankAccountByUserId(id);
         verify(transactionServiceMock, times(0)).getBankAccountTransactions(id);

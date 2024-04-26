@@ -39,6 +39,4 @@ public class UserForm {
     @Pattern(regexp = "\\d{12}", message = "Phone number has to contain 12 digits")
     private String phoneNumber;
 
-    private Instant creationDate;
-
 }
