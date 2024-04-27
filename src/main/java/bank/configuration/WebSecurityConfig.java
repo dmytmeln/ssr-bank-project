@@ -27,6 +27,7 @@ public class WebSecurityConfig  {
                         auth
                                 .requestMatchers("/", "/login", "/register").permitAll()
                                 .anyRequest().authenticated())
+                .rememberMe(rememberMe -> rememberMe.key("uniqueAndSecret"))
                 .formLogin(form ->
                         form
                                 .loginPage("/login")
