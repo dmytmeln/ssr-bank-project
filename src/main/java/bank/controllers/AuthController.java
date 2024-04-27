@@ -1,10 +1,7 @@
 package bank.controllers;
 
-import bank.domain.User;
 import bank.dto.UserForm;
-import bank.dto.UserLogin;
 import bank.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,34 +13,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("/register")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
-    private final String AUTH_PAGE = "html/auth";
+    private final String SIGNUP_PAGE = "auth-signup";
 
     @GetMapping
-    public String showAuth(Model model) {
+    public String showSignup(Model model) {
         model.addAttribute("userForm", new UserForm());
-        model.addAttribute("userLogin", new UserLogin());
-        return AUTH_PAGE;
+        return SIGNUP_PAGE;
     }
 
-    @PostMapping("signup")
+    @PostMapping
     public String signupUser(@ModelAttribute @Validated UserForm userForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return AUTH_PAGE;
+            return SIGNUP_PAGE;
         }
 
         userService.signup(userForm);
-        return "redirect:/auth";
+        return "redirect:/login";
     }
 
-    @PostMapping("login")
-    public String loginUser(UserLogin userLogin, HttpSession session) {
-        session.setAttribute("userId", userService.login(userLogin).getId());
-        return "redirect:/user";
-    }
 
 }

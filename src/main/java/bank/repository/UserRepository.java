@@ -1,6 +1,6 @@
 package bank.repository;
 
-import bank.domain.User;
+import bank.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByEmailAndPhoneNumberAndPassword(String email, String phoneNumber, String password);
 
     boolean existsByEmail(String email);
+
+    Optional<User> findByEmail(String email);
 
     boolean existsByPhoneNumber(String phoneNumber);
 

@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
@@ -38,7 +36,5 @@ public class UserForm {
     @NotNull(message = "Phone number can't be null")
     @Pattern(regexp = "\\d{12}", message = "Phone number has to contain 12 digits")
     private String phoneNumber;
-
-    private Instant creationDate;
 
 }

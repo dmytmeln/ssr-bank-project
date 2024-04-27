@@ -1,17 +1,14 @@
 package bank.mapper;
 
-import bank.domain.User;
 import bank.dto.UserForm;
-import bank.dto.UserLogin;
+import bank.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-import java.time.Instant;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserMapper {
+public class UserMapperTest {
 
     private static User user;
 
@@ -26,7 +23,6 @@ public class UserMapper {
                 .password("12!@asAS")
                 .email("john.doe@example.com")
                 .phoneNumber("123123123123")
-                .creationDate(Instant.now())
                 .build();
     }
 
@@ -40,7 +36,6 @@ public class UserMapper {
         assertEquals(user.getLastname(), mapped.getLastname());
         assertEquals(user.getPassword(), mapped.getPassword());
         assertEquals(user.getPhoneNumber(), mapped.getPhoneNumber());
-        assertEquals(user.getCreationDate(), mapped.getCreationDate());
 
     }
 
@@ -55,30 +50,6 @@ public class UserMapper {
         assertEquals(mappedForm.getLastname(), mappedUser.getLastname());
         assertEquals(mappedForm.getPassword(), mappedUser.getPassword());
         assertEquals(mappedForm.getPhoneNumber(), mappedUser.getPhoneNumber());
-        assertEquals(mappedForm.getCreationDate(), mappedUser.getCreationDate());
-
-    }
-
-    @Test
-    void testMapFromUserToUserLogin() {
-
-        UserLogin mapped = modelMapper.map(user, UserLogin.class);
-
-        assertEquals(user.getEmail(), mapped.getEmail());
-        assertEquals(user.getPassword(), mapped.getPassword());
-        assertEquals(user.getPhoneNumber(), mapped.getPhoneNumber());
-
-    }
-
-    @Test
-    void testMapFromUserLoginToUser() {
-
-        UserLogin mappedLogin = modelMapper.map(user, UserLogin.class);
-        User mappedUser = modelMapper.map(mappedLogin, User.class);
-
-        assertEquals(mappedLogin.getEmail(), mappedUser.getEmail());
-        assertEquals(mappedLogin.getPassword(), mappedUser.getPassword());
-        assertEquals(mappedLogin.getPhoneNumber(), mappedUser.getPhoneNumber());
 
     }
 

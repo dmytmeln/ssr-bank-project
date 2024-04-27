@@ -1,9 +1,10 @@
 package bank.controllers;
 
-import bank.domain.Transaction;
 import bank.dto.TransactionForm;
+import bank.model.User;
 import bank.service.BankService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,11 +18,11 @@ public class BankController {
 
     private final BankService bankService;
 
-    private final String BANK_PAGE = "html/bank";
+    private final String BANK_PAGE = "bank";
 
     @GetMapping
-    public String showBank(@SessionAttribute Long userId, Model model) {
-        model.addAttribute("account", bankService.findBankAccountByUserId(userId));
+    public String showBank(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("account", bankService.findBankAccountByUserId(user.getId()));
         model.addAttribute("transactionFormW", new TransactionForm());
         model.addAttribute("transactionFormD", new TransactionForm());
         return BANK_PAGE;

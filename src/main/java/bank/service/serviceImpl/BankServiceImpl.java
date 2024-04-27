@@ -1,14 +1,13 @@
 package bank.service.serviceImpl;
 
-import bank.domain.BankAccount;
-import bank.domain.Transaction;
+import bank.model.BankAccount;
+import bank.model.Transaction;
 import bank.dto.TransactionForm;
 import bank.repository.AccountRepository;
 import bank.service.BankService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

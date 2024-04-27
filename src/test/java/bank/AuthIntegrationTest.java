@@ -1,7 +1,7 @@
 package bank;
 
-import bank.domain.BankAccount;
-import bank.domain.User;
+import bank.model.BankAccount;
+import bank.model.User;
 import bank.service.BankService;
 import bank.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,17 +41,15 @@ public class AuthIntegrationTest {
                 .phoneNumber("380984035792")
                 .firstname("Dmytro")
                 .lastname("Melnyk")
-                .creationDate(Instant.now())
                 .build();
         mockMvc.perform(post("/auth/signup")
                         .param("email", expectedUser.getEmail())
                         .param("firstname", expectedUser.getFirstname())
                         .param("lastname", expectedUser.getLastname())
                         .param("password", expectedUser.getPassword())
-                        .param("phoneNumber", expectedUser.getPhoneNumber())
-                        .param("creationDate", String.valueOf(expectedUser.getCreationDate())))
+                        .param("phoneNumber", expectedUser.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/auth"));
+                .andExpect(view().name("redirect:/auth/login"));
 
         User actualUser = userService.findById(expectedId);
         BankAccount actualBankAccount = bankService.findBankAccountByUserId(expectedId);

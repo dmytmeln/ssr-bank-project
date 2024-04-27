@@ -1,8 +1,8 @@
 package bank.service.serviceImpl;
 
-import bank.domain.User;
+import bank.mapper.UserMapper;
+import bank.model.User;
 import bank.dto.UserForm;
-import bank.dto.UserLogin;
 import bank.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,9 +27,8 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepoMock;
-
     @Mock
-    private ModelMapper modelMapper;
+    private UserMapper userMapperMock;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -89,7 +88,7 @@ public class UserServiceTest {
             userToSave.setId(expectedId);
             return userToSave;
         });
-        when(modelMapper.map(userForm, User.class)).thenReturn(user);
+        when(userMapperMock.mapToUser(userForm)).thenReturn(user);
 
         User signupUser = userService.signup(userForm);
         Long actualId = signupUser.getId();
@@ -117,36 +116,6 @@ public class UserServiceTest {
         verify(userRepoMock, times(1)).existsByEmailOrPhoneNumber(email, phoneNumber);
     }
 
-    @Test
-    void testLoginTest() {
-        String email = user.getEmail();
-        String phoneNumber = user.getPhoneNumber();
-        String password = user.getPassword();
-
-        when(userRepoMock.findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password)).thenReturn(Optional.of(user));
-
-        UserLogin userLogin = new UserLogin(password, email, phoneNumber);
-        User loggedInUser = userService.login(userLogin);
-
-        verify(userRepoMock, times(1)).findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password);
-        assertNotNull(loggedInUser);
-        assertEquals(email, loggedInUser.getEmail());
-        assertEquals(phoneNumber, loggedInUser.getPhoneNumber());
-        assertEquals(password, loggedInUser.getPassword());
-    }
-
-    @Test
-    void testLoginNonexistentUserTest() {
-        String email = user.getEmail();
-        String phoneNumber = user.getPhoneNumber();
-        String password = user.getPassword();
-
-        UserLogin userLogin = new UserLogin(password, email, phoneNumber);
-        assertThrows(EntityNotFoundException.class, () -> userService.login(userLogin));
-
-        verify(userRepoMock, times(1)).findUserByEmailAndPhoneNumberAndPassword(email, phoneNumber, password);
-    }
-
 
     @Test
     void testUpdateTest() {
@@ -170,7 +139,7 @@ public class UserServiceTest {
                     .lastname(userForm.getLastname())
                     .build();
         });
-        when(modelMapper.map(userForm, User.class)).thenReturn(user);
+        when(userMapperMock.mapToUser(userForm)).thenReturn(user);
 
         User updatedUser = userService.update(userForm, id);
 

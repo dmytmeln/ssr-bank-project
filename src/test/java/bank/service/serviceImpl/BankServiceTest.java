@@ -1,7 +1,7 @@
 package bank.service.serviceImpl;
 
-import bank.domain.BankAccount;
-import bank.domain.Transaction;
+import bank.model.BankAccount;
+import bank.model.Transaction;
 import bank.dto.TransactionForm;
 import bank.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +25,7 @@ public class BankServiceTest {
     private AccountRepository accountRepoMock;
 
     @Mock
-    private ModelMapper modelMapper;
+    private ModelMapper modelMapperMock;
 
     @InjectMocks
     private BankServiceImpl bankService;
@@ -91,7 +91,7 @@ public class BankServiceTest {
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
         when(accountRepoMock.save(bankAccount)).thenReturn(bankAccount);
-        when(modelMapper.map(transaction, Transaction.class)).thenReturn(
+        when(modelMapperMock.map(transaction, Transaction.class)).thenReturn(
                 Transaction.builder()
                         .moneyAmount(moneyAmount)
                         .type(expectedInfo)
@@ -128,7 +128,7 @@ public class BankServiceTest {
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
         when(accountRepoMock.save(bankAccount)).thenReturn(bankAccount);
-        when(modelMapper.map(transaction, Transaction.class)).thenReturn(
+        when(modelMapperMock.map(transaction, Transaction.class)).thenReturn(
                 Transaction.builder()
                         .moneyAmount(moneyAmount)
                         .type(expectedInfo)
@@ -153,7 +153,7 @@ public class BankServiceTest {
     void testInvalidMakeWithdrawalTest() {
         String expectedInfo = "Transaction Test Withdrawal";
         double moneyAmount = 1000.;
-        Transaction transaction = Transaction.builder()
+        TransactionForm transaction = TransactionForm.builder()
                 .moneyAmount(moneyAmount)
                 .msg(expectedInfo)
                 .type(expectedInfo)
@@ -161,7 +161,7 @@ public class BankServiceTest {
 
         when(accountRepoMock.findById(ID)).thenReturn(Optional.of(bankAccount));
 
-        assertThrows(IllegalArgumentException.class, () -> bankService.makeWithdrawal(ID, modelMapper.map(transaction, TransactionForm.class)));
+        assertThrows(IllegalArgumentException.class, () -> bankService.makeWithdrawal(ID, transaction));
     }
 
 
