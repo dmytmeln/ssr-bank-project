@@ -1,5 +1,6 @@
 package bank.repository;
 
+import bank.model.Role;
 import bank.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,7 @@ public class UserRepositoryTest {
                 .firstname("Peter")
                 .lastname("Stinger")
                 .password("asAS!@12")
+                .role(Role.ROLE_USER)
                 .phoneNumber("380981258958")
                 .build();
 
@@ -79,6 +81,7 @@ public class UserRepositoryTest {
                 .id(expectedId)
                 .firstname("Peter")
                 .lastname("Stinger")
+                .role(Role.ROLE_USER)
                 .password(password)
                 .phoneNumber("380981258958")
                 .build();
