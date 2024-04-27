@@ -22,7 +22,7 @@ public class BankController {
 
     @GetMapping
     public String showBank(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("account", user.getBankAccount());
+        model.addAttribute("account", bankService.findBankAccountByUserId(user.getId()));
         model.addAttribute("transactionFormW", new TransactionForm());
         model.addAttribute("transactionFormD", new TransactionForm());
         return BANK_PAGE;

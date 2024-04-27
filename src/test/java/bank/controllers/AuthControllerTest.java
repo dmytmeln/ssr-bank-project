@@ -9,18 +9,23 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class AuthControllerTest {
 
     @Autowired
@@ -56,7 +61,7 @@ public class AuthControllerTest {
 
     @Test
     void testShowSignup() throws Exception {
-        mockMvc.perform(get("/auth/signup"))
+        mockMvc.perform(get("/register").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("userForm"))
                 .andExpect(view().name(SIGNUP_PAGE));
@@ -66,14 +71,14 @@ public class AuthControllerTest {
     void testSignupUser() throws Exception {
         String email = user.getEmail();
         String password = user.getPassword();
-        mockMvc.perform(post("/auth/signup")
+        mockMvc.perform(post("/register").with(csrf())
                         .param("email", email)
                         .param("firstname", user.getFirstname())
                         .param("lastname", user.getLastname())
                         .param("password", password)
                         .param("phoneNumber", user.getPhoneNumber()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/auth/login"));
+                .andExpect(view().name("redirect:/login"));
 
         verify(userServiceMock, times(1)).signup(userFormCaptor.capture());
         UserForm captorValue = userFormCaptor.getValue();
@@ -83,8 +88,8 @@ public class AuthControllerTest {
     }
 
     @Test
-    void testInvalidSignupUser() throws Exception {
-        mockMvc.perform(post("/auth/signup")
+    void testInvalidAuthorizedSignupUser() throws Exception {
+        mockMvc.perform(post("/register").with(csrf())
                         .param("email", user.getEmail())
                         .param("firstname", "")
                         .param("lastname", user.getLastname())
