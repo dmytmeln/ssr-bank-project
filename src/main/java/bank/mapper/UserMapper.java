@@ -13,8 +13,10 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     private final TypeMap<UserForm, User> typeMap;
+    private final ModelMapper modelMapper;
 
     public UserMapper(ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+        this.modelMapper = modelMapper;
 
         Converter<String, String> passwordConverter = converter -> passwordEncoder.encode(converter.getSource());
         this.typeMap = modelMapper.createTypeMap(UserForm.class, User.class)
@@ -32,6 +34,10 @@ public class UserMapper {
         User user = typeMap.map(userForm);
         user.setId(userId);
         return user;
+    }
+
+    public UserForm mapToUserForm(User user) {
+        return modelMapper.map(user, UserForm.class);
     }
 
 }

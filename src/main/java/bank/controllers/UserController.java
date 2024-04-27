@@ -1,6 +1,7 @@
 package bank.controllers;
 
 import bank.dto.UserForm;
+import bank.mapper.UserMapper;
 import bank.model.User;
 import bank.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserController {
     private final UserService userService;
     private final String USER_PAGE = "user-info";
     private final String USER_UPDATE_PAGE = "user-update";
-    private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping
@@ -34,12 +35,12 @@ public class UserController {
     @GetMapping("/update")
     public String showUpdateUser(@AuthenticationPrincipal User user, Model model) {
         user = userService.findById(user.getId());
-        model.addAttribute("userForm", modelMapper.map(user, UserForm.class));
+        model.addAttribute("userForm", userMapper.mapToUserForm(user));
         model.addAttribute("userId", user.getId());
         return USER_UPDATE_PAGE;
     }
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public String updateUser(
             Model model, @AuthenticationPrincipal User user, @RequestParam("oldPassword") String password,
             @ModelAttribute("userForm") @Validated UserForm userForm, BindingResult bindingResult
