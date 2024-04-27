@@ -1,5 +1,6 @@
 package bank.service.serviceImpl;
 
+import bank.mapper.UserMapper;
 import bank.model.User;
 import bank.dto.UserForm;
 import bank.repository.UserRepository;
@@ -26,9 +27,8 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepoMock;
-
     @Mock
-    private ModelMapper modelMapper;
+    private UserMapper userMapperMock;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -88,7 +88,7 @@ public class UserServiceTest {
             userToSave.setId(expectedId);
             return userToSave;
         });
-        when(modelMapper.map(userForm, User.class)).thenReturn(user);
+        when(userMapperMock.mapToUser(userForm)).thenReturn(user);
 
         User signupUser = userService.signup(userForm);
         Long actualId = signupUser.getId();
@@ -139,7 +139,7 @@ public class UserServiceTest {
                     .lastname(userForm.getLastname())
                     .build();
         });
-        when(modelMapper.map(userForm, User.class)).thenReturn(user);
+        when(userMapperMock.mapToUser(userForm)).thenReturn(user);
 
         User updatedUser = userService.update(userForm, id);
 
