@@ -22,7 +22,7 @@
                     <div class="card mt-5">
                         <div class="card-body">
                             <h2 class="card-title">Signup</h2>
-                            <form action="#" method="post" th:action="@{/auth/signup}" th:object="${userForm}">
+                            <form action="#" method="post" th:action="@{/register}" th:object="${userForm}">
                                 <h3 th:if="${#fields.hasAnyErrors()}" class="text-danger">Error Creating User!</h3>
                                 <div class="mb-3">
                                     <label for="firstname">First Name:</label>
